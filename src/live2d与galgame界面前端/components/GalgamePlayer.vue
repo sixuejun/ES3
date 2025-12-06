@@ -1,5 +1,5 @@
 <template>
-  <div ref="containerRef" class="relative w-full overflow-hidden select-none" :style="containerStyle">
+  <div ref="containerRef" class="relative w-full overflow-hidden select-none" :style="containerStyle" style="background: transparent;">
     <!-- 背景 -->
     <div
       class="absolute inset-0 bg-center bg-no-repeat"
@@ -345,7 +345,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue';
 import { hasMotionAndExpression, parseMessageBlocks, parseStatusBlock } from '../lib/messageParser';
-import type { DialogBoxStyle, DialogueItem } from '../types/galgame';
+import type { ChoiceOption, DialogBoxStyle, DialogueItem } from '../types/galgame';
 import { defaultDialogStyle } from '../types/galgame';
 import CharacterSprite from './CharacterSprite.vue';
 import CharacterStatusPanel from './CharacterStatusPanel.vue';
@@ -441,31 +441,41 @@ watch(
 );
 
 // 容器样式 - 横屏显示，等比例缩放（适配iframe）
+// 遵循前端界面规则：使用 width 和 aspect-ratio，禁止使用 vh 等受宿主高度影响的单位
 const containerStyle = computed(() => {
   const isPortrait = window.innerHeight > window.innerWidth;
   const isFullscreen = !!document.fullscreenElement;
   const targetAspectRatio = 16 / 9;
 
   if (isPortrait && isFullscreen) {
-    // 全屏且竖屏时，旋转90度
+    // 全屏且竖屏时，旋转90度显示横屏
+    // 在全屏模式下，以屏幕高度作为容器宽度，保持16:9比例
+    // 使用 width 和 aspect-ratio 来定义尺寸（符合iframe适配要求）
+    const screenHeight = window.innerHeight; // 竖屏时的高度，旋转后作为宽度
+    
     return {
-      width: '100vh',
-      height: '100vw',
-      transform: 'rotate(90deg) translateY(-100%)',
-      transformOrigin: 'top left',
+      width: `${screenHeight}px`,
+      aspectRatio: '16 / 9',
+      transform: 'rotate(90deg)',
+      transformOrigin: 'center center',
       position: 'absolute',
-      top: '100%',
-      left: 0,
+      left: '50%',
+      top: '50%',
+      marginLeft: `-${screenHeight / 2}px`,
+      marginTop: `-${(screenHeight / targetAspectRatio) / 2}px`,
+      background: 'transparent',
     };
   } else if (isPortrait) {
     // 竖屏时等比例缩放，保持横屏比例
     // 使用 width 和 aspect-ratio 来让高度根据宽度动态调整（符合前端界面规则）
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
-
-    // 计算缩放比例，确保横屏内容能完整显示
-    const requiredHeight = viewportWidth / targetAspectRatio;
-    const scale = Math.min(viewportHeight / requiredHeight, 1);
+    // 计算缩放比例，确保横屏内容能完整显示在竖屏容器中
+    const containerWidth = containerRef.value?.parentElement?.clientWidth || window.innerWidth;
+    const containerHeight = containerRef.value?.parentElement?.clientHeight || window.innerHeight;
+    
+    // 计算16:9比例所需的高度
+    const requiredHeight = containerWidth / targetAspectRatio;
+    // 如果所需高度超过容器高度，则缩放以适应容器
+    const scale = containerHeight >= requiredHeight ? 1 : containerHeight / requiredHeight;
 
     return {
       width: '100%',
@@ -473,7 +483,7 @@ const containerStyle = computed(() => {
       transform: `scale(${scale})`,
       transformOrigin: 'center center',
       margin: '0 auto',
-      maxWidth: '100%',
+      background: 'transparent',
     };
   }
 
@@ -481,8 +491,8 @@ const containerStyle = computed(() => {
   return {
     width: '100%',
     aspectRatio: '16 / 9',
-    maxWidth: '100%',
     margin: '0 auto',
+    background: 'transparent',
   };
 });
 
@@ -598,6 +608,31 @@ async function loadDialoguesFromTavern() {
         continue;
       }
 
+      // 收集新格式的选项块（[[choice||选项1||角色名||台词]]）
+      const newFormatChoiceBlocks: Array<{
+        choiceText: string;
+        choiceCharacter: string;
+        choiceResponse: string;
+      }> = [];
+      const oldFormatChoiceBlocks: Array<{ choices: string[] }> = [];
+
+      // 先遍历所有块，收集选项块
+      for (const block of blocks) {
+        if (block.type === 'choice') {
+          if (block.choiceText && block.choiceCharacter && block.choiceResponse) {
+            // 新格式
+            newFormatChoiceBlocks.push({
+              choiceText: block.choiceText,
+              choiceCharacter: block.choiceCharacter,
+              choiceResponse: block.choiceResponse,
+            });
+          } else if (block.choices && block.choices.length > 0) {
+            // 旧格式
+            oldFormatChoiceBlocks.push({ choices: block.choices });
+          }
+        }
+      }
+
       // 处理每个解析到的块
       for (const block of blocks) {
         if (block.type === 'character') {
@@ -678,20 +713,46 @@ async function loadDialoguesFromTavern() {
 
           newDialogues.push(dialogue);
         } else if (block.type === 'choice') {
-          newDialogues.push({
-            character: '',
-            text: '',
-            type: 'choice',
-            message_id: msg.message_id,
-            role: 'system',
-            options:
-              block.choices?.map((choice, index) => ({
-                id: `choice_${index}`,
-                text: choice,
-              })) || [],
-            statusBlock,
-          });
+          // 跳过，稍后统一处理
         }
+      }
+
+      // 处理选项块：优先处理新格式，如果没有新格式则处理旧格式
+      if (newFormatChoiceBlocks.length > 0) {
+        // 新格式：收集所有选项到一个 choice 对话中
+        newDialogues.push({
+          character: '',
+          text: '',
+          type: 'choice',
+          message_id: msg.message_id,
+          role: 'system',
+          options: newFormatChoiceBlocks.map((choiceBlock, index) => ({
+            id: `choice_${index}`,
+            text: choiceBlock.choiceText,
+            character: choiceBlock.choiceCharacter,
+            response: choiceBlock.choiceResponse,
+          })),
+          statusBlock,
+        });
+      } else if (oldFormatChoiceBlocks.length > 0) {
+        // 旧格式：[[choice||选项1||选项2||选项3]]（演出后的真选项框）
+        // 合并所有旧格式选项块
+        const allChoices: string[] = [];
+        for (const choiceBlock of oldFormatChoiceBlocks) {
+          allChoices.push(...choiceBlock.choices);
+        }
+        newDialogues.push({
+          character: '',
+          text: '',
+          type: 'choice',
+          message_id: msg.message_id,
+          role: 'system',
+          options: allChoices.map((choice, index) => ({
+            id: `choice_${index}`,
+            text: choice,
+          })),
+          statusBlock,
+        });
       }
     }
 
@@ -909,9 +970,14 @@ const handleFullscreenChange = () => {
 
 // 监听窗口大小变化，更新容器样式
 const handleResize = () => {
-  // 触发响应式更新
+  // 触发响应式更新（containerStyle 是 computed，会自动更新）
+  // 使用 nextTick 确保 DOM 更新完成
   nextTick(() => {
-    // 强制更新
+    // 强制触发 computed 重新计算
+    if (containerRef.value) {
+      // 通过访问 containerStyle 来触发重新计算
+      const _ = containerStyle.value;
+    }
   });
 };
 
@@ -1062,6 +1128,74 @@ async function handleSaveToStory(text: string) {
   }
 }
 
+// 裁剪选项文本：只保留被选择的选项，删除未选择的选项块
+async function trimChoiceText(messageId: number, selectedText: string): Promise<void> {
+  try {
+    const messages = getChatMessages(messageId);
+    if (messages.length === 0) return;
+
+    const originalMessage = messages[0];
+    const messageText = originalMessage.message || '';
+
+    // 查找所有选项块
+    const choiceBlockRegex = /\[\[choice\|\|([^\]]+)\]\]/g;
+    let match;
+    let newMessageText = messageText;
+    const allChoiceBlocks: Array<{ block: string; parts: string[] }> = [];
+
+    // 收集所有选项块
+    while ((match = choiceBlockRegex.exec(messageText)) !== null) {
+      const choiceBlock = match[0];
+      const parts = match[1].split('||').map(c => c.trim()).filter(c => c);
+      allChoiceBlocks.push({ block: choiceBlock, parts });
+    }
+
+    // 处理新格式：[[choice||选项1||角色名||台词]]
+    const newFormatBlocks = allChoiceBlocks.filter(cb => cb.parts.length >= 3);
+    if (newFormatBlocks.length > 0) {
+      // 删除所有未选择的选项块，只保留被选择的选项块
+      for (const choiceBlock of newFormatBlocks) {
+        const choiceText = choiceBlock.parts[0];
+        if (choiceText !== selectedText) {
+          // 删除未选择的选项块
+          newMessageText = newMessageText.replace(choiceBlock.block, '');
+          console.info('已删除未选择的选项:', choiceText);
+        }
+      }
+      // 清理多余的空行
+      newMessageText = newMessageText.replace(/\n\s*\n/g, '\n').trim();
+    } else {
+      // 处理旧格式：[[choice||选项1||选项2||选项3]]
+      const oldFormatBlocks = allChoiceBlocks.filter(cb => cb.parts.length < 3 && cb.parts.length > 0);
+      for (const choiceBlock of oldFormatBlocks) {
+        const selectedIndex = choiceBlock.parts.findIndex(c => c === selectedText);
+        if (selectedIndex !== -1) {
+          // 只保留被选择的选项
+          const trimmedChoiceBlock = `[[choice||${selectedText}]]`;
+          newMessageText = newMessageText.replace(choiceBlock.block, trimmedChoiceBlock);
+          console.info('已裁剪选项文本（旧格式），只保留被选择的选项:', selectedText);
+        }
+      }
+    }
+
+    // 如果消息文本有变化，更新消息（不刷新界面）
+    if (newMessageText !== messageText) {
+      await setChatMessages(
+        [
+          {
+            message_id: messageId,
+            message: newMessageText,
+          },
+        ],
+        { refresh: 'none' }, // 不刷新界面
+      );
+      console.info('已更新消息文本（不刷新界面）');
+    }
+  } catch (error) {
+    console.error('裁剪选项文本失败:', error);
+  }
+}
+
 async function handleChoiceSelect(id: string, customText?: string) {
   console.log('Selected:', id, customText);
 
@@ -1077,14 +1211,20 @@ async function handleChoiceSelect(id: string, customText?: string) {
     // 获取最后一条消息的ID
     const lastMessageId = getLastMessageId();
 
-    // 确定要发送的文本
+    // 判断是否所有对话演出加载完成
+    const isAllDialoguesLoaded = currentDialogIndex.value >= dialogues.value.length - 1;
+
+    // 确定要发送的文本和选项信息
     let messageText = '';
+    let selectedOption: ChoiceOption | undefined;
+    
     if (id === 'custom' && customText) {
+      // 自定义输入选项
       messageText = customText.trim();
     } else {
-      // 查找对应的选项文本
-      const option = currentDialogue.value?.options?.find(opt => opt.id === id);
-      messageText = option?.text || '';
+      // 查找对应的选项
+      selectedOption = currentDialogue.value?.options?.find(opt => opt.id === id);
+      messageText = selectedOption?.text || '';
     }
 
     if (!messageText) {
@@ -1093,54 +1233,137 @@ async function handleChoiceSelect(id: string, customText?: string) {
       return;
     }
 
-    // 1. 先裁剪之后的剧情文本（删除当前消息之后的所有消息）
-    if (currentMessageId < lastMessageId) {
-      const messagesToDelete: number[] = [];
-      for (let i = currentMessageId + 1; i <= lastMessageId; i++) {
-        messagesToDelete.push(i);
-      }
-      if (messagesToDelete.length > 0) {
-        await deleteChatMessages(messagesToDelete, { refresh: 'all' });
-        console.info(`已删除 ${messagesToDelete.length} 条后续消息`);
-      }
+    // 1. 自动识别并裁剪选项文本（只保留被选择的选项，删除其他未选择的选项）
+    await trimChoiceText(currentMessageId, messageText);
+
+    // 2. 如果选择了选项且有角色回复，显示角色回复
+    if (selectedOption && selectedOption.character && selectedOption.response) {
+      // 在当前位置后插入角色回复对话
+      const responseDialogue: DialogueItem = {
+        character: selectedOption.character,
+        text: selectedOption.response,
+        type: undefined,
+        message_id: currentMessageId, // 使用相同的消息ID
+        role: 'assistant',
+      };
+
+      // 插入到对话列表
+      const newDialogues = [...dialogues.value];
+      newDialogues.splice(currentDialogIndex.value + 1, 0, responseDialogue);
+      dialogues.value = newDialogues;
+
+      // 移动到角色回复对话
+      currentDialogIndex.value = currentDialogIndex.value + 1;
     }
 
-    // 2. 发送用户输入的消息
-    await createChatMessages(
-      [
-        {
-          role: 'user',
-          message: messageText,
-        },
-      ],
-      { refresh: 'all' },
-    );
-    console.info('已发送用户消息:', messageText);
-
-    // 4. 准备流式界面：立即开始监听流式token
-    const expectedMessageId = getLastMessageId() + 1;
-    isStreaming.value = true;
-    streamingText.value = '';
-    streamingMessageId.value = expectedMessageId;
-
-    // 5. 触发 AI 生成回复
-    await triggerSlash('/trigger');
-    console.info('已触发 AI 生成');
-
-    // 6. 重新加载对话数据
-    await loadDialoguesFromTavern();
-
-    // 6. 跳转到最新对话（如果有新消息）
-    nextTick(() => {
-      if (dialogues.value.length > 0) {
-        const newMessage = dialogues.value.find(d => d.message_id === expectedMessageId);
-        if (newMessage) {
-          currentDialogIndex.value = dialogues.value.indexOf(newMessage);
-        } else {
-          currentDialogIndex.value = dialogues.value.length - 1;
+    // 3. 区分演出中和演出后的行为
+    if (isAllDialoguesLoaded) {
+      // 演出后：真选项框，删除后续对话并触发 AI 回复
+      if (currentMessageId < lastMessageId) {
+        const messagesToDelete: number[] = [];
+        for (let i = currentMessageId + 1; i <= lastMessageId; i++) {
+          messagesToDelete.push(i);
+        }
+        if (messagesToDelete.length > 0) {
+          await deleteChatMessages(messagesToDelete, { refresh: 'all' });
+          console.info(`已删除 ${messagesToDelete.length} 条后续消息`);
         }
       }
-    });
+
+      // 发送用户输入的消息
+      await createChatMessages(
+        [
+          {
+            role: 'user',
+            message: messageText,
+          },
+        ],
+        { refresh: 'all' },
+      );
+      console.info('已发送用户消息:', messageText);
+
+      // 准备流式界面：立即开始监听流式token
+      const expectedMessageId = getLastMessageId() + 1;
+      isStreaming.value = true;
+      streamingText.value = '';
+      streamingMessageId.value = expectedMessageId;
+
+      // 触发 AI 生成回复
+      await triggerSlash('/trigger');
+      console.info('已触发 AI 生成');
+
+      // 重新加载对话数据
+      await loadDialoguesFromTavern();
+
+      // 跳转到最新对话（如果有新消息）
+      nextTick(() => {
+        if (dialogues.value.length > 0) {
+          const newMessage = dialogues.value.find(d => d.message_id === expectedMessageId);
+          if (newMessage) {
+            currentDialogIndex.value = dialogues.value.indexOf(newMessage);
+          } else {
+            currentDialogIndex.value = dialogues.value.length - 1;
+          }
+        }
+      });
+    } else {
+      // 演出中：除了输入选项框外，不删除后续对话，不触发 AI 回复
+      // 如果是自定义输入选项，则删除后续对话并触发 AI 回复
+      if (id === 'custom' && customText) {
+        // 自定义输入选项：删除后续对话并触发 AI 回复
+        if (currentMessageId < lastMessageId) {
+          const messagesToDelete: number[] = [];
+          for (let i = currentMessageId + 1; i <= lastMessageId; i++) {
+            messagesToDelete.push(i);
+          }
+          if (messagesToDelete.length > 0) {
+            await deleteChatMessages(messagesToDelete, { refresh: 'all' });
+            console.info(`已删除 ${messagesToDelete.length} 条后续消息`);
+          }
+        }
+
+        // 发送用户输入的消息
+        await createChatMessages(
+          [
+            {
+              role: 'user',
+              message: messageText,
+            },
+          ],
+          { refresh: 'all' },
+        );
+        console.info('已发送用户消息（自定义输入）:', messageText);
+
+        // 准备流式界面
+        const expectedMessageId = getLastMessageId() + 1;
+        isStreaming.value = true;
+        streamingText.value = '';
+        streamingMessageId.value = expectedMessageId;
+
+        // 触发 AI 生成回复
+        await triggerSlash('/trigger');
+        console.info('已触发 AI 生成（自定义输入）');
+
+        // 重新加载对话数据
+        await loadDialoguesFromTavern();
+
+        // 跳转到最新对话
+        nextTick(() => {
+          if (dialogues.value.length > 0) {
+            const newMessage = dialogues.value.find(d => d.message_id === expectedMessageId);
+            if (newMessage) {
+              currentDialogIndex.value = dialogues.value.indexOf(newMessage);
+            } else {
+              currentDialogIndex.value = dialogues.value.length - 1;
+            }
+          }
+        });
+      } else {
+        // 普通选项：只显示角色回复，不删除后续对话，不触发 AI 回复
+        // 继续下一条对话
+        nextDialogue();
+      }
+    }
   } catch (error) {
     console.error('处理选择时出错:', error);
     isStreaming.value = false;
@@ -1263,6 +1486,27 @@ async function handleSendInput() {
   inputText.value = '';
   showInputBox.value = false;
 
+  // 判断是否所有对话演出加载完成
+  const isAllDialoguesLoaded = currentDialogIndex.value >= dialogues.value.length - 1;
+  const currentMessageId = currentDialogue.value?.message_id;
+  const lastMessageId = getLastMessageId();
+
+  // 如果演出中（还有后续对话），先裁剪之后的剧情文本（删除当前消息之后的所有消息）
+  if (!isAllDialoguesLoaded && currentMessageId !== undefined && currentMessageId < lastMessageId) {
+    try {
+      const messagesToDelete: number[] = [];
+      for (let i = currentMessageId + 1; i <= lastMessageId; i++) {
+        messagesToDelete.push(i);
+      }
+      if (messagesToDelete.length > 0) {
+        await deleteChatMessages(messagesToDelete, { refresh: 'all' });
+        console.info(`已删除 ${messagesToDelete.length} 条后续消息`);
+      }
+    } catch (error) {
+      console.error('删除后续消息失败:', error);
+    }
+  }
+
   // 在当前位置后插入用户对话
   const newDialogue: DialogueItem = {
     character: '你',
@@ -1280,7 +1524,7 @@ async function handleSendInput() {
   // 移动到新插入的对话
   currentDialogIndex.value = currentDialogIndex.value + 1;
 
-  // 发送到酒馆（不刷新界面）
+  // 发送到酒馆并触发 AI 回复
   try {
     // 在发送前应用所有编辑和删除操作
     await applyUserMessageEdits();
@@ -1292,13 +1536,39 @@ async function handleSendInput() {
           message: text,
         },
       ],
-      { refresh: 'none' }, // 不刷新界面
+      { refresh: 'all' }, // 刷新界面以触发 AI 回复
     );
-    console.info('已发送用户消息（不刷新界面）:', text);
+    console.info('已发送用户消息:', text);
 
-    // 不重新加载对话，保持界面状态
+    // 准备流式界面：立即开始监听流式token
+    const expectedMessageId = getLastMessageId() + 1;
+    isStreaming.value = true;
+    streamingText.value = '';
+    streamingMessageId.value = expectedMessageId;
+
+    // 触发 AI 生成回复
+    await triggerSlash('/trigger');
+    console.info('已触发 AI 生成');
+
+    // 重新加载对话数据
+    await loadDialoguesFromTavern();
+
+    // 跳转到最新对话（如果有新消息）
+    nextTick(() => {
+      if (dialogues.value.length > 0) {
+        const newMessage = dialogues.value.find(d => d.message_id === expectedMessageId);
+        if (newMessage) {
+          currentDialogIndex.value = dialogues.value.indexOf(newMessage);
+        } else {
+          currentDialogIndex.value = dialogues.value.length - 1;
+        }
+      }
+    });
   } catch (error) {
     console.error('发送消息失败:', error);
+    isStreaming.value = false;
+    streamingText.value = '';
+    streamingMessageId.value = null;
   }
 }
 

@@ -37,6 +37,8 @@ export interface DialogueItem {
 export interface ChoiceOption {
   id: string;
   text: string;
+  character?: string; // 角色名（新格式）
+  response?: string; // 台词（新格式）
   onClick?: () => void;
 }
 

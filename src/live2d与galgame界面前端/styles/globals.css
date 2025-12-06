@@ -2,27 +2,25 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* 确保容器高度正确 - 解决界面展示不完全问题 */
+/* iframe 适配：使用 width 和 aspect-ratio，禁止使用 vh 等受宿主高度影响的单位 */
 html,
-body,
-#app {
+body {
   width: 100%;
-  height: 100%;
-  min-height: 100vh;
-  min-height: 100dvh; /* 动态视口高度，更好地支持移动端 */
   margin: 0;
   padding: 0;
   overflow: hidden;
   background: transparent; /* 背景透明，不填充颜色 */
 }
 
-/* 横屏显示 - Galgame 风格 */
+/* 横屏显示 - Galgame 风格 16:9 */
 #app {
-  aspect-ratio: 16 / 9; /* 强制横屏比例 */
-  max-width: 100vw;
-  max-height: 100vh;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* 使用 aspect-ratio 让高度根据宽度动态调整 */
   margin: 0 auto;
   position: relative;
+  background: transparent; /* 背景透明，不填充颜色 */
+  /* 避免使用会强制撑高父容器的元素 */
+  overflow: hidden;
 }
 
 /* 定义自定义主题变量 */

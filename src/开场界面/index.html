@@ -1,0 +1,36 @@
+<head>
+  <style>
+    /* iframe 适配 - 使用 width 和 aspect-ratio 来让高度根据宽度动态调整 */
+    html {
+      width: 100%;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      overflow: visible;
+      background: transparent;
+    }
+
+    body {
+      width: 100%;
+      height: auto;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      background: transparent;
+    }
+
+    #app {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      background: transparent;
+      // 允许滚动，确保小屏幕上能看到所有内容
+      overflow-x: hidden;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+</body>

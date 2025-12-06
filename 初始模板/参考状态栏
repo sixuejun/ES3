@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>状态栏</title>
+</head>
+
+<body>
+    <style>
+        :root {
+            --bg-color: #f4f8f2;
+            --primary-green: #a8d8c3;
+            --secondary-green: #e0f2e9;
+            --text-dark: #5a6e65;
+            --text-light: #788a82;
+            --border-color: #d1e5d9;
+            --bubble-left-bg: rgba(224, 242, 233, 0.9);
+            --bubble-right-bg: rgba(255, 255, 255, 0.85);
+            --shadow-color: rgba(168, 216, 195, 0.2);
+        }
+
+        .status-container-wrapper {
+            width: 100%;
+            max-width: 700px;
+            margin: 16px auto;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        .status-container-wrapper details {
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)),
+                url('https://pic.imgdd.cc/item/691e765bc828c4c6def97018.jpg') center center / cover no-repeat;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .status-container-wrapper summary {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            list-style: none;
+            color: var(--text-dark);
+            font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.85);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-container-wrapper details[open] summary {
+            background-color: rgba(231, 244, 238, 0.87);
+        }
+
+        .status-container-wrapper summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .status-container-wrapper .summary-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+            color: var(--primary-green);
+        }
+
+        .status-container-wrapper .summary-arrow {
+            margin-left: auto;
+            transition: transform 0.3s ease;
+        }
+
+        .status-container-wrapper details[open] .summary-arrow {
+            transform: rotate(90deg);
+        }
+
+        .status-main-content {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .status-info-bar {
+            display: flex;
+            justify-content: space-between;
+            background: rgba(224, 242, 233, 0.8);
+            padding: 10px 15px;
+            border-radius: 10px;
+            color: var(--text-dark);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-values-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .value-card {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .value-card .value-name {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .value-card .value-number {
+            font-size: 1.5em;
+            color: var(--primary-green);
+            font-weight: bold;
+        }
+
+        .status-text-card {
+            background: rgba(255, 255, 255, 0.85);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .text-card-row {
+            margin-bottom: 8px;
+        }
+
+        .text-card-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .text-card-label {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-right: 8px;
+            display: inline-block;
+            background-color: rgba(224, 242, 233, 0.9);
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .text-card-content {
+            color: var(--text-light);
+            white-space: pre-wrap;
+        }
+
+        .theater-title {
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-dark);
+            padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+            margin-bottom: 15px;
+        }
+
+        .theater-bubbles-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 0 5px;
+        }
+
+        .bubble {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            position: relative;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .bubble::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+
+        .bubble.left {
+            background-color: var(--bubble-left-bg);
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+            align-self: flex-start;
+        }
+
+        .bubble.left::before {
+            left: -10px;
+            border-right-color: var(--bubble-left-bg);
+            border-left: 0;
+        }
+
+        .bubble.right {
+            background-color: var(--bubble-right-bg);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            border-bottom-right-radius: 4px;
+            align-self: flex-end;
+        }
+
+        .bubble.right::before {
+            right: -10px;
+            border-left-color: var(--border-color);
+            border-right: 0;
+        }
+
+        .bubble.right::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: -8px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-left-color: var(--bubble-right-bg);
+            border-right: 0;
+        }
+
+        @media (max-width: 600px) {
+            .status-info-bar {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .bubble {
+                max-width: 90%;
+            }
+        }
+    </style>
+
+    <div class="status-container-wrapper">
+        <details open>
+            <summary>
+                <span class="summary-icon">☘️</span> 状态栏 <span class="summary-arrow">▶</span>
+            </summary>
+
+            <div class="status-main-content">
+                <div class="status-info-bar">
+                    <div class="info-item"><span>🕒</span><span>{{get_message_variable::stat_data.时间}}</span></div>
+                    <div class="info-item"><span>📍</span><span>$1</span></div>
+                </div>
+
+                <div class="status-values-grid">
+                    <div class="value-card">
+                        <div class="value-name">亲情</div>
+                        <div class="value-number">{{get_message_variable::stat_data.程北极.亲情}}</div>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-name">爱欲</div>
+                        <div class="value-number">{{get_message_variable::stat_data.程北极.爱欲}}</div>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-name">厌恶</div>
+                        <div class="value-number">{{get_message_variable::stat_data.程北极.厌恶}}</div>
+                    </div>
+                    <div class="value-card">
+                        <div class="value-name">自我</div>
+                        <div class="value-number">{{get_message_variable::stat_data.程北极.自我}}</div>
+                    </div>
+                </div>
+
+                <div class="status-text-card">
+                    <div class="text-card-row"><span class="text-card-label">关系</span> <span
+                            class="text-card-content">$2</span></div>
+                    <div class="text-card-row"><span class="text-card-label">心情</span> <span
+                            class="text-card-content">$3</span></div>
+                    <div class="text-card-row"><span class="text-card-label">吐槽</span> <span
+                            class="text-card-content">$4</span></div>
+                    <div class="text-card-row"><span class="text-card-label">待办</span> <span
+                            class="text-card-content">$5</span></div>
+                </div>
+
+                <div>
+                    <div class="theater-title">🌿 · 小剧场 · 🌿</div>
+                    <div class="theater-bubbles-container" id="theater-container-{{randomId}}"></div>
+                    <div id="theater-raw-data-{{randomId}}" data-text="$6" style="display:none;"></div>
+                </div>
+            </div>
+        </details>
+    </div>
+
+<script>
+    (function () {
+        const uniqueId = '{{randomId}}';
+        const rawDataElement = document.getElementById('theater-raw-data-' + uniqueId);
+        const container = document.getElementById('theater-container-' + uniqueId);
+        const title = container?.previousElementSibling; // 🌿 · 小剧场 · 🌿
+
+        if (!rawDataElement || !container || !title) return;
+
+        const rawText = rawDataElement.getAttribute('data-text');
+        if (!rawText) return;
+
+        let rendered = false; // 防止重复渲染
+
+        // 点击标题后再渲染对话
+        title.style.cursor = 'pointer';
+        title.title = '点击展开小剧场';
+        title.addEventListener('click', () => {
+            if (rendered) {
+                container.style.display = container.style.display === 'none' ? 'flex' : 'none';
+                return;
+            }
+
+            // ✅ 改进版正则：匹配 【发言人（可含括号描述）: 内容】 ，支持中英文冒号
+            const matches = [...rawText.matchAll(/【([^：:]+)[：:](.*?)】/g)];
+
+            matches.forEach(match => {
+                const fullSpeaker = match[1]?.trim(); // 例：程北极（内心OS）
+                const content = match[2]?.trim();
+                if (!fullSpeaker || !content) return;
+
+                // 判断是否为“程北极”主视角
+                const isCheng = fullSpeaker.startsWith('程北极');
+                const bubbleSide = isCheng ? 'left' : 'right';
+
+                // 创建外层容器（含发言人名）
+                const bubbleWrapper = document.createElement('div');
+                bubbleWrapper.style.display = 'flex';
+                bubbleWrapper.style.flexDirection = 'column';
+                bubbleWrapper.style.alignItems = isCheng ? 'flex-start' : 'flex-end';
+
+                // 发言人标签
+                const speakerLabel = document.createElement('div');
+                speakerLabel.textContent = fullSpeaker;
+                speakerLabel.style.fontSize = '0.85em';
+                speakerLabel.style.color = 'var(--text-light)';
+                speakerLabel.style.margin = isCheng ? '0 0 4px 8px' : '0 8px 4px 0';
+
+                // 对话气泡
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble', bubbleSide);
+                bubble.textContent = content;
+
+                // 组合
+                bubbleWrapper.appendChild(speakerLabel);
+                bubbleWrapper.appendChild(bubble);
+                container.appendChild(bubbleWrapper);
+            });
+
+            rendered = true;
+            container.style.display = 'flex';
+            title.textContent = '🌿 · 小剧场 · 🌿';
+        });
+    })();
+</script>
+
+
+</body>
+
+</html>
