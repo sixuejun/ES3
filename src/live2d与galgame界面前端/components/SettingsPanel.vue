@@ -17,7 +17,7 @@
       <div class="p-4 overflow-y-auto max-h-[calc(85vh-120px)]">
         <div class="space-y-6">
           <!-- 立绘设置 -->
-        <div class="space-y-4">
+          <div class="space-y-4">
             <h3 class="text-sm font-medium text-foreground">立绘设置</h3>
             <div class="space-y-3">
               <div class="space-y-2">
@@ -200,125 +200,125 @@
 
                 <!-- 形状预设标签页 -->
                 <div v-if="activeTab === 'shapes'" class="space-y-4">
-              <!-- 文本框形状 -->
-              <div class="space-y-2">
+                  <!-- 文本框形状 -->
+                  <div class="space-y-2">
                     <label class="text-xs text-muted-foreground">文本框形状</label>
-                <div class="grid grid-cols-5 gap-2">
-                  <button
-                    v-for="preset in boxShapePresets"
-                    :key="preset.id"
-                    @click="updateShape('boxShape', preset.id)"
-                    :class="[
+                    <div class="grid grid-cols-5 gap-2">
+                      <button
+                        v-for="preset in boxShapePresets"
+                        :key="preset.id"
+                        @click="updateShape('boxShape', preset.id)"
+                        :class="[
                           'p-2 text-[10px] rounded-lg border transition-all',
-                      dialogStyle.boxShape === preset.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border hover:border-primary/50',
-                    ]"
-                  >
-                    {{ preset.name }}
-                  </button>
-                </div>
-              </div>
+                          dialogStyle.boxShape === preset.id
+                            ? 'border-primary bg-primary/10 text-primary'
+                            : 'border-border hover:border-primary/50',
+                        ]"
+                      >
+                        {{ preset.name }}
+                      </button>
+                    </div>
+                  </div>
 
                   <!-- 背景图案 -->
-              <div class="space-y-2">
+                  <div class="space-y-2">
                     <label class="text-xs text-muted-foreground">背景图案</label>
                     <div class="grid grid-cols-6 gap-2">
-                  <button
+                      <button
                         v-for="preset in backgroundPatternPresets"
-                    :key="preset.id"
+                        :key="preset.id"
                         @click="updateShape('backgroundPattern', preset.id)"
-                    :class="[
+                        :class="[
                           'p-2 text-[10px] rounded-lg border transition-all',
                           dialogStyle.backgroundPattern === preset.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border hover:border-primary/50',
-                    ]"
-                  >
-                    {{ preset.name }}
-                  </button>
-                </div>
-              </div>
+                            ? 'border-primary bg-primary/10 text-primary'
+                            : 'border-border hover:border-primary/50',
+                        ]"
+                      >
+                        {{ preset.name }}
+                      </button>
+                    </div>
+                  </div>
 
                   <!-- 边框粗细 -->
-              <div class="space-y-2">
+                  <div class="space-y-2">
                     <label class="text-xs text-muted-foreground">边框粗细</label>
                     <div class="grid grid-cols-5 gap-2">
-                  <button
+                      <button
                         v-for="preset in borderWidthPresets"
-                    :key="preset.id"
+                        :key="preset.id"
                         @click="updateShape('borderWidth', preset.id)"
-                    :class="[
+                        :class="[
                           'p-2 text-[10px] rounded-lg border transition-all',
                           dialogStyle.borderWidth === preset.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border hover:border-primary/50',
-                    ]"
-                  >
-                    {{ preset.name }}
-                  </button>
-                </div>
-              </div>
+                            ? 'border-primary bg-primary/10 text-primary'
+                            : 'border-border hover:border-primary/50',
+                        ]"
+                      >
+                        {{ preset.name }}
+                      </button>
+                    </div>
+                  </div>
 
-              <!-- 角色名形状 -->
-              <div class="space-y-2">
+                  <!-- 角色名形状 -->
+                  <div class="space-y-2">
                     <label class="text-xs text-muted-foreground">角色名形状</label>
-                <div class="grid grid-cols-5 gap-2">
-                  <button
-                    v-for="preset in nameShapePresets"
-                    :key="preset.id"
-                    @click="updateShape('nameShape', preset.id)"
-                    :class="[
+                    <div class="grid grid-cols-5 gap-2">
+                      <button
+                        v-for="preset in nameShapePresets"
+                        :key="preset.id"
+                        @click="updateShape('nameShape', preset.id)"
+                        :class="[
                           'p-2 text-[10px] rounded-lg border transition-all',
-                      dialogStyle.nameShape === preset.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border hover:border-primary/50',
-                    ]"
-                  >
-                    {{ preset.name }}
-                  </button>
-                </div>
-              </div>
+                          dialogStyle.nameShape === preset.id
+                            ? 'border-primary bg-primary/10 text-primary'
+                            : 'border-border hover:border-primary/50',
+                        ]"
+                      >
+                        {{ preset.name }}
+                      </button>
+                    </div>
+                  </div>
 
                   <!-- 箭头按钮形状 -->
-              <div class="space-y-2">
+                  <div class="space-y-2">
                     <label class="text-xs text-muted-foreground">箭头按钮形状</label>
                     <div class="grid grid-cols-6 gap-2">
-                  <button
-                    v-for="preset in arrowShapePresets"
-                    :key="preset.id"
-                    @click="updateShape('arrowShape', preset.id)"
-                    :class="[
+                      <button
+                        v-for="preset in arrowShapePresets"
+                        :key="preset.id"
+                        @click="updateShape('arrowShape', preset.id)"
+                        :class="[
                           'p-2 text-[10px] rounded-lg border transition-all',
-                      dialogStyle.arrowShape === preset.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border hover:border-primary/50',
-                    ]"
-                  >
-                    {{ preset.name }}
-                  </button>
-                </div>
-              </div>
+                          dialogStyle.arrowShape === preset.id
+                            ? 'border-primary bg-primary/10 text-primary'
+                            : 'border-border hover:border-primary/50',
+                        ]"
+                      >
+                        {{ preset.name }}
+                      </button>
+                    </div>
+                  </div>
 
                   <!-- 呼吸指示器形状 -->
-              <div class="space-y-2">
+                  <div class="space-y-2">
                     <label class="text-xs text-muted-foreground">呼吸指示器</label>
-                <div class="grid grid-cols-5 gap-2">
-                  <button
-                    v-for="preset in indicatorShapePresets"
-                    :key="preset.id"
-                    @click="updateShape('indicatorShape', preset.id)"
-                    :class="[
+                    <div class="grid grid-cols-5 gap-2">
+                      <button
+                        v-for="preset in indicatorShapePresets"
+                        :key="preset.id"
+                        @click="updateShape('indicatorShape', preset.id)"
+                        :class="[
                           'p-2 text-[10px] rounded-lg border transition-all',
-                      dialogStyle.indicatorShape === preset.id
-                        ? 'border-primary bg-primary/10 text-primary'
-                        : 'border-border hover:border-primary/50',
-                    ]"
-                  >
-                    {{ preset.name }}
-                  </button>
-                </div>
-              </div>
+                          dialogStyle.indicatorShape === preset.id
+                            ? 'border-primary bg-primary/10 text-primary'
+                            : 'border-border hover:border-primary/50',
+                        ]"
+                      >
+                        {{ preset.name }}
+                      </button>
+                    </div>
+                  </div>
 
                   <!-- 字体大小 -->
                   <div class="space-y-2">
@@ -338,8 +338,8 @@
                       step="1"
                       class="w-full"
                     />
-            </div>
-          </div>
+                  </div>
+                </div>
 
                 <!-- 颜色调整标签页 -->
                 <div v-if="activeTab === 'colors'" class="space-y-4">

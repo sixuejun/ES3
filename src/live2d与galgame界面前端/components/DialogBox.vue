@@ -38,7 +38,7 @@
           </button>
         </div>
 
-          <!-- 角色名区域 -->
+        <!-- 角色名区域 -->
         <div
           class="h-6 mb-2 flex items-start"
           :style="{
@@ -92,12 +92,12 @@
               </svg>
             </button>
           </div>
-          </div>
+        </div>
 
         <!-- 文字内容 -->
         <div
           :class="['leading-relaxed', isNarration ? 'italic text-center' : '']"
-              :style="{
+          :style="{
             color: props.isThrough
               ? '#9ca3af'
               : isNarration
@@ -106,15 +106,15 @@
             fontSize: `${dialogStyle.fontSize}px`,
             paddingLeft: isInnerArrow ? '48px' : 0,
             paddingRight: isInnerArrow ? '48px' : 0,
-              }"
-            >
-              {{ displayedText }}
+          }"
+        >
+          {{ displayedText }}
           <span v-if="isTyping" class="animate-pulse ml-0.5">|</span>
-          </div>
+        </div>
 
-          <!-- 呼吸指示器 -->
+        <!-- 呼吸指示器 -->
         <div class="absolute bottom-3 right-4">
-            <component :is="indicatorComponent" />
+          <component :is="indicatorComponent" />
         </div>
 
         <!-- 内置右箭头 -->
@@ -485,7 +485,7 @@ function startTyping() {
     } else {
       isTyping.value = false;
       clearTypingTimer();
-      }
+    }
   }, TYPING_SPEED);
 }
 
