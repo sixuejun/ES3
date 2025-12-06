@@ -1,0 +1,182 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+/* 确保容器高度正确 - 解决界面展示不完全问题 */
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  min-height: 100dvh; /* 动态视口高度，更好地支持移动端 */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: transparent; /* 背景透明，不填充颜色 */
+}
+
+/* 横屏显示 - Galgame 风格 */
+#app {
+  aspect-ratio: 16 / 9; /* 强制横屏比例 */
+  max-width: 100vw;
+  max-height: 100vh;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 定义自定义主题变量 */
+@theme inline {
+  --color-background: oklch(0.97 0.02 145);
+  --color-foreground: oklch(0.25 0.05 145);
+  --color-card: oklch(0.99 0.01 145);
+  --color-card-foreground: oklch(0.25 0.05 145);
+  --color-popover: oklch(0.99 0.01 145);
+  --color-popover-foreground: oklch(0.25 0.05 145);
+  --color-primary: oklch(0.55 0.15 145);
+  --color-primary-foreground: oklch(0.99 0.01 145);
+  --color-secondary: oklch(0.92 0.03 145);
+  --color-secondary-foreground: oklch(0.35 0.08 145);
+  --color-muted: oklch(0.94 0.02 145);
+  --color-muted-foreground: oklch(0.5 0.05 145);
+  --color-accent: oklch(0.75 0.12 90);
+  --color-accent-foreground: oklch(0.25 0.05 145);
+  --color-destructive: oklch(0.577 0.245 27.325);
+  --color-destructive-foreground: oklch(0.577 0.245 27.325);
+  --color-border: oklch(0.85 0.04 145);
+  --color-input: oklch(0.9 0.03 145);
+  --color-ring: oklch(0.55 0.15 145);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* 绿色清新主题 - CSS 变量备份（供直接引用） */
+:root {
+  --background: oklch(0.97 0.02 145);
+  --foreground: oklch(0.25 0.05 145);
+  --card: oklch(0.99 0.01 145);
+  --card-foreground: oklch(0.25 0.05 145);
+  --popover: oklch(0.99 0.01 145);
+  --popover-foreground: oklch(0.25 0.05 145);
+  --primary: oklch(0.55 0.15 145);
+  --primary-foreground: oklch(0.99 0.01 145);
+  --secondary: oklch(0.92 0.03 145);
+  --secondary-foreground: oklch(0.35 0.08 145);
+  --muted: oklch(0.94 0.02 145);
+  --muted-foreground: oklch(0.5 0.05 145);
+  --accent: oklch(0.75 0.12 90);
+  --accent-foreground: oklch(0.25 0.05 145);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.85 0.04 145);
+  --input: oklch(0.9 0.03 145);
+  --ring: oklch(0.55 0.15 145);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.637 0.237 25.331);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+}
+
+/* 基础样式 */
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* 动画样式 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-from-left-2 {
+  from {
+    transform: translateX(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-from-top-2 {
+  from {
+    transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-from-bottom-2 {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-in {
+  animation-duration: 0.3s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
+}
+
+.fade-in {
+  animation-name: fade-in;
+}
+
+.slide-in-from-left-2 {
+  animation-name: slide-in-from-left-2;
+}
+
+.slide-in-from-top-2 {
+  animation-name: slide-in-from-top-2;
+}
+
+.slide-in-from-bottom-2 {
+  animation-name: slide-in-from-bottom-2;
+}

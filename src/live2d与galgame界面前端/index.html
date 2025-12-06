@@ -1,0 +1,27 @@
+<head>
+  <style>
+    /* 确保 iframe 和容器高度正确 */
+    html,
+    body {
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: transparent; /* 背景透明，不填充颜色 */
+    }
+
+    /* 横屏显示 - Galgame 风格（适配iframe） */
+    /* 使用 width 和 aspect-ratio 来让高度根据宽度动态调整（符合前端界面规则） */
+    #app {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      max-width: 100%;
+      margin: 0 auto;
+      position: relative;
+      background: transparent;
+    }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+</body>
