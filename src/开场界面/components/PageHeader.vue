@@ -8,7 +8,11 @@
       <slot></slot>
       {{ title }}
     </h2>
-    <div class="spacer"></div>
+    <div class="page-header-actions">
+      <slot name="actions">
+        <div class="spacer"></div>
+      </slot>
+    </div>
   </div>
 </template>
 

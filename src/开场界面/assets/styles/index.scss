@@ -738,6 +738,14 @@ body {
   white-space: nowrap;
 }
 
+.page-header-actions {
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
 .spacer {
   width: 80px;
   flex-shrink: 0;

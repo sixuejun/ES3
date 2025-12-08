@@ -7,6 +7,16 @@ const DB_NAME = 'live2d-models-db';
 const DB_VERSION = 1;
 const STORE_NAME = 'model-files';
 
+interface StoredFileRecord {
+  id: string;
+  modelName: string;
+  filename: string;
+  data: ArrayBuffer;
+  type: string;
+  size: number;
+  lastModified: number;
+}
+
 /**
  * 打开数据库
  */
@@ -189,6 +199,57 @@ export async function getAllModelNames(): Promise<string[]> {
     };
     request.onerror = () => reject(request.error);
   });
+}
+
+/**
+ * 计算文件总大小
+ */
+function calculateTotalSize(files: StoredFileRecord[]): number {
+  return files.reduce((total, file) => {
+    if (typeof file.size === 'number') {
+      return total + file.size;
+    }
+    const bufferSize = file.data instanceof ArrayBuffer ? file.data.byteLength : 0;
+    return total + bufferSize;
+  }, 0);
+}
+
+/**
+ * 清空 IndexedDB 中的所有文件
+ */
+export async function clearAllFiles(): Promise<{ clearedCount: number; clearedSize: number }> {
+  const db = await openDB();
+
+  // 先获取全部文件用于统计
+  const allFiles = await new Promise<StoredFileRecord[]>((resolve, reject) => {
+    const transaction = db.transaction([STORE_NAME], 'readonly');
+    const store = transaction.objectStore(STORE_NAME);
+    const request = store.getAll();
+
+    request.onsuccess = () => resolve((request.result || []) as StoredFileRecord[]);
+    request.onerror = () => reject(request.error);
+  });
+
+  const clearedSize = calculateTotalSize(allFiles);
+
+  // 再执行清理
+  await new Promise<void>((resolve, reject) => {
+    const transaction = db.transaction([STORE_NAME], 'readwrite');
+    const store = transaction.objectStore(STORE_NAME);
+    const request = store.clear();
+
+    request.onsuccess = () => resolve();
+    request.onerror = () => reject(request.error);
+  });
+
+  console.info(
+    `[IndexedDB] 已清理所有模型缓存 (${allFiles.length} 个文件，约 ${(clearedSize / 1024 / 1024).toFixed(2)} MB)`,
+  );
+
+  return {
+    clearedCount: allFiles.length,
+    clearedSize,
+  };
 }
 
 /**

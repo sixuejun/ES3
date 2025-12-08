@@ -30,6 +30,8 @@
       :image-url="currentImageUrl"
       :live2d-model-id="currentLive2dModelId"
       :live2d-models="live2dModels"
+      :motion="currentDialogue?.motion"
+      :expression="currentDialogue?.expression"
     />
 
     <!-- CG图片（CG模式） -->
@@ -644,6 +646,56 @@ async function loadDialoguesFromTavern() {
     const messages = getChatMessages('0-{{lastMessageId}}');
     const newDialogues: DialogueItem[] = [];
     let lastScene: string | undefined; // 用于场景继承
+    let lastSceneImageUrl: string | undefined; // 上一次解析到的背景图，用于避免重复场景闪动
+    let lastSpriteState: DialogueItem['sprite'] | undefined; // 上一次角色立绘/Live2D 状态
+    let lastMotion: string | undefined; // 上一次 Live2D 动作
+    let lastExpression: string | undefined; // 上一次 Live2D 表情
+
+    // 继承背景，避免同一场景切换时闪动
+    const inheritSceneAndBackground = (dialogue: DialogueItem) => {
+      if (!dialogue.scene && lastScene) {
+        dialogue.scene = lastScene;
+      }
+      if (
+        !dialogue.sceneImageUrl &&
+        lastSceneImageUrl &&
+        (!dialogue.scene || (lastScene && dialogue.scene === lastScene))
+      ) {
+        dialogue.sceneImageUrl = lastSceneImageUrl;
+      }
+    };
+
+    // 继承角色立绘/Live2D 状态（仅非黑屏时需要显示）
+    const inheritSpriteState = (dialogue: DialogueItem) => {
+      if (dialogue.type === 'blackscreen') return;
+      if (lastSpriteState) {
+        dialogue.sprite = { ...lastSpriteState };
+      }
+      if (!dialogue.motion && lastMotion) {
+        dialogue.motion = lastMotion;
+      }
+      if (!dialogue.expression && lastExpression) {
+        dialogue.expression = lastExpression;
+      }
+    };
+
+    // 更新场景状态（背景沿用同一份引用可减少闪动）
+    const updateSceneState = (dialogue: DialogueItem) => {
+      if (dialogue.type === 'blackscreen') return;
+      if (dialogue.scene) {
+        lastScene = dialogue.scene;
+      }
+      if (dialogue.sceneImageUrl) {
+        lastSceneImageUrl = dialogue.sceneImageUrl;
+      }
+    };
+
+    // 仅在新角色块出现时更新立绘/Live2D 状态
+    const updateSpriteStateFromCharacter = (dialogue: DialogueItem) => {
+      lastSpriteState = dialogue.sprite ? { ...dialogue.sprite } : undefined;
+      lastMotion = dialogue.motion;
+      lastExpression = dialogue.expression;
+    };
 
     // 处理每条消息
     for (const msg of messages) {
@@ -689,16 +741,20 @@ async function loadDialoguesFromTavern() {
       // 处理每个解析到的块
       for (const block of blocks) {
         if (block.type === 'character') {
+          const motionToUse = block.motionFile || block.motion;
+          const expressionToUse = block.expressionFile || block.expression;
+
           // 检查是否有motion和expression
           const hasMotionExpr = hasMotionAndExpression(
             block.character || '',
-            block.motion,
-            block.expression,
+            motionToUse,
+            expressionToUse,
             live2dModels.value,
           );
 
           // 如果是CG模式或没有motion/expression，进入CG模式
           const isCGMode = block.isCG || !hasMotionExpr;
+          const live2dModel = live2dModels.value.find(m => m.name === block.character);
 
           const dialogue: DialogueItem = {
             character: block.character,
@@ -708,8 +764,8 @@ async function loadDialoguesFromTavern() {
             type: isCGMode ? 'cg' : undefined,
             scene: block.scene,
             sceneImageUrl: block.sceneImageUrl, // 从世界书匹配到的背景图片URL
-            motion: block.motion,
-            expression: block.expression,
+            motion: motionToUse,
+            expression: expressionToUse,
             // 不再设置 isThrough，因为只有*星号包裹*的部分应该是灰色，不是整行
             isCG: isCGMode,
             cgImageUrl: isCGMode ? block.cgImageUrl || block.scene : undefined, // 优先使用从世界书匹配到的CG URL
@@ -717,17 +773,16 @@ async function loadDialoguesFromTavern() {
             sprite: isCGMode
               ? { type: 'none' } // CG模式不显示立绘
               : {
-                  type: live2dModels.value.some(m => m.name === block.character) ? 'live2d' : 'image',
+                  type: live2dModel ? 'live2d' : 'image',
+                  live2dModelId: live2dModel?.id,
                   imageUrl: block.spriteImageUrl || msg.extra?.sprite_image || undefined,
                 },
           };
 
-          // 更新场景（用于后续继承）
-          if (block.scene) {
-            lastScene = block.scene;
-          }
-
+          inheritSceneAndBackground(dialogue);
           newDialogues.push(dialogue);
+          updateSceneState(dialogue);
+          updateSpriteStateFromCharacter(dialogue);
         } else if (block.type === 'narration') {
           const dialogue: DialogueItem = {
             character: '',
@@ -740,12 +795,10 @@ async function loadDialoguesFromTavern() {
             statusBlock,
           };
 
-          // 更新场景（用于后续继承）
-          if (block.scene) {
-            lastScene = block.scene;
-          }
-
+          inheritSceneAndBackground(dialogue);
+          inheritSpriteState(dialogue);
           newDialogues.push(dialogue);
+          updateSceneState(dialogue);
         } else if (block.type === 'blacktext') {
           newDialogues.push({
             character: '',
@@ -769,11 +822,8 @@ async function loadDialoguesFromTavern() {
             statusBlock,
           };
 
-          // 更新场景（用于后续继承）
-          if (block.scene) {
-            lastScene = block.scene;
-          }
-
+          inheritSceneAndBackground(dialogue);
+          inheritSpriteState(dialogue);
           // 应用编辑（如果有）
           const edit = userMessageEdits.value.get(msg.message_id);
           if (edit) {
@@ -786,6 +836,7 @@ async function loadDialoguesFromTavern() {
           }
 
           newDialogues.push(dialogue);
+          updateSceneState(dialogue);
         } else if (block.type === 'choice') {
           // 跳过，稍后统一处理
         }
@@ -795,7 +846,7 @@ async function loadDialoguesFromTavern() {
       if (newFormatChoiceBlocks.length > 0) {
         // 格式1：带角色回复的选项（继续剧情演出）
         // 收集所有选项到一个 choice 对话中
-        newDialogues.push({
+        const choiceDialogue: DialogueItem = {
           character: '',
           text: '',
           type: 'choice',
@@ -808,7 +859,12 @@ async function loadDialoguesFromTavern() {
             response: choiceBlock.choiceResponse,
           })),
           statusBlock,
-        });
+        };
+
+        inheritSceneAndBackground(choiceDialogue);
+        inheritSpriteState(choiceDialogue);
+        newDialogues.push(choiceDialogue);
+        updateSceneState(choiceDialogue);
       } else if (oldFormatChoiceBlocks.length > 0) {
         // 格式2：纯选项列表（触发AI生成）
         // 合并所有选项块
@@ -816,7 +872,7 @@ async function loadDialoguesFromTavern() {
         for (const choiceBlock of oldFormatChoiceBlocks) {
           allChoices.push(...choiceBlock.choices);
         }
-        newDialogues.push({
+        const choiceDialogue: DialogueItem = {
           character: '',
           text: '',
           type: 'choice',
@@ -827,7 +883,12 @@ async function loadDialoguesFromTavern() {
             text: choice,
           })),
           statusBlock,
-        });
+        };
+
+        inheritSceneAndBackground(choiceDialogue);
+        inheritSpriteState(choiceDialogue);
+        newDialogues.push(choiceDialogue);
+        updateSceneState(choiceDialogue);
       }
     }
 

@@ -2,6 +2,11 @@
   <div class="model-upload-wizard">
     <PageHeader title="游戏设置" @back="$emit('close')">
       <IconUpload />
+      <template #actions>
+        <button class="bubble-btn bubble-btn-sm" :disabled="clearingCache" @click="handleClearCache">
+          {{ clearingCache ? '清理中...' : '清除缓存' }}
+        </button>
+      </template>
     </PageHeader>
 
     <!-- 步骤指示器 -->
@@ -723,7 +728,7 @@ import { computed, ref } from 'vue';
 import { IconCheck, IconClose, IconUpload } from '../assets/icons';
 import { MODEL_CONFIG_FILES, MODEL_PATHS, WORLDBOOK_NAME } from '../data';
 import type { ImportedModel } from '../types';
-import { storeFile } from '../utils/indexedDB';
+import { clearAllFiles, storeFile } from '../utils/indexedDB';
 import {
   createBackgroundResourceWorldbookEntry,
   createCGResourceWorldbookEntry,
@@ -788,6 +793,7 @@ const creating = ref(false);
 const modelVersion = ref(3);
 const urlInput = ref('');
 const importingUrl = ref(false);
+const clearingCache = ref(false);
 
 interface ClassifiedFile {
   name: string;
@@ -852,6 +858,38 @@ const canProceed = computed(() => {
 
   return modelName.value.trim() !== '' && (hasModel || hasOtherResources) && !hasUnclassifiedImages;
 });
+
+function formatSize(bytes: number): string {
+  if (bytes <= 0) return '0 KB';
+  const mb = bytes / (1024 * 1024);
+  if (mb >= 1) {
+    return `${mb.toFixed(2)} MB`;
+  }
+  return `${(bytes / 1024).toFixed(2)} KB`;
+}
+
+async function handleClearCache() {
+  if (clearingCache.value) return;
+
+  const confirmed = window.confirm('确定要清除已缓存的模型和资源吗？这会删除本地 IndexedDB 缓存，需要重新上传或导入。');
+  if (!confirmed) return;
+
+  clearingCache.value = true;
+  try {
+    const { clearedCount, clearedSize } = await clearAllFiles();
+    if (clearedCount === 0) {
+      toastr.info('当前没有可清理的缓存');
+      return;
+    }
+    toastr.success(`已清理 ${clearedCount} 个缓存文件，释放 ${formatSize(clearedSize)}`);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    console.error('清理 IndexedDB 缓存失败:', error);
+    toastr.error(`清理失败：${errorMessage}`);
+  } finally {
+    clearingCache.value = false;
+  }
+}
 
 function triggerFileInput() {
   fileInputRef.value?.click();
