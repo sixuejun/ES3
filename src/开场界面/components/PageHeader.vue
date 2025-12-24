@@ -5,8 +5,9 @@
       返回
     </button>
     <h2>
-      <slot></slot>
+      <slot name="left-icon"></slot>
       {{ title }}
+      <slot name="right-icon"></slot>
     </h2>
     <div class="page-header-actions">
       <slot name="actions">

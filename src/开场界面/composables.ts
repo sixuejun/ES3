@@ -82,13 +82,65 @@ export function createParticles(container: HTMLElement | null | undefined) {
 // ==================== 开场选择 ====================
 
 /**
+ * 跳转到指定的 swipe
+ */
+async function switchFirstMessage(swipeId: number) {
+  try {
+    if (
+      typeof (window as any).SillyTavern !== 'undefined' &&
+      (window as any).SillyTavern.chat &&
+      (window as any).SillyTavern.chat[0]
+    ) {
+      const firstMessage = (window as any).SillyTavern.chat[0];
+      if (firstMessage.swipe_id !== undefined && firstMessage.swipe_id !== swipeId) {
+        if (firstMessage.swipes && firstMessage.swipes[swipeId]) {
+          firstMessage.swipe_id = swipeId;
+          firstMessage.mes = firstMessage.swipes[swipeId];
+          await (window as any).SillyTavern.saveChat();
+          await (window as any).SillyTavern.reloadCurrentChat();
+          console.info(`已跳转到 swipe ${swipeId}`);
+        } else {
+          console.warn(`swipe ${swipeId} 不存在`);
+          toastr.warning(`swipe ${swipeId} 不存在`);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('跳转 swipe 失败:', error);
+    toastr.error('跳转失败');
+    throw error;
+  }
+}
+
+/**
  * 选择开场并发送消息
  */
 export async function selectOpening(opening: Opening) {
   try {
-    await createChatMessages([{ role: 'system', message: opening.message }], { refresh: 'all' });
-    await triggerSlash('/trigger');
-    toastr.success(`已选择开场：${opening.title}`);
+    // 根据 opening.id 决定行为
+    if (opening.id === '02') {
+      // id02: 弹窗显示施工中消息
+      toastr.warning('🚧还没做完，前方施工中🚧');
+      return;
+    }
+
+    // id01, id03, id04: 跳转到对应的 swipe
+    const swipeIdMap: Record<string, number> = {
+      '01': 2, // id01 -> swipe2
+      '03': 3, // id03 -> swipe3
+      '04': 4, // id04 -> swipe4
+    };
+
+    const swipeId = swipeIdMap[opening.id];
+    if (swipeId) {
+      await switchFirstMessage(swipeId);
+      toastr.success(`已选择开场：${opening.title}`);
+    } else {
+      // 如果没有匹配的 swipe，使用原来的逻辑
+      await createChatMessages([{ role: 'system', message: opening.message }], { refresh: 'all' });
+      await triggerSlash('/trigger');
+      toastr.success(`已选择开场：${opening.title}`);
+    }
   } catch (error) {
     console.error('选择开场失败:', error);
     toastr.error('选择开场失败');
@@ -1406,5 +1458,60 @@ async function saveModelToVariables(model: ImportedModel, baseDir?: string) {
   } catch (error) {
     console.error('[开场界面] 保存模型配置到变量失败:', error);
     toastr.warning('模型配置保存失败，但模型已成功导入');
+  }
+}
+
+/**
+ * 解析 model3.json 文件，提取 motions 数组及其索引
+ */
+export async function parseModel3Motions(model3File: File): Promise<
+  Array<{
+    motions: Array<{
+      file: string;
+      index: number;
+      fadeInTime?: number;
+      fadeOutTime?: number;
+    }>;
+    group: string; // model3.json 中 Motions 对象的 key
+  }>
+> {
+  try {
+    const content = await model3File.text();
+    const model3Json = JSON.parse(content);
+
+    const result: Array<{
+      motions: Array<{
+        file: string;
+        index: number;
+        fadeInTime?: number;
+        fadeOutTime?: number;
+      }>;
+      group: string;
+    }> = [];
+
+    // 解析 FileReferences.Motions
+    if (model3Json.FileReferences?.Motions) {
+      for (const [group, motionsArray] of Object.entries(model3Json.FileReferences.Motions)) {
+        if (Array.isArray(motionsArray)) {
+          const motions = motionsArray.map((motion: any, index: number) => ({
+            file: motion.File || motion.file,
+            index,
+            fadeInTime: motion.FadeInTime || motion.fadeInTime,
+            fadeOutTime: motion.FadeOutTime || motion.fadeOutTime,
+          }));
+
+          result.push({
+            motions,
+            group, // 保留原始 group 名称（包括空字符串）
+          });
+        }
+      }
+    }
+
+    console.info('[parseModel3Motions] 解析结果:', result);
+    return result;
+  } catch (error) {
+    console.error('[parseModel3Motions] 解析失败:', error);
+    throw new Error('无法解析 model3.json 文件');
   }
 }

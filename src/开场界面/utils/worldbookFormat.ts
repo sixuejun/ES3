@@ -7,6 +7,18 @@ import type { PartialDeep } from 'type-fest';
 import type { WorldbookEntry } from '../../@types/function/worldbook';
 
 /**
+ * Motion 配置接口
+ */
+export interface Live2DMotionConfig {
+  name: string;
+  file: string;
+  group: string;
+  index: number;
+  motionType: 'motion' | 'expression';
+  textMappings?: string[];
+}
+
+/**
  * 模型资源世界书条目 JSON 格式
  */
 export interface ModelResourceWorldbookData {
@@ -19,13 +31,14 @@ export interface ModelResourceWorldbookData {
     cdi3?: string;
     physics3?: string;
   };
-  motions: Array<{ name: string; file: string; group: string }>;
-  expressions: Array<{ name: string; file: string }>;
+  motions: Live2DMotionConfig[];
   defaultAnimation?: {
     expression?: string;
     motion?: string;
     autoLoop?: boolean;
   };
+  // 为了向后兼容，保留旧的格式字段（如果存在）
+  expressions?: Array<{ name: string; file: string }>;
   textMappings?: {
     expression?: Record<string, string>; // { "happy.exp3.json": "你好呀" }
     motion?: Record<string, string>; // { "idle.motion3.json": "待机" }

@@ -6,63 +6,63 @@ import type { Character, Opening } from './types';
 /** 默认开场数据 - 可根据需要修改 */
 export const DEFAULT_OPENINGS: Opening[] = [
   {
-    id: 'spring',
-    title: '春之邂逅',
-    description: '樱花飘落的季节，命运的相遇悄然开始...',
-    image: '', // TODO: 填入图片URL
-    message: '樱花飘落的季节，我在樱花树下与你相遇...',
+    id: '01',
+    title: '雨声淅淅',
+    description: '下雨天，哥在等<user>放学...',
+    image: 'https://pic1.imgdb.cn/item/6938291300233646958dead1.png', // TODO: 填入图片URL
+    message: ` `,
   },
   {
-    id: 'summer',
-    title: '夏之约定',
-    description: '蝉鸣声中，许下永不忘记的誓言...',
-    image: '', // TODO: 填入图片URL
-    message: '夏日的午后，我们许下了永不忘记的约定...',
+    id: '02',
+    title: '葬礼',
+    description: '养母死后，在葬礼上的重逢',
+    image: 'https://pic1.imgdb.cn/item/693828f100233646958deab2.png', // TODO: 填入图片URL
+    message: `🚧还没做完，前方施工中🚧`,
   },
   {
-    id: 'autumn',
-    title: '秋之离别',
-    description: '红叶纷飞，不舍的泪水模糊了视线...',
-    image: '', // TODO: 填入图片URL
-    message: '秋天的风带走了你，却带不走我的思念...',
+    id: '03',
+    title: '病热潮',
+    description: '哥发烧了，来对他做点什么吧？',
+    image: 'https://pic1.imgdb.cn/item/6938293600233646958deb09.png', // TODO: 填入图片URL
+    message: ` `,
   },
   {
-    id: 'winter',
-    title: '冬之重逢',
-    description: '白雪皑皑，终于再次见到思念的人...',
-    image: '', // TODO: 填入图片URL
-    message: '雪花飘落，我们终于在冬天再次相遇...',
+    id: '04',
+    title: '偷窥',
+    description: '这是什么？哥的日记？偷看一下。',
+    image: 'https://pic1.imgdb.cn/item/693828fe00233646958deab8.png', // TODO: 填入图片URL
+    message: ` `,
   },
 ];
 
 /** 默认角色数据 - 可根据需要修改 */
 export const DEFAULT_CHARACTERS: Character[] = [
   {
-    name: '樱井 美月',
-    role: '女主角',
-    desc: '温柔善良的少女，拥有感知星光的神秘能力。在一次偶然中与命运相遇，开启了一段跨越时空的旅程。',
-    image: '', // TODO: 填入图片URL
-    colorClass: '',
-  },
-  {
-    name: '星野 苍',
+    name: '程北极',
     role: '男主角',
-    desc: '神秘的转学生，似乎隐藏着不为人知的过去。冷淡的外表下，有着温暖的内心。',
-    image: '', // TODO: 填入图片URL
+    desc: '程家养子，<user>名义上的哥哥',
+    image: 'https://iili.io/f1w9qVR.jpg', // TODO: 填入图片URL
     colorClass: 'blue',
   },
   {
-    name: '日向 心',
-    role: '好友',
-    desc: '美月的青梅竹马，活泼开朗的性格总能带给周围人欢笑。暗中守护着美月。',
-    image: '', // TODO: 填入图片URL
+    name: '许桥雨',
+    role: '<user>的同学',
+    desc: '和<user>同班，性格温柔随和，学习努力。',
+    image: 'https://iili.io/f1w9nKN.jpg', // TODO: 填入图片URL
+    colorClass: '',
+  },
+  {
+    name: '林风',
+    role: '程北极的同学',
+    desc: '外向开朗,家境优渥所以不在乎学习,一个不爱读书、向往外面世界的“坏学生”。',
+    image: 'https://iili.io/f1w9olI.jpg', // TODO: 填入图片URL
     colorClass: 'orange',
   },
   {
-    name: '月见 透',
-    role: '神秘人物',
-    desc: '在关键时刻出现的神秘人物，似乎知道所有事情的真相。身份成谜。',
-    image: '', // TODO: 填入图片URL
+    name: '陈曦',
+    role: '<user>的同学',
+    desc: '和{{user}}同班，性格腼腆谨慎，艺术生兼文艺委员。',
+    image: 'https://iili.io/f1w9xSt.jpg', // TODO: 填入图片URL
     colorClass: 'gray',
   },
 ];

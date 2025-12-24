@@ -137,9 +137,9 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       ignored: ['**/dist', '**/node_modules'],
     },
     performance: {
-      maxAssetSize: 512000, // 512 KiB
-      maxEntrypointSize: 512000, // 512 KiB
-      hints: 'warning', // 只显示警告，不阻止构建
+      // 界面复杂，包含大量依赖和资源，文件体积较大属于正常情况
+      // 禁用性能提示，避免在编译时显示体积警告
+      hints: false,
     },
     entry: path.join(import.meta.dirname, entry.script),
     target: 'browserslist',
@@ -396,7 +396,10 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
           // globs: ['src/panel/component/*.vue'],
           resolvers: [VueUseComponentsResolver(), VueUseDirectiveResolver()],
         }),
-        new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
+        // 允许代码分割以减小文件体积
+        // 对于大型应用，移除此限制可以让 webpack 自动分割代码
+        // 如果确实需要单文件打包，可以取消下面的注释
+        // new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
         new webpack.DefinePlugin({
           __VUE_OPTIONS_API__: false,
           __VUE_PROD_DEVTOOLS__: process.env.CI !== 'true',

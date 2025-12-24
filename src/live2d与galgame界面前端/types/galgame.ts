@@ -2,19 +2,34 @@
  * Galgame 界面相关的类型定义
  */
 
+/**
+ * 演出单元 - 一个完整的演出单元包含：
+ * 1. 主对话内容（character/narration/user/blackscreen）
+ * 2. 可选的小纸条（noteContent）
+ * 3. 可选的选项（options）
+ *
+ * 每个演出单元有唯一的 unitId，用于索引和导航
+ */
 export interface DialogueItem {
+  // ===== 演出单元标识 =====
+  unitId: string; // 演出单元唯一ID，格式：msg_{message_id}_unit_{index}
+  unitIndex: number; // 演出单元在当前消息中的序号（从0开始）
+
+  // ===== 主对话内容 =====
   character?: string;
   text: string;
   type?: 'blackscreen' | 'choice' | 'narration' | 'user' | 'cg';
-  options?: ChoiceOption[];
+
+  // ===== 酒馆消息信息 =====
   message_id?: number; // 酒馆消息ID
   role?: 'system' | 'assistant' | 'user'; // 消息角色
+
+  // ===== 视觉效果 =====
   sprite?: {
     type: 'live2d' | 'image' | 'none'; // 立绘类型，none表示CG模式不显示立绘
     live2dModelId?: string; // Live2D 模型ID
     imageUrl?: string; // 图片URL
   };
-  // 新增字段
   scene?: string; // 场景
   sceneImageUrl?: string; // 场景背景图片URL（从世界书匹配）
   motion?: string; // 动作
@@ -22,6 +37,17 @@ export interface DialogueItem {
   isThrough?: boolean; // 是否为through消息（浅灰色斜体）
   isCG?: boolean; // 是否为CG模式
   cgImageUrl?: string; // CG图片URL
+
+  // ===== 附加内容（与主对话绑定展示） =====
+  noteContent?: string; // 小纸条内容（与主对话一起显示）
+  noteUnitId?: string; // 小纸条绑定的演出单元ID（用于绑定到前面的演出单元）
+  notePosition?: { x: number; y: number }; // 小纸条的拖动位置（相对于容器的坐标）
+  options?: ChoiceOption[]; // 选项（与主对话一起显示）
+  choiceFormat?: 'format1' | 'format2'; // 选项格式标识（格式1：剧情中选项，格式2：剧情末尾选项）
+  isChoiceResponse?: boolean; // 是否为选项回复演出单元（演出单元3或4）
+  choiceParentId?: string; // 选项父级ID（用于回溯时识别和替换）
+
+  // ===== 状态栏 =====
   statusBlock?: {
     地点?: string;
     关系?: string;
@@ -31,6 +57,8 @@ export interface DialogueItem {
     小剧场?: string;
     [key: string]: any;
   } | null;
+
+  // ===== 编辑状态 =====
   isEditable?: boolean; // 是否为可编辑的用户消息
   editedText?: string; // 编辑后的文本（内存中）
   isDeleted?: boolean; // 是否已删除（内存中）

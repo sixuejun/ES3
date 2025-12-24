@@ -195,12 +195,10 @@ function handleBackgroundClick(e: MouseEvent) {
   const halfWidth = rect.width / 2;
 
   if (clickX < halfWidth) {
-    // 点击左半屏，返回上一条
+    // 选项演出单元：只支持左半屏回溯，选择前无法前进
     props.onPrev?.();
-  } else {
-    // 点击右半屏，继续下一条
-    props.onNext?.();
   }
+  // 右半屏点击不做任何操作，强制用户做出选择
 }
 </script>
 

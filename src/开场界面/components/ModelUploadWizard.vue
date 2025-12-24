@@ -82,24 +82,23 @@
           <h3 class="method-title">URL导入</h3>
           <div class="url-upload-area">
             <div class="url-input-group">
-              <input
+              <textarea
                 v-model="urlInput"
-                type="text"
                 class="url-input"
-                placeholder="请输入文件URL（支持图片和模型文件）"
-                @keyup.enter="importFromUrl"
+                placeholder="请输入文件URL，每行一个，或使用逗号/分号分隔&#10;支持图片和模型文件"
+                rows="3"
+                @keydown.ctrl.enter="importFromUrl"
               />
               <button
                 class="bubble-btn bubble-btn-primary"
                 :disabled="!urlInput.trim() || importingUrl"
                 @click="importFromUrl"
               >
-                {{ importingUrl ? '导入中...' : '导入' }}
+                {{ importingUrl ? '导入中...' : '导入 URL' }}
               </button>
             </div>
-            <p class="hint">可以输入多个URL，每行一个，或使用逗号/分号分隔</p>
-            <p class="hint">支持 GitHub 仓库，自动解析文件结构</p>
-            <p class="hint">导入的文件会与本地文件合并显示</p>
+            <p class="hint">可以输入多个URL，每行一个，或使用逗号/分号分隔（Ctrl+Enter 快速导入）</p>
+            <p class="hint">导入的文件会与本地文件合并显示，URL 文件会保留原始地址</p>
           </div>
         </div>
       </div>
@@ -172,15 +171,19 @@
             </div>
           </div>
 
-          <!-- 动作文件 -->
+          <!-- 动作/表情文件 -->
           <div v-if="classifiedFiles.motions.length > 0" class="category-section">
-            <h3>动作文件 ({{ classifiedFiles.motions.length }})</h3>
+            <h3>动作/表情文件 ({{ classifiedFiles.motions.length }})</h3>
+            <p class="hint">请确认每个文件是"动作"还是"表情"（系统已自动识别，可手动调整）</p>
             <div class="file-category">
               <div v-for="motion in classifiedFiles.motions" :key="motion.name" class="category-item">
                 <IconCheck class="icon-sm" />
                 <span>{{ motion.name }}</span>
-                <button v-if="motion.canToggle" class="toggle-type-btn" @click="toggleMotionType(motion)">
-                  {{ motion.type === 'motion' ? '改为表情' : '改为动作' }}
+                <span :class="['type-badge', motion.type === 'motion' ? 'badge-motion' : 'badge-expression']">
+                  {{ motion.type === 'motion' ? '动作' : '表情' }}
+                </span>
+                <button class="toggle-type-btn" @click="toggleMotionType(motion)">
+                  切换为{{ motion.type === 'motion' ? '表情' : '动作' }}
                 </button>
               </div>
             </div>
@@ -480,6 +483,9 @@
         </div>
         <!-- 动画和表情设置详情 -->
         <div v-if="resourceDetailPage === 'animation'" class="animation-settings">
+          <div class="settings-hint">
+            <p>提示：系统已从模型文件中提取动作索引信息，配置完成后将自动生成优化的映射表</p>
+          </div>
           <div class="setting-item">
             <label>默认表情</label>
             <select v-model="defaultExpression" class="select-with-scroll">
@@ -726,7 +732,8 @@ import { computed, ref } from 'vue';
 
 // 项目内部
 import { IconCheck, IconClose, IconUpload } from '../assets/icons';
-import { MODEL_CONFIG_FILES, MODEL_PATHS, WORLDBOOK_NAME } from '../data';
+import { parseModel3Motions } from '../composables';
+import { WORLDBOOK_NAME } from '../data';
 import type { ImportedModel } from '../types';
 import { clearAllFiles, storeFile } from '../utils/indexedDB';
 import {
@@ -845,6 +852,9 @@ const hasModelFiles = computed(() => classifiedFiles.value.moc3 || classifiedFil
 const motionCount = computed(() => classifiedFiles.value.motions.filter(m => m.type === 'motion').length);
 const expressionCount = computed(() => classifiedFiles.value.motions.filter(m => m.type === 'expression').length);
 
+// Motion 索引映射表（从 model3.json 解析）：文件名 -> { group, index }
+const motionIndexMap = ref<Map<string, { group: string; index: number }>>(new Map());
+
 // 允许跳过：如果没有模型文件，只要有其他资源也可以继续
 // 如果有待分类图片，需要先分类完才能继续
 const canProceed = computed(() => {
@@ -940,24 +950,8 @@ function removeFile(index: number) {
 }
 
 /**
- * 从URL导入文件
+ * 从URL导入文件（支持多个URL，每行一个或使用逗号/分号分隔）
  */
-/**
- * 检测是否是GitHub仓库URL
- */
-function isGitHubRepositoryUrl(url: string): boolean {
-  try {
-    const urlObj = new URL(url);
-    return (
-      urlObj.hostname === 'github.com' ||
-      urlObj.hostname === 'raw.githubusercontent.com' ||
-      urlObj.hostname.endsWith('.github.io')
-    );
-  } catch {
-    return false;
-  }
-}
-
 async function importFromUrl() {
   const inputText = urlInput.value.trim();
   if (!inputText) {
@@ -967,45 +961,57 @@ async function importFromUrl() {
 
   importingUrl.value = true;
   try {
-    // 检测是否是GitHub仓库URL（单个URL且看起来像仓库）
+    // 解析多个URL（支持换行、逗号、分号分隔）
     const urls = inputText
       .split(/[,\n;]/)
       .map(u => u.trim())
       .filter(u => u.length > 0);
-    const isSingleGitHubRepo = urls.length === 1 && isGitHubRepositoryUrl(urls[0]);
 
-    if (isSingleGitHubRepo) {
-      // GitHub仓库模式：使用composables中的完整解析逻辑
-      try {
-        await importGitHubRepository(urls[0]);
-        urlInput.value = '';
-        return;
-      } catch (error) {
-        // 如果GitHub仓库解析失败，降级为普通URL导入
-        console.warn('GitHub仓库解析失败，降级为普通URL导入:', error);
-        toastr.info('GitHub仓库解析失败，尝试作为普通URL导入...');
-      }
+    if (urls.length === 0) {
+      toastr.warning('未找到有效的URL');
+      return;
     }
 
-    // 普通URL导入模式：直接下载文件
     const existingNames = new Set(pendingFiles.value.map(f => f.file.name));
     let successCount = 0;
     let failCount = 0;
+    const failedUrls: string[] = [];
 
+    // 批量导入文件
     for (const url of urls) {
       try {
-        const response = await fetch(url);
-        if (!response.ok) {
-          console.error(`无法下载文件: ${url}`, response.statusText);
+        // 验证URL格式
+        try {
+          new URL(url);
+        } catch {
+          console.warn(`无效的URL格式: ${url}`);
           failCount++;
+          failedUrls.push(url);
           continue;
         }
 
-        const blob = await response.blob();
+        const response = await fetch(url, { method: 'HEAD' });
+        if (!response.ok) {
+          console.error(`无法访问文件: ${url}`, response.statusText);
+          failCount++;
+          failedUrls.push(url);
+          continue;
+        }
+
+        // 实际下载文件
+        const downloadResponse = await fetch(url);
+        if (!downloadResponse.ok) {
+          console.error(`无法下载文件: ${url}`, downloadResponse.statusText);
+          failCount++;
+          failedUrls.push(url);
+          continue;
+        }
+
+        const blob = await downloadResponse.blob();
 
         // 从URL或Content-Disposition头获取文件名
-        let filename = url.split('/').pop() || 'unknown';
-        const contentDisposition = response.headers.get('Content-Disposition');
+        let filename = url.split('/').pop()?.split('?')[0] || 'unknown';
+        const contentDisposition = downloadResponse.headers.get('Content-Disposition');
         if (contentDisposition) {
           const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
           if (filenameMatch && filenameMatch[1]) {
@@ -1015,7 +1021,7 @@ async function importFromUrl() {
 
         // 如果文件名没有扩展名，尝试从Content-Type推断
         if (!filename.match(/\.[a-z0-9]+$/i)) {
-          const contentType = response.headers.get('Content-Type');
+          const contentType = downloadResponse.headers.get('Content-Type');
           if (contentType) {
             const extMap: Record<string, string> = {
               'image/png': '.png',
@@ -1043,16 +1049,25 @@ async function importFromUrl() {
       } catch (error) {
         console.error(`导入URL失败: ${url}`, error);
         failCount++;
+        failedUrls.push(url);
       }
     }
 
     urlInput.value = '';
 
+    // 显示导入结果
     if (successCount > 0) {
-      toastr.success(`成功导入 ${successCount} 个文件`);
+      toastr.success(`成功导入 ${successCount} 个文件${urls.length > 1 ? `（共 ${urls.length} 个URL）` : ''}`);
     }
     if (failCount > 0) {
-      toastr.warning(`导入失败 ${failCount} 个文件，请检查URL是否正确`);
+      const errorMsg =
+        failCount === 1 && failedUrls[0]
+          ? `导入失败: ${failedUrls[0]}`
+          : `导入失败 ${failCount} 个文件，请检查URL是否正确`;
+      toastr.warning(errorMsg);
+    }
+    if (successCount === 0 && failCount > 0) {
+      toastr.error('所有URL导入失败，请检查网络连接和URL是否正确');
     }
   } catch (error) {
     console.error('URL导入失败:', error);
@@ -1060,221 +1075,6 @@ async function importFromUrl() {
     toastr.error(`URL导入失败: ${errorMessage}`);
   } finally {
     importingUrl.value = false;
-  }
-}
-
-/**
- * 从GitHub仓库导入（使用composables中的完整解析逻辑）
- */
-async function importGitHubRepository(inputUrl: string) {
-  // 规范化URL
-  let baseUrl = inputUrl.trim();
-  if (!baseUrl.endsWith('/')) baseUrl += '/';
-
-  try {
-    const urlObj = new URL(baseUrl);
-    // 处理 GitHub 仓库 URL (github.com)，转换为 GitHub Pages URL
-    if (urlObj.hostname === 'github.com') {
-      const pathParts = urlObj.pathname.split('/').filter(p => p);
-      if (pathParts.length >= 2) {
-        const [username, repo, ...restPath] = pathParts;
-        if (restPath.length === 0 || restPath[0] === 'tree' || restPath[0] === 'blob') {
-          const filePath = restPath.length > 2 ? restPath.slice(2).join('/') + '/' : '';
-          const cleanPath = filePath.replace(/[^/]+\.(json|moc3|png)$/, '');
-          baseUrl = `https://${username}.github.io/${repo}/${cleanPath}`;
-        }
-      }
-    }
-    // 处理 GitHub Raw URL，转换为 GitHub Pages URL
-    if (urlObj.hostname === 'raw.githubusercontent.com') {
-      const pathParts = urlObj.pathname.split('/').filter(p => p);
-      if (pathParts.length >= 3) {
-        const [username, repo, _branch, ...restPath] = pathParts;
-        if (restPath.length > 0) {
-          const isFile = baseUrl.includes('.json') || baseUrl.includes('.moc3') || baseUrl.includes('.png');
-          if (isFile) {
-            restPath.pop();
-          }
-          const path = restPath.length > 0 ? restPath.join('/') + '/' : '';
-          baseUrl = `https://${username}.github.io/${repo}/${path}`;
-        } else {
-          baseUrl = `https://${username}.github.io/${repo}/`;
-        }
-      }
-    }
-  } catch (error) {
-    console.warn('URL 规范化失败，使用原始 URL:', error);
-  }
-
-  toastr.info('正在解析GitHub仓库结构...');
-
-  // 尝试查找模型配置文件
-  let modelJsonUrl = '';
-  let modelName = '';
-  let isModel3Format = true;
-
-  // 尝试自动查找
-  for (const path of MODEL_PATHS) {
-    for (const configFile of MODEL_CONFIG_FILES) {
-      // 从URL路径提取模型名
-      const urlPath = new URL(baseUrl).pathname;
-      const pathParts = urlPath.split('/').filter(p => p && p !== 'models' && p !== 'model');
-      if (pathParts.length > 0) {
-        const extractedName = pathParts[pathParts.length - 1].replace(/\/$/, '');
-        const testUrl = `${baseUrl}${path}${extractedName}.${configFile}`;
-        try {
-          const response = await fetch(testUrl, { method: 'HEAD' });
-          if (response.ok) {
-            modelJsonUrl = testUrl;
-            modelName = extractedName;
-            isModel3Format = configFile === 'model3.json';
-            break;
-          }
-        } catch {
-          // 继续尝试
-        }
-      }
-    }
-    if (modelJsonUrl) break;
-  }
-
-  // 如果未找到，尝试常见文件名
-  if (!modelJsonUrl) {
-    for (const name of ['model', 'character', 'live2d']) {
-      for (const configFile of MODEL_CONFIG_FILES) {
-        const testUrl = `${baseUrl}${name}.${configFile}`;
-        try {
-          const response = await fetch(testUrl, { method: 'HEAD' });
-          if (response.ok) {
-            modelJsonUrl = testUrl;
-            modelName = name;
-            isModel3Format = configFile === 'model3.json';
-            break;
-          }
-        } catch {
-          // 继续尝试
-        }
-      }
-      if (modelJsonUrl) break;
-    }
-  }
-
-  if (!modelJsonUrl) {
-    throw new Error('未能自动找到模型配置文件，请直接输入 model3.json 的完整URL');
-  }
-
-  // 加载并解析模型配置文件
-  const modelJsonResponse = await fetch(modelJsonUrl);
-  if (!modelJsonResponse.ok) {
-    throw new Error(`无法加载模型配置文件: ${modelJsonResponse.statusText}`);
-  }
-  const modelJson = await modelJsonResponse.json();
-  const modelDir = modelJsonUrl.substring(0, modelJsonUrl.lastIndexOf('/') + 1);
-
-  // 从 JSON 文件提取模型名
-  if (!modelName || modelName === 'model') {
-    const refs = modelJson.FileReferences as Record<string, unknown> | undefined;
-    if (refs?.Moc) {
-      const mocPath = refs.Moc as string;
-      const match = mocPath.match(/[\\/]([^\\/]+)\.moc3?$/);
-      if (match) modelName = match[1];
-    }
-    if (!modelName || modelName === 'model') {
-      modelName =
-        modelJsonUrl
-          .split('/')
-          .pop()
-          ?.replace(/\.(model3|model)\.json$/, '') || 'unknown';
-    }
-  }
-
-  // 收集所有文件URL（简化版，只收集主要文件）
-  const fileUrls: Array<{ url: string; filename: string }> = [
-    { url: modelJsonUrl, filename: modelJsonUrl.split('/').pop() || 'model3.json' },
-  ];
-
-  const refs = modelJson.FileReferences as Record<string, unknown> | undefined;
-  if (refs) {
-    // MOC文件
-    if (refs.Moc) {
-      const mocPath = refs.Moc as string;
-      const mocUrl = mocPath.startsWith('http') ? mocPath : new URL(mocPath, modelDir).href;
-      fileUrls.push({ url: mocUrl, filename: mocPath.split('/').pop() || 'model.moc3' });
-    }
-    // 纹理文件
-    if (Array.isArray(refs.Textures)) {
-      for (const texturePath of refs.Textures as string[]) {
-        const textureUrl = texturePath.startsWith('http') ? texturePath : new URL(texturePath, modelDir).href;
-        fileUrls.push({ url: textureUrl, filename: texturePath.split('/').pop() || 'texture.png' });
-      }
-    }
-    // 显示信息文件
-    if (refs.DisplayInfo) {
-      const displayPath = refs.DisplayInfo as string;
-      const displayUrl = displayPath.startsWith('http') ? displayPath : new URL(displayPath, modelDir).href;
-      fileUrls.push({ url: displayUrl, filename: displayPath.split('/').pop() || 'cdi3.json' });
-    }
-    // 动作和表情文件（从Groups读取）
-    if (isModel3Format && refs.Groups && Array.isArray(refs.Groups)) {
-      const groups = refs.Groups as Array<Record<string, unknown>>;
-      for (const group of groups) {
-        if (Array.isArray(group.Files)) {
-          for (const filePath of group.Files as string[]) {
-            const fileUrl = filePath.startsWith('http') ? filePath : new URL(filePath, modelDir).href;
-            fileUrls.push({ url: fileUrl, filename: filePath.split('/').pop() || 'motion.json' });
-          }
-        } else if (group.File && typeof group.File === 'string') {
-          const filePath = group.File as string;
-          const fileUrl = filePath.startsWith('http') ? filePath : new URL(filePath, modelDir).href;
-          fileUrls.push({ url: fileUrl, filename: filePath.split('/').pop() || 'motion.json' });
-        }
-      }
-    }
-  }
-
-  // 下载所有文件
-  const existingNames = new Set(pendingFiles.value.map(f => f.file.name));
-  let successCount = 0;
-  let failCount = 0;
-
-  for (const fileInfo of fileUrls) {
-    try {
-      // 检查是否已存在同名文件
-      if (existingNames.has(fileInfo.filename)) {
-        console.info(`已跳过重复文件: ${fileInfo.filename}`);
-        continue;
-      }
-
-      const response = await fetch(fileInfo.url);
-      if (!response.ok) {
-        console.warn(`无法下载文件: ${fileInfo.url}`);
-        failCount++;
-        continue;
-      }
-
-      const blob = await response.blob();
-      const file = new File([blob], fileInfo.filename, { type: blob.type });
-      // 保存原始URL，这样后续可以区分是URL文件还是本地文件
-      pendingFiles.value.push({ file, sourceUrl: fileInfo.url });
-      existingNames.add(fileInfo.filename);
-      successCount++;
-    } catch (error) {
-      console.warn(`下载文件失败 ${fileInfo.url}:`, error);
-      failCount++;
-    }
-  }
-
-  urlInput.value = '';
-
-  if (successCount > 0) {
-    toastr.success(`成功从GitHub仓库导入 ${successCount} 个文件`);
-  }
-  if (failCount > 0) {
-    toastr.warning(`导入失败 ${failCount} 个文件`);
-  }
-
-  if (successCount === 0) {
-    throw new Error('未能导入任何文件');
   }
 }
 
@@ -1311,11 +1111,47 @@ async function handleUploadAndNext() {
   }
 }
 
+/**
+ * 解析 model3.json 并构建 motion 索引映射表
+ */
+async function parseModel3AndBuildIndex() {
+  if (!classifiedFiles.value.model3) {
+    console.warn('[ModelUploadWizard] 没有 model3.json 文件');
+    return;
+  }
+
+  try {
+    const groups = await parseModel3Motions(classifiedFiles.value.model3.file);
+
+    // 构建文件名 -> (group, index) 的映射表
+    motionIndexMap.value.clear();
+    for (const { group, motions } of groups) {
+      for (const motion of motions) {
+        // 提取文件名（去除路径）
+        const fileName = motion.file.split('/').pop() || motion.file;
+        motionIndexMap.value.set(fileName, {
+          group,
+          index: motion.index,
+        });
+      }
+    }
+
+    console.info('[ModelUploadWizard] Motion 索引映射表:', motionIndexMap.value);
+  } catch (error) {
+    console.error('[ModelUploadWizard] 解析 model3.json 失败:', error);
+    toastr.error('解析模型文件失败，部分功能可能不可用');
+  }
+}
+
 async function nextStep() {
   if (currentStep.value === 0) {
     // 从步骤1到步骤2：分类文件
     if (pendingFiles.value.length === 0) return;
     await classifyPendingFiles();
+  }
+  if (currentStep.value === 2 && hasModelFiles.value) {
+    // 从步骤3到步骤4：解析 model3.json 获取索引
+    await parseModel3AndBuildIndex();
   }
   if (currentStep.value < steps.length - 1) {
     currentStep.value++;
@@ -1412,10 +1248,10 @@ async function classifyPendingFiles() {
       } else if (name.endsWith('.cdi3.json')) {
         type = 'cdi3';
       } else if (name.endsWith('.motion3.json')) {
-        // 使用智能识别动作/表情
+        // 使用智能识别动作/表情（作为初始建议）
         type = detectMotionType(file.name);
-        // 如果无法明确识别，允许切换
-        canToggle = !/_e\.|\.e\.|expression|表情|_m\.|\.m\.|motion|动作/i.test(file.name);
+        // 所有 motion 文件都允许切换（必须让用户确认）
+        canToggle = true;
       } else if (name.match(/\.(png|jpg|jpeg)$/)) {
         // 图片文件统一归类为待分类图片，等待用户手动分类
         type = 'unclassified_image';
@@ -2170,21 +2006,49 @@ async function completeUpload() {
         const cdi3File = storedFiles.find(f => f.type === 'cdi3');
         const textureFiles = storedFiles.filter(f => f.type === 'texture');
 
-        // 构建动作和表情列表
+        // 构建统一的 motions 配置（包含 group, index, motionType, textMappings）
         // 根据文件来源选择路径格式：URL 文件使用原始 URL，本地文件使用 indexeddb 路径
-        const motions = storedMotions
-          .filter(m => m.type === 'motion')
-          .map(m => ({
-            name: m.name,
-            file: m.url || `indexeddb://${modelName.value}/${m.filename}`, // URL 文件使用原始 URL，本地文件使用 indexeddb 路径
-            group: 'default',
-          }));
-        const expressions = storedMotions
-          .filter(m => m.type === 'expression')
-          .map(m => ({
-            name: m.name,
-            file: m.url || `indexeddb://${modelName.value}/${m.filename}`, // URL 文件使用原始 URL，本地文件使用 indexeddb 路径
-          }));
+        const unifiedMotions: Array<{
+          name: string;
+          file: string;
+          group: string;
+          index: number;
+          motionType: 'motion' | 'expression';
+          textMappings?: string[];
+        }> = [];
+
+        // 遍历所有分类的 motion 文件
+        for (const storedMotion of storedMotions) {
+          const fileName = storedMotion.filename;
+          const motionName = extractMotionName(fileName);
+
+          // 从 motionIndexMap 获取 group 和 index
+          // 注意：使用 ?? 而不是 ||，以保留空字符串 group（空字符串是有效的 group 名称）
+          const indexInfo = motionIndexMap.value.get(fileName);
+          const group = indexInfo?.group ?? 'default';
+          const index = indexInfo?.index ?? 0;
+
+          // 查找该 motion 的文本映射
+          const mappingsForThisMotion: string[] = [];
+          for (const mapping of textMappings.value) {
+            const targetField = storedMotion.type === 'motion' ? mapping.motion : mapping.expression;
+            if (targetField === motionName && mapping.textTags && mapping.textTags.length > 0) {
+              mappingsForThisMotion.push(...mapping.textTags);
+            }
+          }
+
+          // 构建文件路径
+          const filePath = storedMotion.url || `indexeddb://${modelName.value}/${fileName}`;
+
+          unifiedMotions.push({
+            name: motionName,
+            file: filePath,
+            group,
+            index,
+            motionType: storedMotion.type,
+            textMappings: mappingsForThisMotion.length > 0 ? mappingsForThisMotion : undefined,
+          });
+        }
 
         // 构建默认动画设置
         const defaultAnimation: {
@@ -2200,51 +2064,6 @@ async function completeUpload() {
           defaultAnimation.autoLoop = autoLoopDefaultMotion.value;
         }
 
-        // 构建文本映射
-        const textMappingData: {
-          expression?: Record<string, string>;
-          motion?: Record<string, string>;
-        } = {};
-
-        // 处理文本映射
-        // 文本映射的 key 应该是文件名，以便与 messageParser 中的匹配逻辑一致
-        const expressionMappings: Record<string, string> = {};
-        const motionMappings: Record<string, string> = {};
-
-        for (const mapping of textMappings.value) {
-          const text = mapping.text.trim();
-          if (!text) continue;
-
-          // 查找对应的表情文件
-          if (mapping.expression && mapping.expression !== 'none') {
-            // 查找表情文件的实际文件名
-            const expression = expressions.find(e => e.name === mapping.expression);
-            if (expression) {
-              // 使用文件名作为 key（去除路径，只保留文件名）
-              const fileName = expression.file.split('/').pop() || `${mapping.expression}.exp3.json`;
-              expressionMappings[fileName] = text;
-            }
-          }
-
-          // 查找对应的动作文件
-          if (mapping.motion && mapping.motion !== 'none') {
-            // 查找动作文件的实际文件名
-            const motion = motions.find(m => m.name === mapping.motion);
-            if (motion) {
-              // 使用文件名作为 key（去除路径，只保留文件名）
-              const fileName = motion.file.split('/').pop() || `${mapping.motion}.motion3.json`;
-              motionMappings[fileName] = text;
-            }
-          }
-        }
-
-        if (Object.keys(expressionMappings).length > 0) {
-          textMappingData.expression = expressionMappings;
-        }
-        if (Object.keys(motionMappings).length > 0) {
-          textMappingData.motion = motionMappings;
-        }
-
         // 创建模型资源世界书条目
         // 根据文件来源选择路径格式：URL 文件使用原始 URL，本地文件使用 indexeddb 路径
         const modelResourceEntry = createModelResourceWorldbookEntry(modelName.value, {
@@ -2256,10 +2075,8 @@ async function completeUpload() {
             textures: textureFiles.map(t => t.url || `indexeddb://${modelName.value}/${t.filename}`),
             cdi3: cdi3File ? cdi3File.url || `indexeddb://${modelName.value}/${cdi3File.filename}` : undefined,
           },
-          motions,
-          expressions,
+          motions: unifiedMotions,
           defaultAnimation: Object.keys(defaultAnimation).length > 0 ? defaultAnimation : undefined,
-          textMappings: Object.keys(textMappingData).length > 0 ? textMappingData : undefined,
         });
 
         resourceEntries.push(modelResourceEntry);
@@ -2827,6 +2644,23 @@ function extractMotionName(filename: string): string {
   cursor: pointer;
 }
 
+.type-badge {
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-left: 8px;
+
+  &.badge-motion {
+    background: #e3f2fd;
+    color: #1976d2;
+  }
+
+  &.badge-expression {
+    background: #fce4ec;
+    color: #c2185b;
+  }
+}
+
 .step-actions {
   display: flex;
   justify-content: space-between;
@@ -2891,6 +2725,10 @@ function extractMotionName(filename: string): string {
   border-radius: 8px;
   font-size: 14px;
   background: white;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.5;
 }
 
 // 手动分类相关样式
@@ -3210,6 +3048,21 @@ function extractMotionName(filename: string): string {
     h4 {
       margin: 0;
       flex-shrink: 0;
+    }
+
+    .settings-hint {
+      padding: 12px;
+      margin-bottom: 16px;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+
+      p {
+        margin: 0;
+        font-size: 13px;
+        color: #3b82f6;
+        line-height: 1.5;
+      }
     }
 
     .hint {

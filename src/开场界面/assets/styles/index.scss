@@ -78,28 +78,57 @@ body {
 }
 
 /* 背景 */
+.opening-interface {
+  // 默认背景色（非主菜单）
+  background: #e8f5e9;
+}
+
 .background {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #fce7f3 0%, #fdf2f8 50%, #f3e8ff 100%);
+  background: #e8f5e9; // 浅绿色后备背景
   z-index: -2;
+  // 默认隐藏背景图片
+  background-image: none;
 }
 
-.background::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1522383225653-a7e3ad22d696?w=1920&q=80');
-  background-size: cover;
-  background-position: center;
-  opacity: 0.4;
+// 只在主菜单显示背景图片
+.opening-interface.is-main-menu {
+  .background {
+    background-image: url('https://iili.io/f1G4kbf.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .overlay {
+    background: linear-gradient(to bottom, rgba(253, 242, 248, 0.3), transparent, rgba(253, 242, 248, 0.4));
+  }
+}
+
+// 非主菜单页面：在纯色背景上方添加背景图片
+.opening-interface:not(.is-main-menu) {
+  .background {
+    // 纯色背景作为后备，图片在上方
+    background-image: url('https://iili.io/fGHD0fs.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  .overlay {
+    // 添加半透明遮罩，让图片显示为 0.9 的不透明度
+    // 使用背景色的 10% 不透明度遮罩，让图片看起来是 0.9 的不透明度
+    background: rgba(232, 245, 233, 0.9);
+  }
 }
 
 .overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to bottom, rgba(253, 242, 248, 0.3), transparent, rgba(253, 242, 248, 0.4));
   z-index: -1;
+  // 非主菜单页面使用纯色背景，确保不透明（作为后备）
+  background: #e8f5e9;
 }
 
 /* 粒子效果 */
@@ -733,9 +762,16 @@ body {
   gap: 10px;
   margin: 0;
   position: absolute;
-  left: 50%;
+  left: 57%;
   transform: translateX(-50%);
   white-space: nowrap;
+
+  // 确保图标样式一致
+  svg {
+    width: 1em;
+    height: 1em;
+    flex-shrink: 0;
+  }
 }
 
 .page-header-actions {

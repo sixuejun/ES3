@@ -1,998 +1,818 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>星之轨迹 - Starlight Trail</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --foreground: #1a1a2e;
-      --muted-foreground: #4a4a6a;
-      --background: #fdf2f8;
-    }
-
-    body {
-      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background: var(--background);
-    }
-
-    /* 背景样式 */
-    .background {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(135deg, #fce7f3 0%, #fdf2f8 50%, #f3e8ff 100%);
-      z-index: -2;
-    }
-
-    .background::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1522383225653-a7e3ad22d696?w=1920&q=80');
-      background-size: cover;
-      background-position: center;
-      opacity: 0.4;
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(253, 242, 248, 0.3), transparent, rgba(253, 242, 248, 0.4));
-      z-index: -1;
-    }
-
-    /* 飘动粒子 */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .particle {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 50%;
-      animation: float linear infinite;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0) translateX(0);
-        opacity: 0;
-      }
-      10% { opacity: 0.6; }
-      90% { opacity: 0.6; }
-      100% {
-        transform: translateY(-100vh) translateX(20px);
-        opacity: 0;
-      }
-    }
-
-    /* 气泡按钮样式 */
-    .bubble-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 32px;
-      background: rgba(255, 255, 255, 0.4);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      border-radius: 9999px;
-      color: var(--foreground);
-      font-size: 16px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
-    }
-
-    .bubble-btn:hover {
-      background: rgba(255, 255, 255, 0.6);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(255, 255, 255, 0.4);
-    }
-
-    .bubble-btn:active {
-      transform: translateY(0);
-    }
-
-    .bubble-btn-sm {
-      padding: 10px 20px;
-      font-size: 14px;
-    }
-
-    .bubble-btn-lg {
-      padding: 16px 40px;
-      font-size: 18px;
-      min-width: 200px;
-    }
-
-    .bubble-btn-round {
-      width: 50px;
-      height: 50px;
-      padding: 0;
-      border-radius: 50%;
-    }
-
-    /* 页面容器 */
-    .page {
-      display: none;
-      min-height: 100vh;
-      position: relative;
-      z-index: 1;
-    }
-
-    .page.active {
-      display: flex;
-    }
-
-    /* 主菜单 */
-    #main-menu {
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .title-section {
-      text-align: center;
-      margin-bottom: 60px;
-    }
-
-    .title-section h1 {
-      font-size: clamp(3rem, 8vw, 5rem);
-      font-weight: bold;
-      color: var(--foreground);
-      margin-bottom: 16px;
-      text-shadow: 0 4px 20px rgba(255, 255, 255, 0.5);
-    }
-
-    .title-section .subtitle {
-      font-size: clamp(1.2rem, 3vw, 1.5rem);
-      color: var(--foreground);
-      opacity: 0.8;
-      letter-spacing: 4px;
-    }
-
-    .title-section .tagline {
-      margin-top: 16px;
-      font-size: 0.9rem;
-      color: var(--muted-foreground);
-    }
-
-    .menu-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .footer {
-      position: absolute;
-      bottom: 30px;
-      font-size: 12px;
-      color: var(--muted-foreground);
-      opacity: 0.7;
-    }
-
-    /* SVG图标 */
-    .icon {
-      width: 20px;
-      height: 20px;
-      stroke: currentColor;
-      stroke-width: 2;
-      fill: none;
-    }
-
-    .icon-sm {
-      width: 16px;
-      height: 16px;
-    }
-
-    .icon-lg {
-      width: 24px;
-      height: 24px;
-    }
-
-    /* 通用页面头部 */
-    .page-header {
-      width: 100%;
-      max-width: 1000px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .page-header h2 {
-      font-size: clamp(1.5rem, 4vw, 2rem);
-      font-weight: bold;
-      color: var(--foreground);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .spacer {
-      width: 80px;
-    }
-
-    /* 开始游戏页面 */
-    #start-game {
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .openings-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 24px;
-      max-width: 900px;
-      width: 100%;
-      padding: 0 20px;
-    }
-
-    .opening-card {
-      position: relative;
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 20px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .opening-card:hover {
-      background: rgba(255, 255, 255, 0.5);
-      transform: scale(1.02);
-      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.3);
-    }
-
-    .opening-card img {
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-      transition: transform 0.5s ease;
-    }
-
-    .opening-card:hover img {
-      transform: scale(1.1);
-    }
-
-    .opening-card .image-wrapper {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .opening-card .image-wrapper::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.4), transparent);
-    }
-
-    .opening-card .content {
-      padding: 16px;
-      text-align: left;
-    }
-
-    .opening-card h3 {
-      font-size: 1.25rem;
-      font-weight: bold;
-      color: var(--foreground);
-      margin-bottom: 8px;
-    }
-
-    .opening-card p {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .opening-card .hover-icon {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      width: 32px;
-      height: 32px;
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(8px);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .opening-card:hover .hover-icon {
-      opacity: 1;
-    }
-
-    .hint-text {
-      margin-top: 30px;
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-      text-align: center;
-    }
-
-    /* 设置页面 */
-    #settings {
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .settings-content {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .settings-card {
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 20px;
-      padding: 24px;
-    }
-
-    .settings-card-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .settings-card-icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .settings-card h3 {
-      font-weight: bold;
-      color: var(--foreground);
-    }
-
-    .settings-card .desc {
-      font-size: 0.875rem;
-      color: var(--muted-foreground);
-    }
-
-    .url-input-group {
-      display: flex;
-      gap: 12px;
-    }
-
-    .url-input-group input {
-      flex: 1;
-      padding: 12px 20px;
-      background: rgba(255, 255, 255, 0.5);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 9999px;
-      color: var(--foreground);
-      font-size: 14px;
-      outline: none;
-    }
-
-    .url-input-group input:focus {
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
-    }
-
-    .url-input-group input::placeholder {
-      color: var(--muted-foreground);
-    }
-
-    .full-width-btn {
-      width: 100%;
-    }
-
-    .hidden-input {
-      display: none;
-    }
-
-    /* 已导入配置列表 */
-    .config-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .config-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(255, 255, 255, 0.4);
-      border-radius: 12px;
-      padding: 12px 16px;
-    }
-
-    .config-item-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .config-item-name {
-      font-size: 0.875rem;
-      color: var(--foreground);
-      max-width: 200px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-
-    .config-item-right {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .check-icon {
-      color: #16a34a;
-    }
-
-    .remove-btn {
-      width: 24px;
-      height: 24px;
-      background: rgba(255, 255, 255, 0.5);
-      border: none;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: background 0.2s ease;
-    }
-
-    .remove-btn:hover {
-      background: rgba(255, 255, 255, 0.7);
-    }
-
-    /* 角色介绍页面 */
-    #character-intro {
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .character-display {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-      max-width: 1100px;
-      gap: 20px;
-      padding: 0 20px;
-    }
-
-    .character-card {
-      flex: 1;
-      background: linear-gradient(135deg, rgba(251, 207, 232, 0.5), rgba(244, 114, 182, 0.3));
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 10px 40px rgba(255, 255, 255, 0.2);
-      transition: all 0.5s ease;
-    }
-
-    .character-card.blue { background: linear-gradient(135deg, rgba(191, 219, 254, 0.5), rgba(99, 102, 241, 0.3)); }
-    .character-card.orange { background: linear-gradient(135deg, rgba(254, 215, 170, 0.5), rgba(251, 146, 60, 0.3)); }
-    .character-card.gray { background: linear-gradient(135deg, rgba(226, 232, 240, 0.5), rgba(148, 163, 184, 0.3)); }
-
-    .character-card-inner {
-      display: flex;
-      flex-direction: column;
-    }
-
-    @media (min-width: 768px) {
-      .character-card-inner {
-        flex-direction: row;
-      }
-    }
-
-    .character-image {
-      position: relative;
-      flex: 1;
-      min-height: 300px;
-    }
-
-    .character-image img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      min-height: 300px;
-    }
-
-    .character-image::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
-    }
-
-    @media (min-width: 768px) {
-      .character-image::after {
-        background: linear-gradient(to right, transparent, rgba(0,0,0,0.2));
-      }
-    }
-
-    .character-info {
-      flex: 1;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    .character-role {
-      display: inline-block;
-      align-self: flex-start;
-      padding: 6px 12px;
-      background: rgba(255, 255, 255, 0.5);
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: var(--foreground);
-      margin-bottom: 12px;
-    }
-
-    .character-name {
-      font-size: clamp(1.8rem, 5vw, 2.5rem);
-      font-weight: bold;
-      color: var(--foreground);
-      margin-bottom: 16px;
-    }
-
-    .character-desc {
-      color: var(--muted-foreground);
-      line-height: 1.7;
-    }
-
-    .character-dots {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 32px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 9999px;
-      background: rgba(26, 26, 46, 0.3);
-      border: none;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .dot:hover {
-      background: rgba(26, 26, 46, 0.5);
-    }
-
-    .dot.active {
-      width: 24px;
-      background: var(--foreground);
-    }
-
-    .nav-btn {
-      flex-shrink: 0;
-    }
-  </style>
-</head>
-<body>
-  <!-- 背景 -->
-  <div class="background"></div>
-  <div class="overlay"></div>
-  
-  <!-- 粒子效果 -->
-  <div class="particles" id="particles"></div>
-
-  <!-- 主菜单 -->
-  <div id="main-menu" class="page active">
-    <div class="title-section">
-      <h1>星之轨迹</h1>
-      <p class="subtitle">Starlight Trail</p>
-      <p class="tagline">— 一段跨越时空的浪漫物语 —</p>
-    </div>
-
-    <div class="menu-buttons">
-      <button class="bubble-btn bubble-btn-lg" onclick="showPage('start-game')">
-        <svg class="icon" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        开始游戏
-      </button>
-      <button class="bubble-btn bubble-btn-lg" onclick="showPage('settings')">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        游戏设置
-      </button>
-      <button class="bubble-btn bubble-btn-lg" onclick="showPage('character-intro')">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-        角色介绍
-      </button>
-    </div>
-
-    <div class="footer">
-      <p>© 2025 Starlight Studio. All rights reserved.</p>
-    </div>
-  </div>
-
-  <!-- 开始游戏页面 -->
-  <div id="start-game" class="page">
-    <div class="page-header">
-      <button class="bubble-btn bubble-btn-sm" onclick="showPage('main-menu')">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        返回
-      </button>
-      <h2>
-        <svg class="icon" viewBox="0 0 24 24"><path d="M12 3l1.912 5.813L20 9.5l-4.562 3.937L17 19l-5-3.5L7 19l1.563-5.563L4 9.5l6.088-.687L12 3z" fill="currentColor" stroke="none"></path></svg>
-        选择开场
-      </h2>
-      <div class="spacer"></div>
-    </div>
-
-    <div class="openings-grid">
-      <div class="opening-card" onclick="selectOpening('春之邂逅')">
-        <div class="image-wrapper">
-          <img src="https://images.unsplash.com/photo-1522383225653-a7e3ad22d696?w=600&q=80" alt="春之邂逅">
-        </div>
-        <div class="content">
-          <h3>春之邂逅</h3>
-          <p>樱花飘落的季节，命运的相遇悄然开始...</p>
-        </div>
-        <div class="hover-icon">
-          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3l1.912 5.813L20 9.5l-4.562 3.937L17 19l-5-3.5L7 19l1.563-5.563L4 9.5l6.088-.687L12 3z" fill="currentColor" stroke="none"></path></svg>
-        </div>
-      </div>
-
-      <div class="opening-card" onclick="selectOpening('夏之约定')">
-        <div class="image-wrapper">
-          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" alt="夏之约定">
-        </div>
-        <div class="content">
-          <h3>夏之约定</h3>
-          <p>蝉鸣声中，许下永不忘记的誓言...</p>
-        </div>
-        <div class="hover-icon">
-          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3l1.912 5.813L20 9.5l-4.562 3.937L17 19l-5-3.5L7 19l1.563-5.563L4 9.5l6.088-.687L12 3z" fill="currentColor" stroke="none"></path></svg>
-        </div>
-      </div>
-
-      <div class="opening-card" onclick="selectOpening('秋之离别')">
-        <div class="image-wrapper">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" alt="秋之离别">
-        </div>
-        <div class="content">
-          <h3>秋之离别</h3>
-          <p>红叶纷飞，不舍的泪水模糊了视线...</p>
-        </div>
-        <div class="hover-icon">
-          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3l1.912 5.813L20 9.5l-4.562 3.937L17 19l-5-3.5L7 19l1.563-5.563L4 9.5l6.088-.687L12 3z" fill="currentColor" stroke="none"></path></svg>
-        </div>
-      </div>
-
-      <div class="opening-card" onclick="selectOpening('冬之重逢')">
-        <div class="image-wrapper">
-          <img src="https://images.unsplash.com/photo-1491002052546-bf38f186af56?w=600&q=80" alt="冬之重逢">
-        </div>
-        <div class="content">
-          <h3>冬之重逢</h3>
-          <p>白雪皑皑，终于再次见到思念的人...</p>
-        </div>
-        <div class="hover-icon">
-          <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M12 3l1.912 5.813L20 9.5l-4.562 3.937L17 19l-5-3.5L7 19l1.563-5.563L4 9.5l6.088-.687L12 3z" fill="currentColor" stroke="none"></path></svg>
-        </div>
-      </div>
-    </div>
-
-    <p class="hint-text">选择一个开场，开启你的专属故事</p>
-  </div>
-
-  <!-- 设置页面 -->
-  <div id="settings" class="page">
-    <div class="page-header">
-      <button class="bubble-btn bubble-btn-sm" onclick="showPage('main-menu')">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        返回
-      </button>
-      <h2>游戏设置</h2>
-      <div class="spacer"></div>
-    </div>
-
-    <div class="settings-content">
-      <!-- URL导入 -->
-      <div class="settings-card">
-        <div class="settings-card-header">
-          <div class="settings-card-icon">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          </div>
-          <div>
-            <h3>URL 导入</h3>
-            <p class="desc">从网络地址导入配置文件</p>
-          </div>
-        </div>
-        <div class="url-input-group">
-          <input type="url" id="url-input" placeholder="输入配置文件 URL...">
-          <button class="bubble-btn bubble-btn-sm" onclick="importFromUrl()">导入</button>
-        </div>
-      </div>
-
-      <!-- ZIP导入 -->
-      <div class="settings-card">
-        <div class="settings-card-header">
-          <div class="settings-card-icon">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M21 8v13H3V8"></path><path d="M1 3h22v5H1z"></path><path d="M10 12h4"></path></svg>
-          </div>
-          <div>
-            <h3>ZIP 压缩包导入</h3>
-            <p class="desc">从本地 ZIP 文件导入配置</p>
-          </div>
-        </div>
-        <input type="file" id="zip-input" class="hidden-input" accept=".zip" onchange="importFile(this, 'zip')">
-        <button class="bubble-btn full-width-btn" onclick="document.getElementById('zip-input').click()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 8v13H3V8"></path><path d="M1 3h22v5H1z"></path><path d="M10 12h4"></path></svg>
-          选择 ZIP 文件
-        </button>
-      </div>
-
-      <!-- 本地文件导入 -->
-      <div class="settings-card">
-        <div class="settings-card-header">
-          <div class="settings-card-icon">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          </div>
-          <div>
-            <h3>本地文件导入</h3>
-            <p class="desc">从本地选择配置文件</p>
-          </div>
-        </div>
-        <input type="file" id="file-input" class="hidden-input" accept=".json,.xml,.yaml,.yml" onchange="importFile(this, 'file')">
-        <button class="bubble-btn full-width-btn" onclick="document.getElementById('file-input').click()">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-          选择本地文件
-        </button>
-      </div>
-
-      <!-- 已导入配置列表 -->
-      <div class="settings-card" id="config-list-card" style="display: none;">
-        <h3 style="margin-bottom: 16px; color: var(--foreground);">已导入的配置</h3>
-        <div class="config-list" id="config-list"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 角色介绍页面 -->
-  <div id="character-intro" class="page">
-    <div class="page-header">
-      <button class="bubble-btn bubble-btn-sm" onclick="showPage('main-menu')">
-        <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-        返回
-      </button>
-      <h2>角色介绍</h2>
-      <div class="spacer"></div>
-    </div>
-
-    <div class="character-display">
-      <button class="bubble-btn bubble-btn-round nav-btn" onclick="prevCharacter()">
-        <svg class="icon icon-lg" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-
-      <div class="character-card" id="character-card">
-        <div class="character-card-inner">
-          <div class="character-image">
-            <img id="character-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80" alt="角色图片">
-          </div>
-          <div class="character-info">
-            <span class="character-role" id="character-role">女主角</span>
-            <h3 class="character-name" id="character-name">樱井 美月</h3>
-            <p class="character-desc" id="character-desc">温柔善良的少女，拥有感知星光的神秘能力。在一次偶然中与命运相遇，开启了一段跨越时空的旅程。</p>
-            <div class="character-dots" id="character-dots"></div>
-          </div>
-        </div>
-      </div>
-
-      <button class="bubble-btn bubble-btn-round nav-btn" onclick="nextCharacter()">
-        <svg class="icon icon-lg" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
-      </button>
-    </div>
-
-    <p class="hint-text">点击左右按钮或底部指示器切换角色</p>
-  </div>
-
-  <script>
-    // 角色数据
-    const characters = [
-      {
-        name: "樱井 美月",
-        role: "女主角",
-        desc: "温柔善良的少女，拥有感知星光的神秘能力。在一次偶然中与命运相遇，开启了一段跨越时空的旅程。",
-        image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=600&q=80",
-        colorClass: ""
-      },
-      {
-        name: "星野 苍",
-        role: "男主角",
-        desc: "神秘的转学生，似乎隐藏着不为人知的过去。冷淡的外表下，有着温暖的内心。",
-        image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80",
-        colorClass: "blue"
-      },
-      {
-        name: "日向 心",
-        role: "好友",
-        desc: "美月的青梅竹马，活泼开朗的性格总能带给周围人欢笑。暗中守护着美月。",
-        image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=600&q=80",
-        colorClass: "orange"
-      },
-      {
-        name: "月见 透",
-        role: "神秘人物",
-        desc: "在关键时刻出现的神秘人物，似乎知道所有事情的真相。身份成谜。",
-        image: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&q=80",
-        colorClass: "gray"
-      }
-    ];
-
-    let currentCharacter = 0;
-    let importedConfigs = [];
-
-    // 初始化
-    document.addEventListener('DOMContentLoaded', function() {
-      createParticles();
-      renderCharacterDots();
-      updateCharacter();
-    });
-
-    // 创建粒子效果
-    function createParticles() {
-      const container = document.getElementById('particles');
-      for (let i = 0; i < 20; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 5 + 's';
-        particle.style.animationDuration = (5 + Math.random() * 5) + 's';
-        container.appendChild(particle);
-      }
-    }
-
-    // 页面切换
-    function showPage(pageId) {
-      document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-      });
-      document.getElementById(pageId).classList.add('active');
-    }
-
-    // 选择开场
-    function selectOpening(title) {
-      alert('已选择开场：' + title);
-    }
-
-    // URL导入
-    function importFromUrl() {
-      const input = document.getElementById('url-input');
-      const url = input.value.trim();
-      if (!url) return;
-      
-      addConfig(url, 'url');
-      input.value = '';
-    }
-
-    // 文件导入
-    function importFile(input, type) {
-      const file = input.files[0];
-      if (!file) return;
-      
-      addConfig(file.name, type);
-      input.value = '';
-    }
-
-    // 添加配置
-    function addConfig(name, type) {
-      importedConfigs.push({ name, type });
-      renderConfigList();
-    }
-
-    // 删除配置
-    function removeConfig(index) {
-      importedConfigs.splice(index, 1);
-      renderConfigList();
-    }
-
-    // 渲染配置列表
-    function renderConfigList() {
-      const card = document.getElementById('config-list-card');
-      const list = document.getElementById('config-list');
-      
-      if (importedConfigs.length === 0) {
-        card.style.display = 'none';
+<script>
+var MessageState;
+(function (MessageState) {
+    MessageState[MessageState["none"] = 0] = "none";
+    MessageState[MessageState["auto"] = 1] = "auto";
+    MessageState[MessageState["skip"] = 2] = "skip";
+})(MessageState || (MessageState = {}));
+class TextInfo {
+    character;
+    clothing;
+    mood;
+    scene;
+    text;
+}
+class MessageInfo {
+    mesid;
+    _textIndex;
+    get textIndex() {
+        return this._textIndex;
+    }
+    set textIndex(value) {
+        this._textIndex = value;
+        this.charIndex = 0;
+    }
+    charIndex;
+    state;
+    timeoutID;
+    nameElement;
+    textElement;
+    sceneElement;
+    indicatorElement;
+    nextElement;
+    autoTeggleElement;
+    skipTeggleElement;
+    tempElement;
+    portraitElements;
+    texts;
+    constructor() {
+        this.textIndex = 0;
+        this.charIndex = 0;
+        this.state = MessageState.none;
+    }
+    setElement(mes_text) {
+        this.nameElement = $(".custom-name", mes_text)[0];
+        this.textElement = $(".custom-text", mes_text)[0];
+        this.portraitElements = $(".custom-portrait", mes_text);
+        this.sceneElement = $(".custom-scene", mes_text)[0];
+        this.indicatorElement = $(".custom-text-indicator", mes_text)[0];
+        this.indicatorElement.textContent = 1 + "/" + this.texts.length;
+        this.nextElement = $(".custom-text-next-img", mes_text)[0];
+        this.autoTeggleElement = $(".custom-auto-toggle", mes_text)[0];
+        this.skipTeggleElement = $(".custom-skip-toggle", mes_text)[0];
+    }
+}
+class StreamInfo {
+    mesid;
+    character;
+    scene;
+    text;
+    textLength;
+    textCount;
+    characters;
+    textElement;
+    sceneElement;
+    portraitsElement;
+    indicatorElement;
+    constructor() {
+        this.textCount = 0;
+        this.characters = new Set;
+    }
+}
+function jumpAnimate(element, count, speed = 10, minPosition = -30, maxPosition = 0) {
+    let position = 0;
+    let direction = -1;
+    let completedCount = 0;
+    const animate = () => {
+        if (completedCount < count) {
+            position += direction * 5;
+            if (position > maxPosition) {
+                direction *= -1;
+                completedCount++;
+            }
+            else if (position < minPosition) {
+                direction *= -1;
+            }
+            element.style.top = position + "px";
+            setTimeout(requestAnimationFrame, speed, animate);
+        }
+        else {
+            element.style.top = "0px";
+        }
+    };
+    requestAnimationFrame(animate);
+}
+;
+function showText(msgInfo, textInfo, charTimeout = charAutoInterval) {
+    msgInfo.textElement.textContent = "";
+    msgInfo.nameElement.textContent = textInfo.character;
+    msgInfo.nextElement.style.opacity = "0";
+    msgInfo.indicatorElement.textContent = (msgInfo.textIndex + 1) + "/" + msgInfo.texts.length;
+    let portrait;
+    if (portraitImageMap.has(textInfo.character)) {
+        for (let i = 0; i < msgInfo.portraitElements.length; i++) {
+            portrait = msgInfo.portraitElements[i];
+            if (portrait.getAttribute("alt") === textInfo.character) {
+                portrait.style.opacity = "1.0";
+                portrait.setAttribute("src", catboxFormat.format(portraitImageMap.get(textInfo.character)?.get(textInfo.clothing)?.getX(textInfo.mood)));
+            }
+            else
+                portrait.style.opacity = "0.6";
+        }
+    }
+    else {
+        msgInfo.portraitElements.css("opacity", "1.0");
+    }
+    msgInfo.sceneElement.setAttribute("src", catboxFormat.format(sceneImageMap.getX(textInfo.scene)));
+    if (portrait) {
+        jumpAnimate(portrait, 2);
+    }
+    if (charTimeout === 0) {
+        msgInfo.textElement.innerHTML = textInfo.text;
+        msgInfo.nextElement.style.opacity = "1.0";
+    }
+    else {
+        showChar(textInfo.text, charTimeout);
+    }
+    function showChar(text, timeout) {
+        if (msgInfo.charIndex < text.length) {
+            let hasWord = false;
+            filterWordMap.forEach((words, length) => {
+                var word = text.substring(msgInfo.charIndex, msgInfo.charIndex + length);
+                if (words.has(word)) {
+                    msgInfo.textElement.innerHTML += word;
+                    let elementName = word.match(elementNameRagex)[1];
+                    if (msgInfo.tempElement?.localName === elementName) {
+                        msgInfo.tempElement = undefined;
+                    }
+                    else {
+                        msgInfo.tempElement = $(`${elementName}`, msgInfo.textElement)[0];
+                        hasWord = true;
+                    }
+                    msgInfo.charIndex += length;
+                }
+            });
+            if (msgInfo.tempElement === undefined) {
+                msgInfo.textElement.innerHTML += text.charAt(msgInfo.charIndex);
+                msgInfo.charIndex++;
+            }
+            else if (hasWord === false) {
+                msgInfo.tempElement.innerHTML += text.charAt(msgInfo.charIndex);
+                msgInfo.charIndex++;
+            }
+            msgInfo.timeoutID = setTimeout(showChar, timeout, text, timeout);
+        }
+        else {
+            clearTimeout(msgInfo.timeoutID);
+            msgInfo.timeoutID = undefined;
+            msgInfo.tempElement = undefined;
+            msgInfo.nextElement.style.opacity = "1.0";
+            msgInfo.timeoutID = tryNextText(msgInfo);
+        }
+    }
+}
+function tryNextText(msgInfo, timeout = undefined) {
+    if (msgInfo.timeoutID !== undefined)
         return;
-      }
-      
-      card.style.display = 'block';
-      
-      const iconMap = {
-        url: '<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>',
-        zip: '<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 8v13H3V8"></path><path d="M1 3h22v5H1z"></path><path d="M10 12h4"></path></svg>',
-        file: '<svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>'
-      };
-      
-      list.innerHTML = importedConfigs.map((config, index) => `
-        <div class="config-item">
-          <div class="config-item-left">
-            ${iconMap[config.type]}
-            <span class="config-item-name">${config.name}</span>
-          </div>
-          <div class="config-item-right">
-            <svg class="icon icon-sm check-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <button class="remove-btn" onclick="removeConfig(${index})">
-              <svg class="icon icon-sm" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+    if (msgInfo.textIndex < msgInfo.texts.length - 1 && msgInfo.state !== MessageState.none) {
+        if (msgInfo.state === MessageState.auto) {
+            timeout ??= messageAutoInterval;
+            return setTimeout(show, timeout);
+        }
+        else if (msgInfo.state === MessageState.skip) {
+            timeout ??= messageSkipInterval;
+            return setTimeout(show, timeout);
+        }
+    }
+    else {
+        msgInfo.state = MessageState.none;
+        msgInfo.autoTeggleElement.checked = false;
+        msgInfo.skipTeggleElement.checked = false;
+    }
+    function show() {
+        msgInfo.textIndex++;
+        showText(msgInfo, msgInfo.texts[msgInfo.textIndex], msgInfo.state === MessageState.auto ? charAutoInterval : charSkipInterval);
+    }
+}
+function nextText(msgInfo, increase) {
+    clearTimeout(msgInfo.timeoutID);
+    if (msgInfo.timeoutID !== undefined || msgInfo.state !== MessageState.none) {
+        msgInfo.state = MessageState.none;
+        msgInfo.autoTeggleElement.checked = false;
+        msgInfo.skipTeggleElement.checked = false;
+        msgInfo.tempElement = undefined;
+        msgInfo.timeoutID = undefined;
+        msgInfo.nextElement.style.opacity = "1.0";
+        msgInfo.textElement.innerHTML = msgInfo.texts[msgInfo.textIndex].text;
+        return;
+    }
+    msgInfo.textIndex += increase;
+    if (msgInfo.textIndex > msgInfo.texts.length - 1) {
+        msgInfo.textIndex = 0;
+        for (let i = 0; i < msgInfo.portraitElements.length; i++) {
+            let element = msgInfo.portraitElements[i];
+            let character = element.getAttribute("alt");
+            let textInfo = msgInfo.texts.find((info) => info.character === character);
+            element.setAttribute("src", catboxFormat.format(portraitImageMap.get(textInfo.character)?.get(textInfo.clothing)?.getX(textInfo.mood)));
+        }
+    }
+    else if (msgInfo.textIndex < 0) {
+        msgInfo.textIndex = msgInfo.texts.length - 1;
+        for (let i = 0; i < msgInfo.portraitElements.length; i++) {
+            let element = msgInfo.portraitElements[i];
+            let character = element.getAttribute("alt");
+            let textInfo = msgInfo.texts.findLast((info) => info.character === character);
+            element.setAttribute("src", catboxFormat.format(portraitImageMap.get(textInfo.character)?.get(textInfo.clothing)?.getX(textInfo.mood)));
+        }
+    }
+    showText(msgInfo, msgInfo.texts[msgInfo.textIndex]);
+}
+function messageParser(message) {
+    // [[character||{{name}}||{{clothing}}||{{scene}}||{{mood}}||{{text}}]]
+    // [[narration||{{scene}}||{{message}}]]
+    let infos = new Array();
+    let matchs = [...message.matchAll(messageRagex)];
+    for (let i = 0; i < matchs.length; i++) {
+        let info = new TextInfo();
+        let text = matchs[i][0];
+        let match = text.match(dialogueRagex);
+        if (match && match.length > 1) {
+            info.character = match[1];
+            info.scene = match[2];
+            info.clothing = match[3];
+            info.mood = match[4];
+            info.text = match[5];
+        }
+        else {
+            match = text.match(narrationRagex);
+            info.character = "";
+            info.scene = match[1];
+            info.text = match[2];
+        }
+        infos.push(info);
+    }
+    return infos;
+}
+function registeredEvent(msgInfo, mes_text) {
+    let element = $(".custom-text-next", mes_text);
+    element.on("click", _ => nextText(msgInfo, 1));
+    element = $(".custom-text-previous", mes_text);
+    element.on("click", _ => nextText(msgInfo, -1));
+    element = $(".custom-auto-button", mes_text);
+    element.on("click", ev => {
+        ev.target.previousElementSibling.click();
+        if (msgInfo.state !== MessageState.auto) {
+            msgInfo.state = MessageState.auto;
+            msgInfo.skipTeggleElement.checked = false;
+            msgInfo.timeoutID = tryNextText(msgInfo, 0);
+        }
+        else {
+            msgInfo.state = MessageState.none;
+            clearTimeout(msgInfo.timeoutID);
+            msgInfo.timeoutID = undefined;
+        }
+    });
+    element = $(".custom-skip-button", mes_text);
+    element.on("click", ev => {
+        ev.target.previousElementSibling.click();
+        if (msgInfo.state !== MessageState.skip) {
+            msgInfo.state = MessageState.skip;
+            msgInfo.autoTeggleElement.checked = false;
+            msgInfo.timeoutID = tryNextText(msgInfo, 0);
+        }
+        else {
+            msgInfo.state = MessageState.none;
+            clearTimeout(msgInfo.timeoutID);
+            msgInfo.timeoutID = undefined;
+        }
+    });
+}
+async function messageAction(mesid, mes_text) {
+    streamStart = false;
+    streamInfo = undefined;
+    if (mes_text === undefined) {
+        // 如果是不是AI消息则跳过
+        let mes = $(`.mes[mesid='${mesid}'][is_user='false'][is_system='false']`, window.parent.document);
+        if (mes.length === 0)
+            return;
+        mes_text = $(".mes_text", mes);
+    }
+    if (!Number.isInteger(mesid))
+        mesid = Number.parseInt(mesid.toString());
+    console.log(`开始消息解析, 消息ID ${mesid}`);
+    let fromEvent = mes_text === undefined;
+    let msgInfo = new MessageInfo();
+    msgInfo.mesid = mesid;
+    let messages = await getChatMessages(mesid);
+    let message = messages[0].message;
+    message = renderText(message);
+    // message = await formatAsDisplayedMessage(message);
+    msgInfo.texts = messageParser(message);
+    let characterNames = new Set();
+    let portraits = "";
+    for (let i = 0; i < msgInfo.texts.length; i++) {
+        let textInfo = msgInfo.texts[i];
+        if (portraitImageMap.has(textInfo.character) && !characterNames.has(textInfo.character)) {
+            characterNames.add(textInfo.character);
+            portraits += portraitFormat.format(portraitImageMap.get(textInfo.character)?.get(textInfo.clothing)?.getX(textInfo.mood), textInfo.character);
+        }
+    }
+    message = `<style>${style}</style>
+    <body>
+    ${mainHTMLFormat.format("", "", "", portraits)}
+    </body>`;
+    mes_text[0].innerHTML = message;
+    if (mes_text.length > 1) {
+        mes_text[0].style.display = "";
+        mes_text[1].style.display = "none";
+        mes_text[1].textContent = "";
+    }
+    msgInfo.setElement(mes_text[0]);
+    registeredEvent(msgInfo, mes_text[0]);
+    messageMap.set(mesid, msgInfo);
+    console.log(`完成消息解析, 消息ID ${mesid}`);
+    showText(msgInfo, msgInfo.texts[0], fromEvent ? charAutoInterval : 0);
+}
+async function loadConfig() {
+    const regexes = await getTavernRegexes({ scope: 'character', enable_state: 'enabled' });
+    for (let i = 0; i < regexes.length; i++) {
+        let regex = regexes[i];
+        switch (regex.script_name) {
+            case "黑暗模式":
+                const darkMode = true;
+                break;
+            case "自动模式字间隔(ms)":
+                charAutoInterval = tryParseInt(regex.replace_string, charAutoInterval);
+                break;
+            case "自动模式消息间隔(ms)":
+                messageAutoInterval = tryParseInt(regex.replace_string, messageAutoInterval);
+                break;
+            case "快进模式字间隔(ms)":
+                charSkipInterval = tryParseInt(regex.replace_string, charSkipInterval);
+                break;
+            case "快进模式消息间隔(ms)":
+                messageSkipInterval = tryParseInt(regex.replace_string, messageSkipInterval);
+                break;
+        }
+    }
+}
+let streamStart = false;
+let streamParsing = false;
+async function streamParser(fulltext) {
+    if (streamStart === false) {
+        streamStart = true;
+        streamParsing = false;
+        let last_mesid = Number.parseInt(await triggerSlashWithResult('/pass {{lastMessageId}}'));
+        let mes_text = retrieveDisplayedMessage(last_mesid);
+        streamInfo = new StreamInfo();
+        streamInfo.mesid = last_mesid;
+        streamInfo.textLength = fulltext.length;
+        streamInfo.text = fulltext;
+        streamInfo.textCount = 0;
+        let temp_mes_text;
+        if (mes_text.length > 1)
+            temp_mes_text = mes_text[1];
+        else
+            temp_mes_text = mes_text.clone()[0];
+        mes_text.css("display", "none");
+        mes_text.after(temp_mes_text);
+        let message = `<style>${style}</style>
+        <body>
+        ${mainHTMLFormat.format("", "", "", "")}
+        </body>`;
+        temp_mes_text.innerHTML = message;
+        streamInfo.portraitsElement = $(".custom-portraits", temp_mes_text)[0];
+        streamInfo.indicatorElement = $(".custom-text-indicator", temp_mes_text)[0];
+        streamInfo.textElement = $(".custom-text", temp_mes_text)[0];
+        streamInfo.sceneElement = $(".custom-scene", temp_mes_text)[0];
+        streamParsing = false;
+    }
+    else if (streamParsing === false && streamInfo !== undefined) {
+        streamParsing = true;
+        let incremental_text = fulltext.slice(streamInfo.textLength);
+        streamInfo.text += incremental_text;
+        streamInfo.textLength += incremental_text.length;
+        let messageMatch = streamInfo.text.match(messageRagex);
+        if (messageMatch === null) {
+            streamParsing = false;
+            return;
+        }
+        let dialogueMatch = messageMatch[0].match(dialogueRagex);
+        if (dialogueMatch) {
+            streamInfo.text = streamInfo.text.replace(dialogueMatch[0], "");
+            streamInfo.textCount++;
+            let character = dialogueMatch[1];
+            let scene = dialogueMatch[2];
+            let clothing = dialogueMatch[3];
+            let mood = dialogueMatch[4];
+            let text = dialogueMatch[5];
+            if (!streamInfo.characters.has(character) && portraitImageMap.has(character)) {
+                streamInfo.characters.add(character);
+                streamInfo.portraitsElement.innerHTML += portraitFormat.format(portraitImageMap.get(character)?.get(clothing)?.getX(mood), character);
+            }
+            if (streamInfo.textElement.textContent?.length === 0) {
+                streamInfo.sceneElement.setAttribute("src", catboxFormat.format(sceneImageMap.getX(scene)));
+                text = renderText(text);
+                streamInfo.textElement.innerHTML = text;
+            }
+        }
+        else {
+            let narrationMatch = messageMatch[0].match(narrationRagex);
+            if (narrationMatch) {
+                streamInfo.text = streamInfo.text.replace(narrationMatch[0], "");
+                streamInfo.textCount++;
+                let scene = narrationMatch[1];
+                let text = narrationMatch[2];
+                if (streamInfo.textElement.textContent?.length === 0) {
+                    streamInfo.sceneElement.setAttribute("src", catboxFormat.format(sceneImageMap.getX(scene)));
+                    text = renderText(text);
+                    streamInfo.textElement.innerHTML = text;
+                }
+            }
+        }
+        streamInfo.indicatorElement.textContent = "1/" + streamInfo.textCount;
+        streamParsing = false;
+    }
+}
+async function initialize() {
+    let nodes = $("#chat", window.parent.document).children(".mes[is_user='false'][is_system='false']");
+    for (let i = nodes.length - 1; i >= 0; i--) {
+        let node = nodes[i];
+        let mesid = Number.parseInt(node.getAttribute("mesid"));
+        await messageAction(mesid, $(".mes_text", node));
+    }
+}
+//#region Extension
+function renderText(string) {
+    string = string.replace(/\*{1}(.+?)\*{1}/g, "<em>$1</em>");
+    return string.replace(/\"{1}(.+?)\"{1}/g, "$1");
+}
+function tryParseInt(string, defaultNumber) {
+    let result = Number.parseInt(string);
+    return Number.isNaN(result) ? defaultNumber : result;
+}
+function setStringFormat() {
+    if (String.prototype.format !== undefined)
+        return;
+    String.prototype.format = function (...args) {
+        return this.replace(/{{1}([0-9]+?)}{1}/g, function (match, number) {
+            return typeof args[number] != "undefined" ? args[number] : match;
+        });
+    };
+}
+function setRandomElement() {
+    if (Array.prototype.randomElement !== undefined)
+        return;
+    Array.prototype.randomElement = function () {
+        let randomIndex = Math.floor(Math.random() * this.length);
+        return this[randomIndex];
+    };
+}
+function setMapGetX() {
+    if (Map.prototype.getX !== undefined)
+        return;
+    Map.prototype.getX = function (key) {
+        let value = this.get(key);
+        if (Array.isArray(value))
+            return value.randomElement();
+        else
+            return value;
+    };
+}
+function setExtensions() {
+    setStringFormat();
+    setRandomElement();
+    setMapGetX();
+}
+setExtensions();
+//#endregion
+console.log("全局脚本启动");
+loadConfig();
+initialize();
+
+
+eventOn(tavern_events.MESSAGE_UPDATED, messageAction);
+eventOn(tavern_events.MESSAGE_RECEIVED, messageAction);
+eventOn(tavern_events.MESSAGE_SWIPED, messageAction);
+eventOn(tavern_events.MESSAGE_DELETED, initialize);
+eventOn(tavern_events.STREAM_TOKEN_RECEIVED, streamParser);
+var charAutoInterval = 30;
+var messageAutoInterval = 1000;
+var charSkipInterval = 5;
+var messageSkipInterval = 500;
+var streamInfo;
+const dialogueRagex = /\[{2}character\|{2}(.+?)\|{2}(.+?)\|{2}(.+?)\|{2}(.+?)\|{2}(.+?)\]{2}/;
+const narrationRagex = /\[{2}narration\|{2}(.+?)\|{2}(.+?)\]{2}/;
+const messageRagex = /\[{2}.*\]{2}/g;
+const elementNameRagex = /<{1}\/*([^ >]+)[^>]*?>{1}/;
+const catboxFormat = "https://files.catbox.moe/{0}.png";
+const portraitFormat = `<img class="custom-portrait" src="https://files.catbox.moe/{0}.png" alt="{1}">`;
+const messageMap = new Map();
+const sceneImageMap = new Map([
+    ["办公室-白天", "ugp0te"],
+    ["办公室-夜晚", "ngcw7f"],
+    ["港区-白天", ["m5ec7e", "82kb3j", "fcs2lr", "nmze4i"]],
+    ["港区-夜晚", "ecg99t"],
+    ["泳池", "po2maq"]
+]);
+const portraitImageMap = new Map([
+    ["阿尔萨斯", new Map([["常服", new Map([
+                    ["平静", "1khn70"],
+                    ["疑惑", ["5nfkod", "96ah82"]],
+                    ["开心", ["clcwpr", "loifrv", "cew2uc"]],
+                    ["不开心", "q37vtn"],
+                    ["惊讶", "idvx7i"],
+                    ["脸红", "o0jdwq"],
+                    ["害羞", ["pyjfi7", "k5a9tc"]],
+                    ["脸红惊讶", ["o0jdwq", "pl5ng8"]]
+                ])],
+            ["泳装", new Map([
+                    ["平静", ["yeer6b", "0ry8xm", "ttsckh"]],
+                    ["疑惑", ["nkot8h"]],
+                    ["开心", ["05d98g", "cwwntd"]],
+                    ["不开心", ["6ttg4w", "a8wqcp", "8e0wlb"]],
+                    ["惊讶", ["xqt4jn"]],
+                    ["脸红", ["zyo11o", "ulmkc8"]],
+                    ["害羞", ["ckz70f", "4o9mdb", "qmmzow"]],
+                    ["脸红惊讶", ["agrqtl"]]
+                ])]])]
+]);
+const filterWordMap = new Map([
+    [4, new Set(["<em>"])],
+    [5, new Set(["</em>"])],
+]);
+const style = `
+        .custom-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            max-height: 400px;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .custom-container img {
+            width: auto;
+        }
+
+        .custom-portraits {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .custom-portrait {
+            position: relative;
+            object-fit: cover;
+            z-index: 2;
+            margin: 5px;
+            max-width: 150px;
+            height: 100%;
+            max-height: 80% !important;
+            min-width: 10%;
+            min-height: 20%;
+            transition: transform 0.3s ease;
+        }
+
+        .custom-portrait:hover {
+            transform: scale(1.2);
+        }
+
+        .custom-scene {
+            position: absolute;
+            z-index: 1;
+            min-height: 50%;
+            height: 100%;
+            min-width: 100%;
+            object-fit: cover;
+        }
+
+        .custom-dialogue-box {
+            z-index: 10;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background: linear-gradient(to top, #4a5873cc 70%, #ffffff00);
+            color: white;
+            padding: 30px 50px 0px 50px;
+            box-sizing: border-box;
+            min-height: 30%;
+        }
+
+        .custom-dialogue-box .custom-name {
+            color: #00bfff;
+            font-weight: bold;
+            order: 2;
+            pointer-events: none;
+        }
+
+        .custom-dialogue-box .custom-divider {
+            height: 1px;
+            background: #ffffff22;
+            margin: 5px 0;
+            pointer-events: none;
+        }
+
+        .custom-dialogue-box .custom-text {
+            margin-top: 5px;
+            white-space: pre-wrap;
+            pointer-events: none;
+        }
+
+        .custom-dialogue-box .custom-info {
+            display: flex;
+            pointer-events: none;
+        }
+
+        .custom-name:empty+.custom-print {
+            opacity: 0;
+        }
+
+        .custom-dialogue-box .custom-print {
+            margin-top: 4px;
+            margin-right: 8px;
+            height: 14px;
+            pointer-events: none;
+        }
+
+        .custom-dialogue-box .custom-text-next-img {
+            position: absolute;
+            right: 15px;
+            bottom: 5px;
+            height: 14px;
+            animation: text-next-jump 1s infinite;
+        }
+
+        @keyframes text-next-jump {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .custom-dialogue-box .custom-text-action {
+            display: flex;
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+            z-index: 15;
+        }
+
+        .custom-text-action div {
+            height: 100%;
+            width: 50%;
+            position: relative;
+        }
+
+        .custom-dialogue-box .custom-text-indicator {
+            opacity: 0.6;
+            position: absolute;
+            right: 5px;
+            bottom: 30px;
+        }
+
+        .custom-topbar {
+            z-index: 10;
+            padding: 10px;
+            width: 100%;
+            background: linear-gradient(to bottom, #4a5873cc 60%, #ffffff00);
+            position: absolute;
+            top: 0;
+        }
+
+        .custom-topbar button:hover {
+            opacity: 0.8;
+        }
+
+        .custom-topbar button:active {
+            opacity: 0.9;
+        }
+
+        .custom-topbar input {
+            display: none;
+        }
+
+        .custom-topbar button {
+            top: -3px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 16px;
+            position: relative;
+        }
+
+        .custom-topbar .custom-log-toggle:checked~.custom-log-button {
+            filter: sepia(1) saturate(10) brightness(1.5);
+        }
+
+        .custom-topbar .custom-skip-toggle:checked~.custom-skip-button {
+            filter: sepia(1) saturate(10) brightness(1.5);
+        }
+
+        .custom-topbar .custom-skip-toggle:checked~.custom-skip-button img {
+            animation: slide 1s linear infinite;
+        }
+
+        .custom-topbar .custom-auto-toggle:checked~.custom-auto-button {
+            filter: sepia(1) saturate(10) brightness(1.5);  
+        }
+
+        .custom-topbar .custom-auto-toggle:checked~.custom-auto-button img {
+            animation: revolve 2s linear infinite;
+        }
+
+
+        .custom-topbar img {
+            margin: 4px;
+            height: 14px;
+        }
+
+        .custom-topbar .custom-auto-button {
+            display: flex;
+            float: right;
+            margin-right: 10px;
+        }
+
+        .custom-topbar .custom-auto-button:hover .custom-auto-img {
+            animation: revolve 2s linear infinite;
+        }
+
+        @keyframes revolve {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .custom-topbar .custom-skip-button {
+            display: flex;
+            float: right;
+            margin-right: 10px;
+        }
+
+        .custom-topbar .custom-skip-button:hover .custom-skip-img {
+            animation: slide 1s linear infinite;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translate(-5px, 0)
+            }
+
+            100% {
+                transform: translate(5px, 0)
+            }
+        }
+
+        .custom-topbar .custom-log-button {
+            padding: 0px;
+        }
+
+        .custom-topbar .custom-log-button img {
+            height: 26px;
+        }
+`;
+const mainHTMLFormat = `
+    <div class="custom-container">
+        <div class="custom-topbar">
+            <input type="checkbox" class="custom-log-toggle"/>
+            <button class="custom-log-button">
+                <img class="custom-log-img" src="https://files.catbox.moe/6a69x9.png" alt="日志">
             </button>
-          </div>
+            <input type="checkbox" class="custom-skip-toggle"/>
+            <button class="custom-skip-button">跳过
+                <img class="custom-skip-img" src="https://files.catbox.moe/9c7d8s.png" alt="跳过">
+            </button>
+            <input type="checkbox" class="custom-auto-toggle"/>
+            <button class="custom-auto-button">自动
+                <img class="custom-auto-img" src="https://files.catbox.moe/1tjxo5.png" alt="自动">
+            </button>
         </div>
-      `).join('');
-    }
-
-    // 角色切换
-    function prevCharacter() {
-      currentCharacter = currentCharacter === 0 ? characters.length - 1 : currentCharacter - 1;
-      updateCharacter();
-    }
-
-    function nextCharacter() {
-      currentCharacter = currentCharacter === characters.length - 1 ? 0 : currentCharacter + 1;
-      updateCharacter();
-    }
-
-    function goToCharacter(index) {
-      currentCharacter = index;
-      updateCharacter();
-    }
-
-    function updateCharacter() {
-      const char = characters[currentCharacter];
-      const card = document.getElementById('character-card');
-      
-      document.getElementById('character-name').textContent = char.name;
-      document.getElementById('character-role').textContent = char.role;
-      document.getElementById('character-desc').textContent = char.desc;
-      document.getElementById('character-img').src = char.image;
-      
-      card.className = 'character-card ' + char.colorClass;
-      
-      document.querySelectorAll('.dot').forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentCharacter);
-      });
-    }
-
-    function renderCharacterDots() {
-      const container = document.getElementById('character-dots');
-      container.innerHTML = characters.map((_, index) => 
-        `<button class="dot ${index === 0 ? 'active' : ''}" onclick="goToCharacter(${index})"></button>`
-      ).join('');
-    }
-  </script>
-</body>
-</html>
+        <div class="custom-dialogue-box">
+            <div class="custom-info">
+                <div class="custom-name">{0}</div>
+                <img class="custom-print" src="https://files.catbox.moe/du80gs.png" alt="对话"></img>
+            </div>
+            <div class="custom-divider"></div>
+            <div class="custom-text">{1}</div>
+            <img class="custom-text-next-img" src="https://files.catbox.moe/ltt6x5.png" alt="下一个"></img>
+            <div class="custom-text-action">
+                <div class="custom-text-previous"></div>
+                <div class="custom-text-next"></div>
+            </div>
+            <div class="custom-text-indicator"></div>
+        </div>
+        <img class="custom-scene" src="https://files.catbox.moe/{2}.png" alt="背景"></img>
+        <div class="custom-portraits">
+{3}
+        </div>
+    </div>
+`;
+</script>

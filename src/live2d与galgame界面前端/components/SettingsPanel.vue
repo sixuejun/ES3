@@ -2,7 +2,7 @@
   <div
     class="animate-in fade-in absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm duration-200"
   >
-    <div class="bg-card relative max-h-[85vh] w-[90%] max-w-lg overflow-hidden rounded-xl shadow-2xl">
+    <div class="bg-card relative max-h-[85vh] w-[90%] max-w-lg overflow-hidden rounded-2xl shadow-2xl">
       <!-- 头部 -->
       <div class="border-border flex items-center justify-between border-b p-4">
         <h2 class="text-foreground text-lg font-semibold">设置</h2>
@@ -16,9 +16,27 @@
       <!-- 内容 -->
       <div class="settings-scroll-container max-h-[calc(85vh-120px)] overflow-y-auto p-4">
         <div class="space-y-6">
-          <!-- 立绘设置 -->
+          <!-- 用户称呼设置 -->
+          <div class="space-y-4">
+            <h3 class="text-foreground text-sm font-medium">用户称呼</h3>
+            <div class="space-y-3">
+              <div class="space-y-2">
+                <label class="text-muted-foreground text-xs">你想让我称呼你为……？</label>
+                <input
+                  type="text"
+                  :value="userDisplayName"
+                  placeholder="请输入你的称呼"
+                  class="border-border bg-background text-foreground w-full rounded-lg border px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:ring-primary focus:ring-1 focus:outline-none"
+                  @input="e => updateUserDisplayName((e.target as HTMLInputElement).value)"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- 立绘设置（静态图片） -->
           <div class="space-y-4">
             <h3 class="text-foreground text-sm font-medium">立绘设置</h3>
+            <p class="text-muted-foreground text-xs">调整静态立绘图片的显示效果</p>
             <div class="space-y-3">
               <div class="space-y-2">
                 <label class="text-muted-foreground text-xs"
@@ -64,13 +82,77 @@
                   type="range"
                   :value="spriteSettings.positionY"
                   min="0"
-                  max="100"
+                  max="200"
                   step="1"
                   class="w-full"
                   @input="
                     e =>
                       updateSpriteSettings({
                         ...spriteSettings,
+                        positionY: parseInt((e.target as HTMLInputElement).value),
+                      })
+                  "
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Live2D 模型设置 -->
+          <div class="space-y-4">
+            <h3 class="text-foreground text-sm font-medium">Live2D 模型设置</h3>
+            <p class="text-muted-foreground text-xs">调整 Live2D 动态模型的显示效果</p>
+            <div class="space-y-3">
+              <div class="space-y-2">
+                <label class="text-muted-foreground text-xs"
+                  >大小 ({{ Math.round(live2dSettings.scale * 100) }}%)</label
+                >
+                <input
+                  type="range"
+                  :value="live2dSettings.scale"
+                  min="0"
+                  max="2"
+                  step="0.05"
+                  class="w-full"
+                  @input="
+                    e =>
+                      updateLive2dSettings({
+                        ...live2dSettings,
+                        scale: parseFloat((e.target as HTMLInputElement).value),
+                      })
+                  "
+                />
+              </div>
+              <div class="space-y-2">
+                <label class="text-muted-foreground text-xs">水平位置 ({{ live2dSettings.positionX }}%)</label>
+                <input
+                  type="range"
+                  :value="live2dSettings.positionX"
+                  min="0"
+                  max="100"
+                  step="1"
+                  class="w-full"
+                  @input="
+                    e =>
+                      updateLive2dSettings({
+                        ...live2dSettings,
+                        positionX: parseInt((e.target as HTMLInputElement).value),
+                      })
+                  "
+                />
+              </div>
+              <div class="space-y-2">
+                <label class="text-muted-foreground text-xs">垂直位置 ({{ live2dSettings.positionY }}%)</label>
+                <input
+                  type="range"
+                  :value="live2dSettings.positionY"
+                  min="0"
+                  max="150"
+                  step="1"
+                  class="w-full"
+                  @input="
+                    e =>
+                      updateLive2dSettings({
+                        ...live2dSettings,
                         positionY: parseInt((e.target as HTMLInputElement).value),
                       })
                   "
@@ -418,12 +500,20 @@ import DialogPreview from './DialogPreview.vue';
 
 interface Props {
   onClose: () => void;
+  userDisplayName: string;
+  onUserDisplayNameChange: (name: string) => void;
   spriteSettings: {
     scale: number;
     positionX: number;
     positionY: number;
   };
   onSpriteSettingsChange: (settings: { scale: number; positionX: number; positionY: number }) => void;
+  live2dSettings: {
+    scale: number;
+    positionX: number;
+    positionY: number;
+  };
+  onLive2dSettingsChange: (settings: { scale: number; positionX: number; positionY: number }) => void;
   autoPlay: boolean;
   onAutoPlayChange: (autoPlay: boolean) => void;
   autoPlaySpeed: number;
@@ -444,8 +534,16 @@ const hasChanges = computed(() => {
   return JSON.stringify(props.dialogStyle) !== JSON.stringify(props.currentAppliedStyle);
 });
 
+function updateUserDisplayName(name: string) {
+  props.onUserDisplayNameChange(name);
+}
+
 function updateSpriteSettings(settings: { scale: number; positionX: number; positionY: number }) {
   props.onSpriteSettingsChange(settings);
+}
+
+function updateLive2dSettings(settings: { scale: number; positionX: number; positionY: number }) {
+  props.onLive2dSettingsChange(settings);
 }
 
 function updateShape(key: keyof DialogBoxStyle, value: string) {

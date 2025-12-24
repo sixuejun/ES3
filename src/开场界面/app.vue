@@ -1,6 +1,6 @@
 <template>
   <div class="opening-interface-wrapper">
-    <div class="opening-interface">
+    <div class="opening-interface" :class="{ 'is-main-menu': currentPage === 'main-menu' }">
       <!-- 背景 -->
       <div class="background"></div>
       <div class="overlay"></div>
@@ -39,7 +39,12 @@
       <!-- 开始游戏页面 -->
       <div v-show="currentPage === 'start-game'" class="page start-game">
         <PageHeader title="选择开场" @back="showPage('main-menu')">
-          <IconStar />
+          <template #left-icon>
+            <IconStar />
+          </template>
+          <template #right-icon>
+            <IconStar />
+          </template>
         </PageHeader>
 
         <div class="openings-grid">
