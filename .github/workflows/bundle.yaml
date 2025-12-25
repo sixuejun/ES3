@@ -50,3 +50,5 @@ jobs:
           with-v: true
       - if: ${{ steps.autotag.outputs.tag != '0.0.0' && steps.autotag.outputs.new-tag != steps.autotag.outputs.tag }}
         run: git push --delete origin ${{ steps.autotag.outputs.tag }}
+      - if: ${{ steps.autotag.outputs.new-tag != '0.0.0' && steps.autotag.outputs.new-tag != steps.autotag.outputs.tag }}
+        run: git push origin ${{ steps.autotag.outputs.new-tag }}
