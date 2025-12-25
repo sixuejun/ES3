@@ -963,6 +963,15 @@ async function loadDialoguesFromTavern() {
             }
 
             if (allOptions.length > 0) {
+              // 为格式1选项分配唯一ID，避免多个 choice 块默认使用相同的 choice_0 导致点击错乱
+              const mergedOptions = allOptions.map((opt, idx) => ({
+                ...opt,
+                id:
+                  opt.id && opt.id !== 'choice_0'
+                    ? opt.id
+                    : `choice_${msg.message_id}_${unitIndex}_${idx}`,
+              }));
+
               const choiceDialogue: DialogueItem = {
                 unitId: `msg_${msg.message_id}_unit_${unitIndex}`,
                 unitIndex: unitIndex++,
@@ -972,7 +981,7 @@ async function loadDialoguesFromTavern() {
                 message_id: msg.message_id,
                 role: 'system',
                 choiceFormat: 'format1',
-                options: allOptions,
+                options: mergedOptions,
                 statusBlock,
               };
 
