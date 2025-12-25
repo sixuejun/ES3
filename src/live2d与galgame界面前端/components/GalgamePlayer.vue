@@ -749,11 +749,12 @@ const currentSpriteType = computed<'live2d' | 'image' | 'none'>(() => {
     return 'none';
   }
   // 默认：根据是否有 Live2D 模型或立绘资源来决定
-  if (dialogue?.character) {
-    const hasLive2d = live2dModels.value.some(m => m.name === dialogue.character);
+  if (dialogue?.character !== undefined) {
+    const charName = typeof dialogue.character === 'string' ? dialogue.character : String(dialogue.character);
+    const hasLive2d = live2dModels.value.some(m => m.name === charName);
     const hasImage = !!dialogue.sprite?.imageUrl;
     console.info('[GalgamePlayer] currentSpriteType: 自动判断', {
-      character: dialogue.character,
+      character: charName,
       hasLive2d,
       hasImage,
       availableModels: live2dModels.value.map(m => ({ id: m.id, name: m.name })),
@@ -784,10 +785,11 @@ const currentLive2dModelId = computed(() => {
     return dialogue.sprite.live2dModelId;
   }
   // 自动匹配：根据角色名从世界书加载的模型列表中查找
-  if (dialogue?.character) {
-    const model = live2dModels.value.find(m => m.name === dialogue.character);
+  if (dialogue?.character !== undefined) {
+    const charName = typeof dialogue.character === 'string' ? dialogue.character : String(dialogue.character);
+    const model = live2dModels.value.find(m => m.name === charName);
     console.info('[GalgamePlayer] currentLive2dModelId: 从世界书模型列表中匹配角色名', {
-      character: dialogue.character,
+      character: charName,
       foundModel: model ? { id: model.id, name: model.name } : null,
       availableModels: live2dModels.value.map(m => ({ id: m.id, name: m.name })),
       source: 'live2dModels.value (从世界书加载)',
@@ -1035,7 +1037,8 @@ async function loadDialoguesFromTavern() {
             live2dModels.value,
           );
 
-          const live2dModel = live2dModels.value.find(m => m.name === block.character);
+          const characterName = typeof block.character === 'string' ? block.character : String(block.character || '');
+          const live2dModel = live2dModels.value.find(m => m.name === characterName);
           const hasSpriteImage = !!block.spriteImageUrl || !!msg.extra?.sprite_image;
 
           console.info('[对话创建] 资源检查:', {
@@ -1067,7 +1070,7 @@ async function loadDialoguesFromTavern() {
           const dialogue: DialogueItem = {
             unitId: `msg_${msg.message_id}_unit_${unitIndex}`,
             unitIndex: unitIndex++,
-            character: block.character,
+            character: characterName,
             text: block.text || '',
             message_id: msg.message_id,
             role: 'assistant',
