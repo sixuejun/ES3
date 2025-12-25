@@ -10,7 +10,11 @@ importers:
     dependencies:
       '@pixi/react':
         specifier: 8.0.0-beta.25
+<<<<<<< HEAD
         version: 8.0.0-beta.25(@types/react@19.2.7)(pixi.js@7.4.3)(react@19.2.3)
+=======
+        version: 8.0.0-beta.25(@types/react@19.2.7)(pixi.js@8.14.3)(react@19.2.3)
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
       '@vueuse/components':
         specifier: ^14.1.0
         version: 14.1.0(vue@3.5.26(typescript@6.0.0-dev.20250807))
@@ -47,9 +51,12 @@ importers:
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@6.0.0-dev.20250807)(vue@3.5.26(typescript@6.0.0-dev.20250807))
+<<<<<<< HEAD
       pixi-live2d-display:
         specifier: 0.5.0-beta
         version: 0.5.0-beta(pixi.js@7.4.3)
+=======
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
       pixi.js:
         specifier: ^7.4.3
         version: 7.4.3
@@ -4525,6 +4532,7 @@ snapshots:
 
   '@pixi/colord@2.9.6': {}
 
+<<<<<<< HEAD
   '@pixi/compressed-textures@7.4.3(@pixi/assets@7.4.3(@pixi/core@7.4.3))(@pixi/core@7.4.3)':
     dependencies:
       '@pixi/assets': 7.4.3(@pixi/core@7.4.3)
@@ -4632,6 +4640,12 @@ snapshots:
     dependencies:
       its-fine: 1.2.5(@types/react@19.2.7)(react@19.2.3)
       pixi.js: 7.4.3
+=======
+  '@pixi/react@8.0.0-beta.25(@types/react@19.2.7)(pixi.js@8.14.3)(react@19.2.3)':
+    dependencies:
+      its-fine: 1.2.5(@types/react@19.2.7)(react@19.2.3)
+      pixi.js: 8.14.3
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
       react: 19.2.3
       react-reconciler: 0.31.0(react@19.2.3)
     transitivePeerDependencies:
