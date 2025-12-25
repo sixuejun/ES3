@@ -4,7 +4,8 @@
  */
 
 import type { PartialDeep } from 'type-fest';
-import type { WorldbookEntry } from '../../@types/function/worldbook';
+// 世界书类型在全局声明，这里用 any 以避免解析路径问题
+type WorldbookEntry = any;
 
 /**
  * Motion 配置接口
@@ -275,9 +276,26 @@ export function parseWorldbookJsonData(content: string): any {
     }
   }
 
+  // 去除 UTF-8 BOM
+  const trimmed = content.replace(/^\uFEFF/, '').trim();
+
+  // 跳过 YAML 前言（--- ... ---）
+  if (trimmed.startsWith('---')) {
+    const parts = trimmed.split('---');
+    if (parts.length >= 3) {
+      const afterFrontMatter = parts.slice(2).join('---').trim();
+      return parseWorldbookJsonData(afterFrontMatter); // 递归尝试解析后续部分
+    }
+  }
+
+  // 只有在看起来是 JSON 时才尝试解析，避免 YAML/文本报错
+  if (!(trimmed.startsWith('{') || trimmed.startsWith('['))) {
+    return null;
+  }
+
   // 如果没有代码块，尝试直接解析整个内容
   try {
-    return JSON.parse(content.trim());
+    return JSON.parse(trimmed);
   } catch (error) {
     console.warn('解析世界书 JSON 数据失败:', error);
     return null;

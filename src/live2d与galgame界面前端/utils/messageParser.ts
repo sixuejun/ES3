@@ -74,8 +74,8 @@ export async function loadWorldbookResources(): Promise<WorldbookResourceCache> 
     console.warn('获取角色卡世界书失败:', error);
   }
 
-  // 如果没有角色卡世界书，使用默认世界书
-  if (worldbookNames.length === 0) {
+  // 始终追加默认世界书作为后备（确保模型/资源可用）
+  if (!worldbookNames.includes(WORLDBOOK_NAME)) {
     worldbookNames.push(WORLDBOOK_NAME);
   }
 

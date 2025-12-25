@@ -48,6 +48,46 @@ let lastMotion: string | undefined = undefined;
 let lastExpression: string | undefined = undefined;
 let lastModelId: string | undefined = undefined;
 
+async function ensureRendererReady(): Promise<boolean> {
+  // 已有且就绪
+  if (live2dRenderer && live2dRenderer.isReady()) return true;
+
+  // 确保 canvas 已挂载
+  await nextTick();
+  if (!live2dCanvasRef.value) {
+    console.error('[CharacterSprite] Canvas 元素不存在，等待一帧后重试');
+    await new Promise(resolve => requestAnimationFrame(() => resolve(undefined)));
+    await nextTick();
+  }
+  if (!live2dCanvasRef.value) {
+    console.error('[CharacterSprite] Canvas 仍不存在，无法初始化渲染器');
+    return false;
+  }
+
+  try {
+    if (!live2dRenderer) {
+      console.info('[CharacterSprite] 初始化 Pixi Live2D 渲染器');
+      live2dRenderer = new PixiLive2DRenderer();
+    }
+    const renderer = live2dRenderer;
+    if (!renderer) {
+      console.error('[CharacterSprite] 渲染器实例创建失败');
+      return false;
+    }
+    if (!renderer.isReady()) {
+      await renderer.init(live2dCanvasRef.value);
+      console.info('[CharacterSprite] Pixi Live2D 渲染器初始化完成');
+    }
+    return !!renderer && renderer.isReady();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    const stack = error instanceof Error ? error.stack : undefined;
+    console.error('[CharacterSprite] 渲染器初始化失败:', message);
+    if (stack) console.error('[CharacterSprite] 初始化错误堆栈:', stack);
+    return false;
+  }
+}
+
 // 立绘容器样式（仅用于静态图片）
 const spriteContainerStyle = computed(() => {
   return {
@@ -206,6 +246,13 @@ async function loadLive2dModel() {
     return;
   }
 
+  // 确保渲染器已就绪
+  const ready = await ensureRendererReady();
+  if (!ready) {
+    console.error('[CharacterSprite] 渲染器未初始化，无法加载模型');
+    return;
+  }
+
   // 输出所有可用的模型ID，用于调试
   const availableModels = props.live2dModels.map(m => ({ id: m.id, name: m.name }));
   console.info('[CharacterSprite] 可用的模型列表:', availableModels);
@@ -243,9 +290,9 @@ async function loadLive2dModel() {
   });
 
   try {
-    // 确保渲染器已初始化
-    if (!live2dRenderer || !live2dRenderer.isReady()) {
-      console.error('[CharacterSprite] 渲染器未初始化，无法加载模型');
+    const renderer = live2dRenderer;
+    if (!renderer) {
+      console.error('[CharacterSprite] 渲染器不存在，无法加载模型');
       return;
     }
 
@@ -257,13 +304,13 @@ async function loadLive2dModel() {
         oldModelId: lastModelId,
         newModelId: props.live2dModelId,
       });
-      await live2dRenderer.loadModel(modelConfig);
+      await renderer.loadModel(modelConfig);
       console.info('[CharacterSprite] Live2D 模型加载完成');
       lastModelId = props.live2dModelId;
 
       // 应用用户的缩放和位置设置
-      live2dRenderer.setScale(props.live2dScale);
-      live2dRenderer.setPosition(props.live2dPositionX, props.live2dPositionY);
+      renderer.setScale(props.live2dScale);
+      renderer.setPosition(props.live2dPositionX, props.live2dPositionY);
       console.info('[CharacterSprite] 应用用户设置:', {
         scale: props.live2dScale,
         positionX: props.live2dPositionX,
