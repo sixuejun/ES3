@@ -776,14 +776,11 @@ const currentLive2dModelId = computed(() => {
   if (dialogue?.sprite?.live2dModelId) {
     // dialogue.sprite.live2dModelId 是在创建 dialogue 时从世界书匹配得到的
     // （通过 loadWorldbookResources() -> live2dModels.value -> 根据角色名匹配）
-    console.info(
-      '[GalgamePlayer] currentLive2dModelId: 使用已匹配的模型ID（来自世界书）',
-      {
-        modelId: dialogue.sprite.live2dModelId,
-        character: dialogue.character,
-        source: 'dialogue.sprite.live2dModelId (在创建dialogue时从世界书匹配)',
-      },
-    );
+    console.info('[GalgamePlayer] currentLive2dModelId: 使用已匹配的模型ID（来自世界书）', {
+      modelId: dialogue.sprite.live2dModelId,
+      character: dialogue.character,
+      source: 'dialogue.sprite.live2dModelId (在创建dialogue时从世界书匹配)',
+    });
     return dialogue.sprite.live2dModelId;
   }
   // 自动匹配：根据角色名从世界书加载的模型列表中查找
