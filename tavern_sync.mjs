@@ -1,10 +1,20 @@
 import {fileURLToPath as __webpack_fileURLToPath__} from "node:url";
+<<<<<<< HEAD
+=======
+var __webpack_dirname__ = __webpack_fileURLToPath__(import.meta.url.replace(/\/(?:[^\/]*)$/, ""));
+var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 import { createRequire as __WEBPACK_EXTERNAL_createRequire } from "node:module";
 const __WEBPACK_EXTERNAL_createRequire_require = __WEBPACK_EXTERNAL_createRequire(import.meta.url);
 /******/ var __webpack_modules__ = ({
 
+<<<<<<< HEAD
 /***/ 9:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ 9
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*!
  * accepts
@@ -246,6 +256,7 @@ function validMime (type) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 21:
@@ -338,6 +349,12 @@ exports.StrictEventEmitter = StrictEventEmitter;
 
 /***/ 50:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 50
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -550,10 +567,86 @@ function resolveFlowCollection({ composeNode, composeEmptyNode }, ctx, fc, onErr
 exports.resolveFlowCollection = resolveFlowCollection;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 146:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 143
+(module) {
+
+
+
+/**
+ * Checks if a given buffer contains only correct UTF-8.
+ * Ported from https://www.cl.cam.ac.uk/%7Emgk25/ucs/utf8_check.c by
+ * Markus Kuhn.
+ *
+ * @param {Buffer} buf The buffer to check
+ * @return {Boolean} `true` if `buf` contains only correct UTF-8, else `false`
+ * @public
+ */
+function isValidUTF8(buf) {
+  const len = buf.length;
+  let i = 0;
+
+  while (i < len) {
+    if ((buf[i] & 0x80) === 0x00) {  // 0xxxxxxx
+      i++;
+    } else if ((buf[i] & 0xe0) === 0xc0) {  // 110xxxxx 10xxxxxx
+      if (
+        i + 1 === len ||
+        (buf[i + 1] & 0xc0) !== 0x80 ||
+        (buf[i] & 0xfe) === 0xc0  // overlong
+      ) {
+        return false;
+      }
+
+      i += 2;
+    } else if ((buf[i] & 0xf0) === 0xe0) {  // 1110xxxx 10xxxxxx 10xxxxxx
+      if (
+        i + 2 >= len ||
+        (buf[i + 1] & 0xc0) !== 0x80 ||
+        (buf[i + 2] & 0xc0) !== 0x80 ||
+        buf[i] === 0xe0 && (buf[i + 1] & 0xe0) === 0x80 ||  // overlong
+        buf[i] === 0xed && (buf[i + 1] & 0xe0) === 0xa0  // surrogate (U+D800 - U+DFFF)
+      ) {
+        return false;
+      }
+
+      i += 3;
+    } else if ((buf[i] & 0xf8) === 0xf0) {  // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+      if (
+        i + 3 >= len ||
+        (buf[i + 1] & 0xc0) !== 0x80 ||
+        (buf[i + 2] & 0xc0) !== 0x80 ||
+        (buf[i + 3] & 0xc0) !== 0x80 ||
+        buf[i] === 0xf0 && (buf[i + 1] & 0xf0) === 0x80 ||  // overlong
+        buf[i] === 0xf4 && buf[i + 1] > 0x8f || buf[i] > 0xf4  // > U+10FFFF
+      ) {
+        return false;
+      }
+
+      i += 4;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+module.exports = isValidUTF8;
+
+
+/***/ },
+
+/***/ 146
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const EventEmitter = (__webpack_require__(8474).EventEmitter);
 const childProcess = __webpack_require__(1421);
@@ -3219,10 +3312,17 @@ exports.Command = Command;
 exports.useColor = useColor; // exporting for tests
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 180:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 180
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -3281,6 +3381,7 @@ function hasBinary(obj, toJSON) {
 exports.hasBinary = hasBinary;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 181:
@@ -3567,6 +3668,49 @@ exports.Client = Client;
 
 /***/ 222:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 181
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("buffer");
+
+/***/ },
+
+/***/ 188
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const polling_1 = __webpack_require__(4571);
+const polling_jsonp_1 = __webpack_require__(3240);
+const websocket_1 = __webpack_require__(5787);
+const webtransport_1 = __webpack_require__(4013);
+exports["default"] = {
+    polling: polling,
+    websocket: websocket_1.WebSocket,
+    webtransport: webtransport_1.WebTransport,
+};
+/**
+ * Polling polymorphic constructor.
+ */
+function polling(req) {
+    if ("string" === typeof req._query.j) {
+        return new polling_jsonp_1.JSONP(req);
+    }
+    else {
+        return new polling_1.Polling(req);
+    }
+}
+polling.upgradesTo = ["websocket", "webtransport"];
+
+
+/***/ },
+
+/***/ 222
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -3669,6 +3813,7 @@ exports.coreKnownTags = coreKnownTags;
 exports.getTags = getTags;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 414:
@@ -4657,6 +4802,693 @@ exports.Socket = Socket;
 
 /***/ 533:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 278
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ClusterAdapterWithHeartbeat = exports.ClusterAdapter = exports.MessageType = void 0;
+const in_memory_adapter_1 = __webpack_require__(6181);
+const debug_1 = __webpack_require__(8725);
+const crypto_1 = __webpack_require__(6982);
+const debug = (0, debug_1.debug)("socket.io-adapter");
+const EMITTER_UID = "emitter";
+const DEFAULT_TIMEOUT = 5000;
+function randomId() {
+    return (0, crypto_1.randomBytes)(8).toString("hex");
+}
+var MessageType;
+(function (MessageType) {
+    MessageType[MessageType["INITIAL_HEARTBEAT"] = 1] = "INITIAL_HEARTBEAT";
+    MessageType[MessageType["HEARTBEAT"] = 2] = "HEARTBEAT";
+    MessageType[MessageType["BROADCAST"] = 3] = "BROADCAST";
+    MessageType[MessageType["SOCKETS_JOIN"] = 4] = "SOCKETS_JOIN";
+    MessageType[MessageType["SOCKETS_LEAVE"] = 5] = "SOCKETS_LEAVE";
+    MessageType[MessageType["DISCONNECT_SOCKETS"] = 6] = "DISCONNECT_SOCKETS";
+    MessageType[MessageType["FETCH_SOCKETS"] = 7] = "FETCH_SOCKETS";
+    MessageType[MessageType["FETCH_SOCKETS_RESPONSE"] = 8] = "FETCH_SOCKETS_RESPONSE";
+    MessageType[MessageType["SERVER_SIDE_EMIT"] = 9] = "SERVER_SIDE_EMIT";
+    MessageType[MessageType["SERVER_SIDE_EMIT_RESPONSE"] = 10] = "SERVER_SIDE_EMIT_RESPONSE";
+    MessageType[MessageType["BROADCAST_CLIENT_COUNT"] = 11] = "BROADCAST_CLIENT_COUNT";
+    MessageType[MessageType["BROADCAST_ACK"] = 12] = "BROADCAST_ACK";
+    MessageType[MessageType["ADAPTER_CLOSE"] = 13] = "ADAPTER_CLOSE";
+})(MessageType = exports.MessageType || (exports.MessageType = {}));
+function encodeOptions(opts) {
+    return {
+        rooms: [...opts.rooms],
+        except: [...opts.except],
+        flags: opts.flags,
+    };
+}
+function decodeOptions(opts) {
+    return {
+        rooms: new Set(opts.rooms),
+        except: new Set(opts.except),
+        flags: opts.flags,
+    };
+}
+/**
+ * A cluster-ready adapter. Any extending class must:
+ *
+ * - implement {@link ClusterAdapter#doPublish} and {@link ClusterAdapter#doPublishResponse}
+ * - call {@link ClusterAdapter#onMessage} and {@link ClusterAdapter#onResponse}
+ */
+class ClusterAdapter extends in_memory_adapter_1.Adapter {
+    constructor(nsp) {
+        super(nsp);
+        this.requests = new Map();
+        this.ackRequests = new Map();
+        this.uid = randomId();
+    }
+    /**
+     * Called when receiving a message from another member of the cluster.
+     *
+     * @param message
+     * @param offset
+     * @protected
+     */
+    onMessage(message, offset) {
+        if (message.uid === this.uid) {
+            return debug("[%s] ignore message from self", this.uid);
+        }
+        debug("[%s] new event of type %d from %s", this.uid, message.type, message.uid);
+        switch (message.type) {
+            case MessageType.BROADCAST: {
+                const withAck = message.data.requestId !== undefined;
+                if (withAck) {
+                    super.broadcastWithAck(message.data.packet, decodeOptions(message.data.opts), (clientCount) => {
+                        debug("[%s] waiting for %d client acknowledgements", this.uid, clientCount);
+                        this.publishResponse(message.uid, {
+                            type: MessageType.BROADCAST_CLIENT_COUNT,
+                            data: {
+                                requestId: message.data.requestId,
+                                clientCount,
+                            },
+                        });
+                    }, (arg) => {
+                        debug("[%s] received acknowledgement with value %j", this.uid, arg);
+                        this.publishResponse(message.uid, {
+                            type: MessageType.BROADCAST_ACK,
+                            data: {
+                                requestId: message.data.requestId,
+                                packet: arg,
+                            },
+                        });
+                    });
+                }
+                else {
+                    const packet = message.data.packet;
+                    const opts = decodeOptions(message.data.opts);
+                    this.addOffsetIfNecessary(packet, opts, offset);
+                    super.broadcast(packet, opts);
+                }
+                break;
+            }
+            case MessageType.SOCKETS_JOIN:
+                super.addSockets(decodeOptions(message.data.opts), message.data.rooms);
+                break;
+            case MessageType.SOCKETS_LEAVE:
+                super.delSockets(decodeOptions(message.data.opts), message.data.rooms);
+                break;
+            case MessageType.DISCONNECT_SOCKETS:
+                super.disconnectSockets(decodeOptions(message.data.opts), message.data.close);
+                break;
+            case MessageType.FETCH_SOCKETS: {
+                debug("[%s] calling fetchSockets with opts %j", this.uid, message.data.opts);
+                super
+                    .fetchSockets(decodeOptions(message.data.opts))
+                    .then((localSockets) => {
+                    this.publishResponse(message.uid, {
+                        type: MessageType.FETCH_SOCKETS_RESPONSE,
+                        data: {
+                            requestId: message.data.requestId,
+                            sockets: localSockets.map((socket) => {
+                                // remove sessionStore from handshake, as it may contain circular references
+                                const _a = socket.handshake, { sessionStore } = _a, handshake = __rest(_a, ["sessionStore"]);
+                                return {
+                                    id: socket.id,
+                                    handshake,
+                                    rooms: [...socket.rooms],
+                                    data: socket.data,
+                                };
+                            }),
+                        },
+                    });
+                });
+                break;
+            }
+            case MessageType.SERVER_SIDE_EMIT: {
+                const packet = message.data.packet;
+                const withAck = message.data.requestId !== undefined;
+                if (!withAck) {
+                    this.nsp._onServerSideEmit(packet);
+                    return;
+                }
+                let called = false;
+                const callback = (arg) => {
+                    // only one argument is expected
+                    if (called) {
+                        return;
+                    }
+                    called = true;
+                    debug("[%s] calling acknowledgement with %j", this.uid, arg);
+                    this.publishResponse(message.uid, {
+                        type: MessageType.SERVER_SIDE_EMIT_RESPONSE,
+                        data: {
+                            requestId: message.data.requestId,
+                            packet: arg,
+                        },
+                    });
+                };
+                this.nsp._onServerSideEmit([...packet, callback]);
+                break;
+            }
+            // @ts-ignore
+            case MessageType.BROADCAST_CLIENT_COUNT:
+            // @ts-ignore
+            case MessageType.BROADCAST_ACK:
+            // @ts-ignore
+            case MessageType.FETCH_SOCKETS_RESPONSE:
+            // @ts-ignore
+            case MessageType.SERVER_SIDE_EMIT_RESPONSE:
+                // extending classes may not make a distinction between a ClusterMessage and a ClusterResponse payload and may
+                // always call the onMessage() method
+                this.onResponse(message);
+                break;
+            default:
+                debug("[%s] unknown message type: %s", this.uid, message.type);
+        }
+    }
+    /**
+     * Called when receiving a response from another member of the cluster.
+     *
+     * @param response
+     * @protected
+     */
+    onResponse(response) {
+        var _a, _b;
+        const requestId = response.data.requestId;
+        debug("[%s] received response %s to request %s", this.uid, response.type, requestId);
+        switch (response.type) {
+            case MessageType.BROADCAST_CLIENT_COUNT: {
+                (_a = this.ackRequests
+                    .get(requestId)) === null || _a === void 0 ? void 0 : _a.clientCountCallback(response.data.clientCount);
+                break;
+            }
+            case MessageType.BROADCAST_ACK: {
+                (_b = this.ackRequests.get(requestId)) === null || _b === void 0 ? void 0 : _b.ack(response.data.packet);
+                break;
+            }
+            case MessageType.FETCH_SOCKETS_RESPONSE: {
+                const request = this.requests.get(requestId);
+                if (!request) {
+                    return;
+                }
+                request.current++;
+                response.data.sockets.forEach((socket) => request.responses.push(socket));
+                if (request.current === request.expected) {
+                    clearTimeout(request.timeout);
+                    request.resolve(request.responses);
+                    this.requests.delete(requestId);
+                }
+                break;
+            }
+            case MessageType.SERVER_SIDE_EMIT_RESPONSE: {
+                const request = this.requests.get(requestId);
+                if (!request) {
+                    return;
+                }
+                request.current++;
+                request.responses.push(response.data.packet);
+                if (request.current === request.expected) {
+                    clearTimeout(request.timeout);
+                    request.resolve(null, request.responses);
+                    this.requests.delete(requestId);
+                }
+                break;
+            }
+            default:
+                // @ts-ignore
+                debug("[%s] unknown response type: %s", this.uid, response.type);
+        }
+    }
+    async broadcast(packet, opts) {
+        var _a;
+        const onlyLocal = (_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local;
+        if (!onlyLocal) {
+            try {
+                const offset = await this.publishAndReturnOffset({
+                    type: MessageType.BROADCAST,
+                    data: {
+                        packet,
+                        opts: encodeOptions(opts),
+                    },
+                });
+                this.addOffsetIfNecessary(packet, opts, offset);
+            }
+            catch (e) {
+                return debug("[%s] error while broadcasting message: %s", this.uid, e.message);
+            }
+        }
+        super.broadcast(packet, opts);
+    }
+    /**
+     * Adds an offset at the end of the data array in order to allow the client to receive any missed packets when it
+     * reconnects after a temporary disconnection.
+     *
+     * @param packet
+     * @param opts
+     * @param offset
+     * @private
+     */
+    addOffsetIfNecessary(packet, opts, offset) {
+        var _a;
+        if (!this.nsp.server.opts.connectionStateRecovery) {
+            return;
+        }
+        const isEventPacket = packet.type === 2;
+        // packets with acknowledgement are not stored because the acknowledgement function cannot be serialized and
+        // restored on another server upon reconnection
+        const withoutAcknowledgement = packet.id === undefined;
+        const notVolatile = ((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.volatile) === undefined;
+        if (isEventPacket && withoutAcknowledgement && notVolatile) {
+            packet.data.push(offset);
+        }
+    }
+    broadcastWithAck(packet, opts, clientCountCallback, ack) {
+        var _a;
+        const onlyLocal = (_a = opts === null || opts === void 0 ? void 0 : opts.flags) === null || _a === void 0 ? void 0 : _a.local;
+        if (!onlyLocal) {
+            const requestId = randomId();
+            this.ackRequests.set(requestId, {
+                clientCountCallback,
+                ack,
+            });
+            this.publish({
+                type: MessageType.BROADCAST,
+                data: {
+                    packet,
+                    requestId,
+                    opts: encodeOptions(opts),
+                },
+            });
+            // we have no way to know at this level whether the server has received an acknowledgement from each client, so we
+            // will simply clean up the ackRequests map after the given delay
+            setTimeout(() => {
+                this.ackRequests.delete(requestId);
+            }, opts.flags.timeout);
+        }
+        super.broadcastWithAck(packet, opts, clientCountCallback, ack);
+    }
+    async addSockets(opts, rooms) {
+        var _a;
+        const onlyLocal = (_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local;
+        if (!onlyLocal) {
+            try {
+                await this.publishAndReturnOffset({
+                    type: MessageType.SOCKETS_JOIN,
+                    data: {
+                        opts: encodeOptions(opts),
+                        rooms,
+                    },
+                });
+            }
+            catch (e) {
+                debug("[%s] error while publishing message: %s", this.uid, e.message);
+            }
+        }
+        super.addSockets(opts, rooms);
+    }
+    async delSockets(opts, rooms) {
+        var _a;
+        const onlyLocal = (_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local;
+        if (!onlyLocal) {
+            try {
+                await this.publishAndReturnOffset({
+                    type: MessageType.SOCKETS_LEAVE,
+                    data: {
+                        opts: encodeOptions(opts),
+                        rooms,
+                    },
+                });
+            }
+            catch (e) {
+                debug("[%s] error while publishing message: %s", this.uid, e.message);
+            }
+        }
+        super.delSockets(opts, rooms);
+    }
+    async disconnectSockets(opts, close) {
+        var _a;
+        const onlyLocal = (_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local;
+        if (!onlyLocal) {
+            try {
+                await this.publishAndReturnOffset({
+                    type: MessageType.DISCONNECT_SOCKETS,
+                    data: {
+                        opts: encodeOptions(opts),
+                        close,
+                    },
+                });
+            }
+            catch (e) {
+                debug("[%s] error while publishing message: %s", this.uid, e.message);
+            }
+        }
+        super.disconnectSockets(opts, close);
+    }
+    async fetchSockets(opts) {
+        var _a;
+        const [localSockets, serverCount] = await Promise.all([
+            super.fetchSockets(opts),
+            this.serverCount(),
+        ]);
+        const expectedResponseCount = serverCount - 1;
+        if (((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local) || expectedResponseCount <= 0) {
+            return localSockets;
+        }
+        const requestId = randomId();
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                const storedRequest = this.requests.get(requestId);
+                if (storedRequest) {
+                    reject(new Error(`timeout reached: only ${storedRequest.current} responses received out of ${storedRequest.expected}`));
+                    this.requests.delete(requestId);
+                }
+            }, opts.flags.timeout || DEFAULT_TIMEOUT);
+            const storedRequest = {
+                type: MessageType.FETCH_SOCKETS,
+                resolve,
+                timeout,
+                current: 0,
+                expected: expectedResponseCount,
+                responses: localSockets,
+            };
+            this.requests.set(requestId, storedRequest);
+            this.publish({
+                type: MessageType.FETCH_SOCKETS,
+                data: {
+                    opts: encodeOptions(opts),
+                    requestId,
+                },
+            });
+        });
+    }
+    async serverSideEmit(packet) {
+        const withAck = typeof packet[packet.length - 1] === "function";
+        if (!withAck) {
+            return this.publish({
+                type: MessageType.SERVER_SIDE_EMIT,
+                data: {
+                    packet,
+                },
+            });
+        }
+        const ack = packet.pop();
+        const expectedResponseCount = (await this.serverCount()) - 1;
+        debug('[%s] waiting for %d responses to "serverSideEmit" request', this.uid, expectedResponseCount);
+        if (expectedResponseCount <= 0) {
+            return ack(null, []);
+        }
+        const requestId = randomId();
+        const timeout = setTimeout(() => {
+            const storedRequest = this.requests.get(requestId);
+            if (storedRequest) {
+                ack(new Error(`timeout reached: only ${storedRequest.current} responses received out of ${storedRequest.expected}`), storedRequest.responses);
+                this.requests.delete(requestId);
+            }
+        }, DEFAULT_TIMEOUT);
+        const storedRequest = {
+            type: MessageType.SERVER_SIDE_EMIT,
+            resolve: ack,
+            timeout,
+            current: 0,
+            expected: expectedResponseCount,
+            responses: [],
+        };
+        this.requests.set(requestId, storedRequest);
+        this.publish({
+            type: MessageType.SERVER_SIDE_EMIT,
+            data: {
+                requestId,
+                packet,
+            },
+        });
+    }
+    publish(message) {
+        this.publishAndReturnOffset(message).catch((err) => {
+            debug("[%s] error while publishing message: %s", this.uid, err);
+        });
+    }
+    publishAndReturnOffset(message) {
+        message.uid = this.uid;
+        message.nsp = this.nsp.name;
+        return this.doPublish(message);
+    }
+    publishResponse(requesterUid, response) {
+        response.uid = this.uid;
+        response.nsp = this.nsp.name;
+        this.doPublishResponse(requesterUid, response).catch((err) => {
+            debug("[%s] error while publishing response: %s", this.uid, err);
+        });
+    }
+}
+exports.ClusterAdapter = ClusterAdapter;
+class ClusterAdapterWithHeartbeat extends ClusterAdapter {
+    constructor(nsp, opts) {
+        super(nsp);
+        this.nodesMap = new Map(); // uid => timestamp of last message
+        this.customRequests = new Map();
+        this._opts = Object.assign({
+            heartbeatInterval: 5000,
+            heartbeatTimeout: 10000,
+        }, opts);
+        this.cleanupTimer = setInterval(() => {
+            const now = Date.now();
+            this.nodesMap.forEach((lastSeen, uid) => {
+                const nodeSeemsDown = now - lastSeen > this._opts.heartbeatTimeout;
+                if (nodeSeemsDown) {
+                    debug("[%s] node %s seems down", this.uid, uid);
+                    this.removeNode(uid);
+                }
+            });
+        }, 1000);
+    }
+    init() {
+        this.publish({
+            type: MessageType.INITIAL_HEARTBEAT,
+        });
+    }
+    scheduleHeartbeat() {
+        if (this.heartbeatTimer) {
+            this.heartbeatTimer.refresh();
+        }
+        else {
+            this.heartbeatTimer = setTimeout(() => {
+                this.publish({
+                    type: MessageType.HEARTBEAT,
+                });
+            }, this._opts.heartbeatInterval);
+        }
+    }
+    close() {
+        this.publish({
+            type: MessageType.ADAPTER_CLOSE,
+        });
+        clearTimeout(this.heartbeatTimer);
+        if (this.cleanupTimer) {
+            clearInterval(this.cleanupTimer);
+        }
+    }
+    onMessage(message, offset) {
+        if (message.uid === this.uid) {
+            return debug("[%s] ignore message from self", this.uid);
+        }
+        if (message.uid && message.uid !== EMITTER_UID) {
+            // we track the UID of each sender, in order to know how many servers there are in the cluster
+            this.nodesMap.set(message.uid, Date.now());
+        }
+        debug("[%s] new event of type %d from %s", this.uid, message.type, message.uid);
+        switch (message.type) {
+            case MessageType.INITIAL_HEARTBEAT:
+                this.publish({
+                    type: MessageType.HEARTBEAT,
+                });
+                break;
+            case MessageType.HEARTBEAT:
+                // nothing to do
+                break;
+            case MessageType.ADAPTER_CLOSE:
+                this.removeNode(message.uid);
+                break;
+            default:
+                super.onMessage(message, offset);
+        }
+    }
+    serverCount() {
+        return Promise.resolve(1 + this.nodesMap.size);
+    }
+    publish(message) {
+        this.scheduleHeartbeat();
+        return super.publish(message);
+    }
+    async serverSideEmit(packet) {
+        const withAck = typeof packet[packet.length - 1] === "function";
+        if (!withAck) {
+            return this.publish({
+                type: MessageType.SERVER_SIDE_EMIT,
+                data: {
+                    packet,
+                },
+            });
+        }
+        const ack = packet.pop();
+        const expectedResponseCount = this.nodesMap.size;
+        debug('[%s] waiting for %d responses to "serverSideEmit" request', this.uid, expectedResponseCount);
+        if (expectedResponseCount <= 0) {
+            return ack(null, []);
+        }
+        const requestId = randomId();
+        const timeout = setTimeout(() => {
+            const storedRequest = this.customRequests.get(requestId);
+            if (storedRequest) {
+                ack(new Error(`timeout reached: missing ${storedRequest.missingUids.size} responses`), storedRequest.responses);
+                this.customRequests.delete(requestId);
+            }
+        }, DEFAULT_TIMEOUT);
+        const storedRequest = {
+            type: MessageType.SERVER_SIDE_EMIT,
+            resolve: ack,
+            timeout,
+            missingUids: new Set([...this.nodesMap.keys()]),
+            responses: [],
+        };
+        this.customRequests.set(requestId, storedRequest);
+        this.publish({
+            type: MessageType.SERVER_SIDE_EMIT,
+            data: {
+                requestId,
+                packet,
+            },
+        });
+    }
+    async fetchSockets(opts) {
+        var _a;
+        const [localSockets, serverCount] = await Promise.all([
+            super.fetchSockets({
+                rooms: opts.rooms,
+                except: opts.except,
+                flags: {
+                    local: true,
+                },
+            }),
+            this.serverCount(),
+        ]);
+        const expectedResponseCount = serverCount - 1;
+        if (((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.local) || expectedResponseCount <= 0) {
+            return localSockets;
+        }
+        const requestId = randomId();
+        return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                const storedRequest = this.customRequests.get(requestId);
+                if (storedRequest) {
+                    reject(new Error(`timeout reached: missing ${storedRequest.missingUids.size} responses`));
+                    this.customRequests.delete(requestId);
+                }
+            }, opts.flags.timeout || DEFAULT_TIMEOUT);
+            const storedRequest = {
+                type: MessageType.FETCH_SOCKETS,
+                resolve,
+                timeout,
+                missingUids: new Set([...this.nodesMap.keys()]),
+                responses: localSockets,
+            };
+            this.customRequests.set(requestId, storedRequest);
+            this.publish({
+                type: MessageType.FETCH_SOCKETS,
+                data: {
+                    opts: encodeOptions(opts),
+                    requestId,
+                },
+            });
+        });
+    }
+    onResponse(response) {
+        const requestId = response.data.requestId;
+        debug("[%s] received response %s to request %s", this.uid, response.type, requestId);
+        switch (response.type) {
+            case MessageType.FETCH_SOCKETS_RESPONSE: {
+                const request = this.customRequests.get(requestId);
+                if (!request) {
+                    return;
+                }
+                response.data.sockets.forEach((socket) => request.responses.push(socket));
+                request.missingUids.delete(response.uid);
+                if (request.missingUids.size === 0) {
+                    clearTimeout(request.timeout);
+                    request.resolve(request.responses);
+                    this.customRequests.delete(requestId);
+                }
+                break;
+            }
+            case MessageType.SERVER_SIDE_EMIT_RESPONSE: {
+                const request = this.customRequests.get(requestId);
+                if (!request) {
+                    return;
+                }
+                request.responses.push(response.data.packet);
+                request.missingUids.delete(response.uid);
+                if (request.missingUids.size === 0) {
+                    clearTimeout(request.timeout);
+                    request.resolve(null, request.responses);
+                    this.customRequests.delete(requestId);
+                }
+                break;
+            }
+            default:
+                super.onResponse(response);
+        }
+    }
+    removeNode(uid) {
+        this.customRequests.forEach((request, requestId) => {
+            request.missingUids.delete(uid);
+            if (request.missingUids.size === 0) {
+                clearTimeout(request.timeout);
+                if (request.type === MessageType.FETCH_SOCKETS) {
+                    request.resolve(request.responses);
+                }
+                else if (request.type === MessageType.SERVER_SIDE_EMIT) {
+                    request.resolve(null, request.responses);
+                }
+                this.customRequests.delete(requestId);
+            }
+        });
+        this.nodesMap.delete(uid);
+    }
+}
+exports.ClusterAdapterWithHeartbeat = ClusterAdapterWithHeartbeat;
+
+
+/***/ },
+
+/***/ 533
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -4742,10 +5574,17 @@ exports.pairs = pairs;
 exports.resolvePairs = resolvePairs;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 578:
 /***/ ((module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 578
+(module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /* eslint-env browser */
 
@@ -5020,10 +5859,17 @@ formatters.j = function (v) {
 };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 616:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+=======
+/***/ },
+
+/***/ 597
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 var __importDefault = (this && this.__importDefault) || function (mod) {
@@ -5031,10 +5877,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Namespace = exports.RESERVED_EVENTS = void 0;
+<<<<<<< HEAD
 const socket_1 = __webpack_require__(414);
 const typed_events_1 = __webpack_require__(21);
 const debug_1 = __importDefault(__webpack_require__(8725));
 const broadcast_operator_1 = __webpack_require__(3761);
+=======
+const socket_1 = __webpack_require__(1825);
+const typed_events_1 = __webpack_require__(5510);
+const debug_1 = __importDefault(__webpack_require__(8725));
+const broadcast_operator_1 = __webpack_require__(8594);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const debug = (0, debug_1.default)("socket.io:namespace");
 exports.RESERVED_EVENTS = new Set(["connect", "connection", "new_namespace"]);
 /**
@@ -5608,10 +6461,17 @@ class Namespace extends typed_events_1.StrictEventEmitter {
 exports.Namespace = Namespace;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 720:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 720
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -5654,6 +6514,7 @@ function resolveEnd(end, offset, reqSpace, onError) {
 exports.resolveEnd = resolveEnd;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 777:
@@ -5753,6 +6614,12 @@ class ParentBroadcastAdapter extends socket_io_adapter_1.Adapter {
 
 /***/ 812:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 812
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -5821,6 +6688,7 @@ function stringifyKey(key, jsKey, ctx) {
 exports.addPairToJSMap = addPairToJSMap;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 857:
@@ -5832,6 +6700,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("os");
 
 /***/ 873:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 857
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("os");
+
+/***/ },
+
+/***/ 873
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -5892,6 +6773,7 @@ function applyReviver(reviver, obj, key, val) {
 exports.applyReviver = applyReviver;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 902:
@@ -5903,6 +6785,12 @@ module.exports = {"rE":"4.8.1"};
 
 /***/ 925:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 925
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -5925,6 +6813,7 @@ exports.debug = debug;
 exports.warn = warn;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 932:
@@ -5936,6 +6825,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("process");
 
 /***/ 968:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 932
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("process");
+
+/***/ },
+
+/***/ 968
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6007,10 +6909,97 @@ exports.isMergeKey = isMergeKey;
 exports.merge = merge;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1106:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 987
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WebSocket = void 0;
+const transport_1 = __webpack_require__(7388);
+const debug_1 = __webpack_require__(8725);
+const debug = (0, debug_1.default)("engine:ws");
+class WebSocket extends transport_1.Transport {
+    /**
+     * WebSocket transport
+     *
+     * @param req
+     */
+    constructor(req) {
+        super(req);
+        this.writable = false;
+        this.perMessageDeflate = null;
+    }
+    /**
+     * Transport name
+     */
+    get name() {
+        return "websocket";
+    }
+    /**
+     * Advertise upgrade support.
+     */
+    get handlesUpgrades() {
+        return true;
+    }
+    /**
+     * Writes a packet payload.
+     *
+     * @param {Array} packets
+     * @private
+     */
+    send(packets) {
+        this.writable = false;
+        for (let i = 0; i < packets.length; i++) {
+            const packet = packets[i];
+            const isLast = i + 1 === packets.length;
+            const send = (data) => {
+                const isBinary = typeof data !== "string";
+                const compress = this.perMessageDeflate &&
+                    Buffer.byteLength(data) > this.perMessageDeflate.threshold;
+                debug('writing "%s"', data);
+                this.socket.send(data, isBinary, compress);
+                if (isLast) {
+                    this.emit("drain");
+                    this.writable = true;
+                    this.emit("ready");
+                }
+            };
+            if (packet.options && typeof packet.options.wsPreEncoded === "string") {
+                send(packet.options.wsPreEncoded);
+            }
+            else {
+                this.parser.encodePacket(packet, this.supportsBinary, send);
+            }
+        }
+    }
+    /**
+     * Closes the transport.
+     *
+     * @private
+     */
+    doClose(fn) {
+        debug("closing");
+        fn && fn();
+        // call fn first since socket.end() immediately emits a "close" event
+        this.socket.end();
+    }
+}
+exports.WebSocket = WebSocket;
+
+
+/***/ },
+
+/***/ 1106
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6232,10 +7221,17 @@ exports.resolveAsScalar = resolveAsScalar;
 exports.setScalarValue = setScalarValue;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1188:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 1188
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6301,10 +7297,17 @@ exports.YAMLWarning = YAMLWarning;
 exports.prettifyError = prettifyError;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1235:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1235
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6415,10 +7418,17 @@ exports.parseDocument = parseDocument;
 exports.stringify = stringify;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1277:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 1277
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6448,10 +7458,17 @@ function stringifyNumber({ format, minFractionDigits, tag, value }) {
 exports.stringifyNumber = stringifyNumber;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1292:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1292
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const { InvalidArgumentError } = __webpack_require__(6729);
 
@@ -6604,10 +7621,17 @@ exports.Argument = Argument;
 exports.humanReadableArgName = humanReadableArgName;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1314:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1314
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6640,6 +7664,7 @@ exports.falseTag = falseTag;
 exports.trueTag = trueTag;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1324:
@@ -6666,6 +7691,730 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:child_process");
 
 /***/ 1440:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1407
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const { Writable } = __webpack_require__(2203);
+
+const PerMessageDeflate = __webpack_require__(6038);
+const {
+  BINARY_TYPES,
+  EMPTY_BUFFER,
+  kStatusCode,
+  kWebSocket
+} = __webpack_require__(6261);
+const { concat, toArrayBuffer, unmask } = __webpack_require__(2905);
+const { isValidStatusCode, isValidUTF8 } = __webpack_require__(6237);
+
+const FastBuffer = Buffer[Symbol.species];
+
+const GET_INFO = 0;
+const GET_PAYLOAD_LENGTH_16 = 1;
+const GET_PAYLOAD_LENGTH_64 = 2;
+const GET_MASK = 3;
+const GET_DATA = 4;
+const INFLATING = 5;
+const DEFER_EVENT = 6;
+
+/**
+ * HyBi Receiver implementation.
+ *
+ * @extends Writable
+ */
+class Receiver extends Writable {
+  /**
+   * Creates a Receiver instance.
+   *
+   * @param {Object} [options] Options object
+   * @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+   *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+   *     multiple times in the same tick
+   * @param {String} [options.binaryType=nodebuffer] The type for binary data
+   * @param {Object} [options.extensions] An object containing the negotiated
+   *     extensions
+   * @param {Boolean} [options.isServer=false] Specifies whether to operate in
+   *     client or server mode
+   * @param {Number} [options.maxPayload=0] The maximum allowed message length
+   * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+   *     not to skip UTF-8 validation for text and close messages
+   */
+  constructor(options = {}) {
+    super();
+
+    this._allowSynchronousEvents =
+      options.allowSynchronousEvents !== undefined
+        ? options.allowSynchronousEvents
+        : true;
+    this._binaryType = options.binaryType || BINARY_TYPES[0];
+    this._extensions = options.extensions || {};
+    this._isServer = !!options.isServer;
+    this._maxPayload = options.maxPayload | 0;
+    this._skipUTF8Validation = !!options.skipUTF8Validation;
+    this[kWebSocket] = undefined;
+
+    this._bufferedBytes = 0;
+    this._buffers = [];
+
+    this._compressed = false;
+    this._payloadLength = 0;
+    this._mask = undefined;
+    this._fragmented = 0;
+    this._masked = false;
+    this._fin = false;
+    this._opcode = 0;
+
+    this._totalPayloadLength = 0;
+    this._messageLength = 0;
+    this._fragments = [];
+
+    this._errored = false;
+    this._loop = false;
+    this._state = GET_INFO;
+  }
+
+  /**
+   * Implements `Writable.prototype._write()`.
+   *
+   * @param {Buffer} chunk The chunk of data to write
+   * @param {String} encoding The character encoding of `chunk`
+   * @param {Function} cb Callback
+   * @private
+   */
+  _write(chunk, encoding, cb) {
+    if (this._opcode === 0x08 && this._state == GET_INFO) return cb();
+
+    this._bufferedBytes += chunk.length;
+    this._buffers.push(chunk);
+    this.startLoop(cb);
+  }
+
+  /**
+   * Consumes `n` bytes from the buffered data.
+   *
+   * @param {Number} n The number of bytes to consume
+   * @return {Buffer} The consumed bytes
+   * @private
+   */
+  consume(n) {
+    this._bufferedBytes -= n;
+
+    if (n === this._buffers[0].length) return this._buffers.shift();
+
+    if (n < this._buffers[0].length) {
+      const buf = this._buffers[0];
+      this._buffers[0] = new FastBuffer(
+        buf.buffer,
+        buf.byteOffset + n,
+        buf.length - n
+      );
+
+      return new FastBuffer(buf.buffer, buf.byteOffset, n);
+    }
+
+    const dst = Buffer.allocUnsafe(n);
+
+    do {
+      const buf = this._buffers[0];
+      const offset = dst.length - n;
+
+      if (n >= buf.length) {
+        dst.set(this._buffers.shift(), offset);
+      } else {
+        dst.set(new Uint8Array(buf.buffer, buf.byteOffset, n), offset);
+        this._buffers[0] = new FastBuffer(
+          buf.buffer,
+          buf.byteOffset + n,
+          buf.length - n
+        );
+      }
+
+      n -= buf.length;
+    } while (n > 0);
+
+    return dst;
+  }
+
+  /**
+   * Starts the parsing loop.
+   *
+   * @param {Function} cb Callback
+   * @private
+   */
+  startLoop(cb) {
+    this._loop = true;
+
+    do {
+      switch (this._state) {
+        case GET_INFO:
+          this.getInfo(cb);
+          break;
+        case GET_PAYLOAD_LENGTH_16:
+          this.getPayloadLength16(cb);
+          break;
+        case GET_PAYLOAD_LENGTH_64:
+          this.getPayloadLength64(cb);
+          break;
+        case GET_MASK:
+          this.getMask();
+          break;
+        case GET_DATA:
+          this.getData(cb);
+          break;
+        case INFLATING:
+        case DEFER_EVENT:
+          this._loop = false;
+          return;
+      }
+    } while (this._loop);
+
+    if (!this._errored) cb();
+  }
+
+  /**
+   * Reads the first two bytes of a frame.
+   *
+   * @param {Function} cb Callback
+   * @private
+   */
+  getInfo(cb) {
+    if (this._bufferedBytes < 2) {
+      this._loop = false;
+      return;
+    }
+
+    const buf = this.consume(2);
+
+    if ((buf[0] & 0x30) !== 0x00) {
+      const error = this.createError(
+        RangeError,
+        'RSV2 and RSV3 must be clear',
+        true,
+        1002,
+        'WS_ERR_UNEXPECTED_RSV_2_3'
+      );
+
+      cb(error);
+      return;
+    }
+
+    const compressed = (buf[0] & 0x40) === 0x40;
+
+    if (compressed && !this._extensions[PerMessageDeflate.extensionName]) {
+      const error = this.createError(
+        RangeError,
+        'RSV1 must be clear',
+        true,
+        1002,
+        'WS_ERR_UNEXPECTED_RSV_1'
+      );
+
+      cb(error);
+      return;
+    }
+
+    this._fin = (buf[0] & 0x80) === 0x80;
+    this._opcode = buf[0] & 0x0f;
+    this._payloadLength = buf[1] & 0x7f;
+
+    if (this._opcode === 0x00) {
+      if (compressed) {
+        const error = this.createError(
+          RangeError,
+          'RSV1 must be clear',
+          true,
+          1002,
+          'WS_ERR_UNEXPECTED_RSV_1'
+        );
+
+        cb(error);
+        return;
+      }
+
+      if (!this._fragmented) {
+        const error = this.createError(
+          RangeError,
+          'invalid opcode 0',
+          true,
+          1002,
+          'WS_ERR_INVALID_OPCODE'
+        );
+
+        cb(error);
+        return;
+      }
+
+      this._opcode = this._fragmented;
+    } else if (this._opcode === 0x01 || this._opcode === 0x02) {
+      if (this._fragmented) {
+        const error = this.createError(
+          RangeError,
+          `invalid opcode ${this._opcode}`,
+          true,
+          1002,
+          'WS_ERR_INVALID_OPCODE'
+        );
+
+        cb(error);
+        return;
+      }
+
+      this._compressed = compressed;
+    } else if (this._opcode > 0x07 && this._opcode < 0x0b) {
+      if (!this._fin) {
+        const error = this.createError(
+          RangeError,
+          'FIN must be set',
+          true,
+          1002,
+          'WS_ERR_EXPECTED_FIN'
+        );
+
+        cb(error);
+        return;
+      }
+
+      if (compressed) {
+        const error = this.createError(
+          RangeError,
+          'RSV1 must be clear',
+          true,
+          1002,
+          'WS_ERR_UNEXPECTED_RSV_1'
+        );
+
+        cb(error);
+        return;
+      }
+
+      if (
+        this._payloadLength > 0x7d ||
+        (this._opcode === 0x08 && this._payloadLength === 1)
+      ) {
+        const error = this.createError(
+          RangeError,
+          `invalid payload length ${this._payloadLength}`,
+          true,
+          1002,
+          'WS_ERR_INVALID_CONTROL_PAYLOAD_LENGTH'
+        );
+
+        cb(error);
+        return;
+      }
+    } else {
+      const error = this.createError(
+        RangeError,
+        `invalid opcode ${this._opcode}`,
+        true,
+        1002,
+        'WS_ERR_INVALID_OPCODE'
+      );
+
+      cb(error);
+      return;
+    }
+
+    if (!this._fin && !this._fragmented) this._fragmented = this._opcode;
+    this._masked = (buf[1] & 0x80) === 0x80;
+
+    if (this._isServer) {
+      if (!this._masked) {
+        const error = this.createError(
+          RangeError,
+          'MASK must be set',
+          true,
+          1002,
+          'WS_ERR_EXPECTED_MASK'
+        );
+
+        cb(error);
+        return;
+      }
+    } else if (this._masked) {
+      const error = this.createError(
+        RangeError,
+        'MASK must be clear',
+        true,
+        1002,
+        'WS_ERR_UNEXPECTED_MASK'
+      );
+
+      cb(error);
+      return;
+    }
+
+    if (this._payloadLength === 126) this._state = GET_PAYLOAD_LENGTH_16;
+    else if (this._payloadLength === 127) this._state = GET_PAYLOAD_LENGTH_64;
+    else this.haveLength(cb);
+  }
+
+  /**
+   * Gets extended payload length (7+16).
+   *
+   * @param {Function} cb Callback
+   * @private
+   */
+  getPayloadLength16(cb) {
+    if (this._bufferedBytes < 2) {
+      this._loop = false;
+      return;
+    }
+
+    this._payloadLength = this.consume(2).readUInt16BE(0);
+    this.haveLength(cb);
+  }
+
+  /**
+   * Gets extended payload length (7+64).
+   *
+   * @param {Function} cb Callback
+   * @private
+   */
+  getPayloadLength64(cb) {
+    if (this._bufferedBytes < 8) {
+      this._loop = false;
+      return;
+    }
+
+    const buf = this.consume(8);
+    const num = buf.readUInt32BE(0);
+
+    //
+    // The maximum safe integer in JavaScript is 2^53 - 1. An error is returned
+    // if payload length is greater than this number.
+    //
+    if (num > Math.pow(2, 53 - 32) - 1) {
+      const error = this.createError(
+        RangeError,
+        'Unsupported WebSocket frame: payload length > 2^53 - 1',
+        false,
+        1009,
+        'WS_ERR_UNSUPPORTED_DATA_PAYLOAD_LENGTH'
+      );
+
+      cb(error);
+      return;
+    }
+
+    this._payloadLength = num * Math.pow(2, 32) + buf.readUInt32BE(4);
+    this.haveLength(cb);
+  }
+
+  /**
+   * Payload length has been read.
+   *
+   * @param {Function} cb Callback
+   * @private
+   */
+  haveLength(cb) {
+    if (this._payloadLength && this._opcode < 0x08) {
+      this._totalPayloadLength += this._payloadLength;
+      if (this._totalPayloadLength > this._maxPayload && this._maxPayload > 0) {
+        const error = this.createError(
+          RangeError,
+          'Max payload size exceeded',
+          false,
+          1009,
+          'WS_ERR_UNSUPPORTED_MESSAGE_LENGTH'
+        );
+
+        cb(error);
+        return;
+      }
+    }
+
+    if (this._masked) this._state = GET_MASK;
+    else this._state = GET_DATA;
+  }
+
+  /**
+   * Reads mask bytes.
+   *
+   * @private
+   */
+  getMask() {
+    if (this._bufferedBytes < 4) {
+      this._loop = false;
+      return;
+    }
+
+    this._mask = this.consume(4);
+    this._state = GET_DATA;
+  }
+
+  /**
+   * Reads data bytes.
+   *
+   * @param {Function} cb Callback
+   * @private
+   */
+  getData(cb) {
+    let data = EMPTY_BUFFER;
+
+    if (this._payloadLength) {
+      if (this._bufferedBytes < this._payloadLength) {
+        this._loop = false;
+        return;
+      }
+
+      data = this.consume(this._payloadLength);
+
+      if (
+        this._masked &&
+        (this._mask[0] | this._mask[1] | this._mask[2] | this._mask[3]) !== 0
+      ) {
+        unmask(data, this._mask);
+      }
+    }
+
+    if (this._opcode > 0x07) {
+      this.controlMessage(data, cb);
+      return;
+    }
+
+    if (this._compressed) {
+      this._state = INFLATING;
+      this.decompress(data, cb);
+      return;
+    }
+
+    if (data.length) {
+      //
+      // This message is not compressed so its length is the sum of the payload
+      // length of all fragments.
+      //
+      this._messageLength = this._totalPayloadLength;
+      this._fragments.push(data);
+    }
+
+    this.dataMessage(cb);
+  }
+
+  /**
+   * Decompresses data.
+   *
+   * @param {Buffer} data Compressed data
+   * @param {Function} cb Callback
+   * @private
+   */
+  decompress(data, cb) {
+    const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
+
+    perMessageDeflate.decompress(data, this._fin, (err, buf) => {
+      if (err) return cb(err);
+
+      if (buf.length) {
+        this._messageLength += buf.length;
+        if (this._messageLength > this._maxPayload && this._maxPayload > 0) {
+          const error = this.createError(
+            RangeError,
+            'Max payload size exceeded',
+            false,
+            1009,
+            'WS_ERR_UNSUPPORTED_MESSAGE_LENGTH'
+          );
+
+          cb(error);
+          return;
+        }
+
+        this._fragments.push(buf);
+      }
+
+      this.dataMessage(cb);
+      if (this._state === GET_INFO) this.startLoop(cb);
+    });
+  }
+
+  /**
+   * Handles a data message.
+   *
+   * @param {Function} cb Callback
+   * @private
+   */
+  dataMessage(cb) {
+    if (!this._fin) {
+      this._state = GET_INFO;
+      return;
+    }
+
+    const messageLength = this._messageLength;
+    const fragments = this._fragments;
+
+    this._totalPayloadLength = 0;
+    this._messageLength = 0;
+    this._fragmented = 0;
+    this._fragments = [];
+
+    if (this._opcode === 2) {
+      let data;
+
+      if (this._binaryType === 'nodebuffer') {
+        data = concat(fragments, messageLength);
+      } else if (this._binaryType === 'arraybuffer') {
+        data = toArrayBuffer(concat(fragments, messageLength));
+      } else {
+        data = fragments;
+      }
+
+      if (this._allowSynchronousEvents) {
+        this.emit('message', data, true);
+        this._state = GET_INFO;
+      } else {
+        this._state = DEFER_EVENT;
+        setImmediate(() => {
+          this.emit('message', data, true);
+          this._state = GET_INFO;
+          this.startLoop(cb);
+        });
+      }
+    } else {
+      const buf = concat(fragments, messageLength);
+
+      if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+        const error = this.createError(
+          Error,
+          'invalid UTF-8 sequence',
+          true,
+          1007,
+          'WS_ERR_INVALID_UTF8'
+        );
+
+        cb(error);
+        return;
+      }
+
+      if (this._state === INFLATING || this._allowSynchronousEvents) {
+        this.emit('message', buf, false);
+        this._state = GET_INFO;
+      } else {
+        this._state = DEFER_EVENT;
+        setImmediate(() => {
+          this.emit('message', buf, false);
+          this._state = GET_INFO;
+          this.startLoop(cb);
+        });
+      }
+    }
+  }
+
+  /**
+   * Handles a control message.
+   *
+   * @param {Buffer} data Data to handle
+   * @return {(Error|RangeError|undefined)} A possible error
+   * @private
+   */
+  controlMessage(data, cb) {
+    if (this._opcode === 0x08) {
+      if (data.length === 0) {
+        this._loop = false;
+        this.emit('conclude', 1005, EMPTY_BUFFER);
+        this.end();
+      } else {
+        const code = data.readUInt16BE(0);
+
+        if (!isValidStatusCode(code)) {
+          const error = this.createError(
+            RangeError,
+            `invalid status code ${code}`,
+            true,
+            1002,
+            'WS_ERR_INVALID_CLOSE_CODE'
+          );
+
+          cb(error);
+          return;
+        }
+
+        const buf = new FastBuffer(
+          data.buffer,
+          data.byteOffset + 2,
+          data.length - 2
+        );
+
+        if (!this._skipUTF8Validation && !isValidUTF8(buf)) {
+          const error = this.createError(
+            Error,
+            'invalid UTF-8 sequence',
+            true,
+            1007,
+            'WS_ERR_INVALID_UTF8'
+          );
+
+          cb(error);
+          return;
+        }
+
+        this._loop = false;
+        this.emit('conclude', code, buf);
+        this.end();
+      }
+
+      this._state = GET_INFO;
+      return;
+    }
+
+    if (this._allowSynchronousEvents) {
+      this.emit(this._opcode === 0x09 ? 'ping' : 'pong', data);
+      this._state = GET_INFO;
+    } else {
+      this._state = DEFER_EVENT;
+      setImmediate(() => {
+        this.emit(this._opcode === 0x09 ? 'ping' : 'pong', data);
+        this._state = GET_INFO;
+        this.startLoop(cb);
+      });
+    }
+  }
+
+  /**
+   * Builds an error object.
+   *
+   * @param {function(new:Error|RangeError)} ErrorCtor The error constructor
+   * @param {String} message The error message
+   * @param {Boolean} prefix Specifies whether or not to add a default prefix to
+   *     `message`
+   * @param {Number} statusCode The status code
+   * @param {String} errorCode The exposed error code
+   * @return {(Error|RangeError)} The error
+   * @private
+   */
+  createError(ErrorCtor, message, prefix, statusCode, errorCode) {
+    this._loop = false;
+    this._errored = true;
+
+    const err = new ErrorCtor(
+      prefix ? `Invalid WebSocket frame: ${message}` : message
+    );
+
+    Error.captureStackTrace(err, this.createError);
+    err.code = errorCode;
+    err[kStatusCode] = statusCode;
+    return err;
+  }
+}
+
+module.exports = Receiver;
+
+
+/***/ },
+
+/***/ 1421
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:child_process");
+
+/***/ },
+
+/***/ 1440
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6821,10 +8570,17 @@ function stringifyPair({ key, value }, ctx, onComment, onChompKeep) {
 exports.stringifyPair = stringifyPair;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1451:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1451
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -6945,10 +8701,17 @@ function resolveBlockMap({ composeNode, composeEmptyNode }, ctx, bm, onError, ta
 exports.resolveBlockMap = resolveBlockMap;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1490:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1490
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const { InvalidArgumentError } = __webpack_require__(6729);
 
@@ -7319,10 +9082,17 @@ exports.Option = Option;
 exports.DualOptions = DualOptions;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1510:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1510
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -7368,10 +9138,17 @@ exports.intHex = intHex;
 exports.intOct = intOct;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1533:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 1533
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -7383,6 +9160,7 @@ module.exports = (flag, argv = process.argv) => {
 };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1610:
@@ -7516,14 +9294,1364 @@ if (isUtf8) {
     };
   } catch (e) {
     // Continue regardless of the error.
+=======
+/***/ },
+
+/***/ 1551
+(module, __unused_webpack_exports, __webpack_require__) {
+
+/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^Duplex|Readable$", "caughtErrors": "none" }] */
+
+
+
+const EventEmitter = __webpack_require__(4434);
+const https = __webpack_require__(5692);
+const http = __webpack_require__(8611);
+const net = __webpack_require__(9278);
+const tls = __webpack_require__(4756);
+const { randomBytes, createHash } = __webpack_require__(6982);
+const { Duplex, Readable } = __webpack_require__(2203);
+const { URL } = __webpack_require__(7016);
+
+const PerMessageDeflate = __webpack_require__(6038);
+const Receiver = __webpack_require__(1407);
+const Sender = __webpack_require__(3147);
+const {
+  BINARY_TYPES,
+  EMPTY_BUFFER,
+  GUID,
+  kForOnEventAttribute,
+  kListener,
+  kStatusCode,
+  kWebSocket,
+  NOOP
+} = __webpack_require__(6261);
+const {
+  EventTarget: { addEventListener, removeEventListener }
+} = __webpack_require__(1972);
+const { format, parse } = __webpack_require__(5669);
+const { toBuffer } = __webpack_require__(2905);
+
+const closeTimeout = 30 * 1000;
+const kAborted = Symbol('kAborted');
+const protocolVersions = [8, 13];
+const readyStates = ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'];
+const subprotocolRegex = /^[!#$%&'*+\-.0-9A-Z^_`|a-z~]+$/;
+
+/**
+ * Class representing a WebSocket.
+ *
+ * @extends EventEmitter
+ */
+class WebSocket extends EventEmitter {
+  /**
+   * Create a new `WebSocket`.
+   *
+   * @param {(String|URL)} address The URL to which to connect
+   * @param {(String|String[])} [protocols] The subprotocols
+   * @param {Object} [options] Connection options
+   */
+  constructor(address, protocols, options) {
+    super();
+
+    this._binaryType = BINARY_TYPES[0];
+    this._closeCode = 1006;
+    this._closeFrameReceived = false;
+    this._closeFrameSent = false;
+    this._closeMessage = EMPTY_BUFFER;
+    this._closeTimer = null;
+    this._extensions = {};
+    this._paused = false;
+    this._protocol = '';
+    this._readyState = WebSocket.CONNECTING;
+    this._receiver = null;
+    this._sender = null;
+    this._socket = null;
+
+    if (address !== null) {
+      this._bufferedAmount = 0;
+      this._isServer = false;
+      this._redirects = 0;
+
+      if (protocols === undefined) {
+        protocols = [];
+      } else if (!Array.isArray(protocols)) {
+        if (typeof protocols === 'object' && protocols !== null) {
+          options = protocols;
+          protocols = [];
+        } else {
+          protocols = [protocols];
+        }
+      }
+
+      initAsClient(this, address, protocols, options);
+    } else {
+      this._autoPong = options.autoPong;
+      this._isServer = true;
+    }
+  }
+
+  /**
+   * This deviates from the WHATWG interface since ws doesn't support the
+   * required default "blob" type (instead we define a custom "nodebuffer"
+   * type).
+   *
+   * @type {String}
+   */
+  get binaryType() {
+    return this._binaryType;
+  }
+
+  set binaryType(type) {
+    if (!BINARY_TYPES.includes(type)) return;
+
+    this._binaryType = type;
+
+    //
+    // Allow to change `binaryType` on the fly.
+    //
+    if (this._receiver) this._receiver._binaryType = type;
+  }
+
+  /**
+   * @type {Number}
+   */
+  get bufferedAmount() {
+    if (!this._socket) return this._bufferedAmount;
+
+    return this._socket._writableState.length + this._sender._bufferedBytes;
+  }
+
+  /**
+   * @type {String}
+   */
+  get extensions() {
+    return Object.keys(this._extensions).join();
+  }
+
+  /**
+   * @type {Boolean}
+   */
+  get isPaused() {
+    return this._paused;
+  }
+
+  /**
+   * @type {Function}
+   */
+  /* istanbul ignore next */
+  get onclose() {
+    return null;
+  }
+
+  /**
+   * @type {Function}
+   */
+  /* istanbul ignore next */
+  get onerror() {
+    return null;
+  }
+
+  /**
+   * @type {Function}
+   */
+  /* istanbul ignore next */
+  get onopen() {
+    return null;
+  }
+
+  /**
+   * @type {Function}
+   */
+  /* istanbul ignore next */
+  get onmessage() {
+    return null;
+  }
+
+  /**
+   * @type {String}
+   */
+  get protocol() {
+    return this._protocol;
+  }
+
+  /**
+   * @type {Number}
+   */
+  get readyState() {
+    return this._readyState;
+  }
+
+  /**
+   * @type {String}
+   */
+  get url() {
+    return this._url;
+  }
+
+  /**
+   * Set up the socket and the internal resources.
+   *
+   * @param {Duplex} socket The network socket between the server and client
+   * @param {Buffer} head The first packet of the upgraded stream
+   * @param {Object} options Options object
+   * @param {Boolean} [options.allowSynchronousEvents=false] Specifies whether
+   *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+   *     multiple times in the same tick
+   * @param {Function} [options.generateMask] The function used to generate the
+   *     masking key
+   * @param {Number} [options.maxPayload=0] The maximum allowed message size
+   * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+   *     not to skip UTF-8 validation for text and close messages
+   * @private
+   */
+  setSocket(socket, head, options) {
+    const receiver = new Receiver({
+      allowSynchronousEvents: options.allowSynchronousEvents,
+      binaryType: this.binaryType,
+      extensions: this._extensions,
+      isServer: this._isServer,
+      maxPayload: options.maxPayload,
+      skipUTF8Validation: options.skipUTF8Validation
+    });
+
+    this._sender = new Sender(socket, this._extensions, options.generateMask);
+    this._receiver = receiver;
+    this._socket = socket;
+
+    receiver[kWebSocket] = this;
+    socket[kWebSocket] = this;
+
+    receiver.on('conclude', receiverOnConclude);
+    receiver.on('drain', receiverOnDrain);
+    receiver.on('error', receiverOnError);
+    receiver.on('message', receiverOnMessage);
+    receiver.on('ping', receiverOnPing);
+    receiver.on('pong', receiverOnPong);
+
+    //
+    // These methods may not be available if `socket` is just a `Duplex`.
+    //
+    if (socket.setTimeout) socket.setTimeout(0);
+    if (socket.setNoDelay) socket.setNoDelay();
+
+    if (head.length > 0) socket.unshift(head);
+
+    socket.on('close', socketOnClose);
+    socket.on('data', socketOnData);
+    socket.on('end', socketOnEnd);
+    socket.on('error', socketOnError);
+
+    this._readyState = WebSocket.OPEN;
+    this.emit('open');
+  }
+
+  /**
+   * Emit the `'close'` event.
+   *
+   * @private
+   */
+  emitClose() {
+    if (!this._socket) {
+      this._readyState = WebSocket.CLOSED;
+      this.emit('close', this._closeCode, this._closeMessage);
+      return;
+    }
+
+    if (this._extensions[PerMessageDeflate.extensionName]) {
+      this._extensions[PerMessageDeflate.extensionName].cleanup();
+    }
+
+    this._receiver.removeAllListeners();
+    this._readyState = WebSocket.CLOSED;
+    this.emit('close', this._closeCode, this._closeMessage);
+  }
+
+  /**
+   * Start a closing handshake.
+   *
+   *          +----------+   +-----------+   +----------+
+   *     - - -|ws.close()|-->|close frame|-->|ws.close()|- - -
+   *    |     +----------+   +-----------+   +----------+     |
+   *          +----------+   +-----------+         |
+   * CLOSING  |ws.close()|<--|close frame|<--+-----+       CLOSING
+   *          +----------+   +-----------+   |
+   *    |           |                        |   +---+        |
+   *                +------------------------+-->|fin| - - - -
+   *    |         +---+                      |   +---+
+   *     - - - - -|fin|<---------------------+
+   *              +---+
+   *
+   * @param {Number} [code] Status code explaining why the connection is closing
+   * @param {(String|Buffer)} [data] The reason why the connection is
+   *     closing
+   * @public
+   */
+  close(code, data) {
+    if (this.readyState === WebSocket.CLOSED) return;
+    if (this.readyState === WebSocket.CONNECTING) {
+      const msg = 'WebSocket was closed before the connection was established';
+      abortHandshake(this, this._req, msg);
+      return;
+    }
+
+    if (this.readyState === WebSocket.CLOSING) {
+      if (
+        this._closeFrameSent &&
+        (this._closeFrameReceived || this._receiver._writableState.errorEmitted)
+      ) {
+        this._socket.end();
+      }
+
+      return;
+    }
+
+    this._readyState = WebSocket.CLOSING;
+    this._sender.close(code, data, !this._isServer, (err) => {
+      //
+      // This error is handled by the `'error'` listener on the socket. We only
+      // want to know if the close frame has been sent here.
+      //
+      if (err) return;
+
+      this._closeFrameSent = true;
+
+      if (
+        this._closeFrameReceived ||
+        this._receiver._writableState.errorEmitted
+      ) {
+        this._socket.end();
+      }
+    });
+
+    //
+    // Specify a timeout for the closing handshake to complete.
+    //
+    this._closeTimer = setTimeout(
+      this._socket.destroy.bind(this._socket),
+      closeTimeout
+    );
+  }
+
+  /**
+   * Pause the socket.
+   *
+   * @public
+   */
+  pause() {
+    if (
+      this.readyState === WebSocket.CONNECTING ||
+      this.readyState === WebSocket.CLOSED
+    ) {
+      return;
+    }
+
+    this._paused = true;
+    this._socket.pause();
+  }
+
+  /**
+   * Send a ping.
+   *
+   * @param {*} [data] The data to send
+   * @param {Boolean} [mask] Indicates whether or not to mask `data`
+   * @param {Function} [cb] Callback which is executed when the ping is sent
+   * @public
+   */
+  ping(data, mask, cb) {
+    if (this.readyState === WebSocket.CONNECTING) {
+      throw new Error('WebSocket is not open: readyState 0 (CONNECTING)');
+    }
+
+    if (typeof data === 'function') {
+      cb = data;
+      data = mask = undefined;
+    } else if (typeof mask === 'function') {
+      cb = mask;
+      mask = undefined;
+    }
+
+    if (typeof data === 'number') data = data.toString();
+
+    if (this.readyState !== WebSocket.OPEN) {
+      sendAfterClose(this, data, cb);
+      return;
+    }
+
+    if (mask === undefined) mask = !this._isServer;
+    this._sender.ping(data || EMPTY_BUFFER, mask, cb);
+  }
+
+  /**
+   * Send a pong.
+   *
+   * @param {*} [data] The data to send
+   * @param {Boolean} [mask] Indicates whether or not to mask `data`
+   * @param {Function} [cb] Callback which is executed when the pong is sent
+   * @public
+   */
+  pong(data, mask, cb) {
+    if (this.readyState === WebSocket.CONNECTING) {
+      throw new Error('WebSocket is not open: readyState 0 (CONNECTING)');
+    }
+
+    if (typeof data === 'function') {
+      cb = data;
+      data = mask = undefined;
+    } else if (typeof mask === 'function') {
+      cb = mask;
+      mask = undefined;
+    }
+
+    if (typeof data === 'number') data = data.toString();
+
+    if (this.readyState !== WebSocket.OPEN) {
+      sendAfterClose(this, data, cb);
+      return;
+    }
+
+    if (mask === undefined) mask = !this._isServer;
+    this._sender.pong(data || EMPTY_BUFFER, mask, cb);
+  }
+
+  /**
+   * Resume the socket.
+   *
+   * @public
+   */
+  resume() {
+    if (
+      this.readyState === WebSocket.CONNECTING ||
+      this.readyState === WebSocket.CLOSED
+    ) {
+      return;
+    }
+
+    this._paused = false;
+    if (!this._receiver._writableState.needDrain) this._socket.resume();
+  }
+
+  /**
+   * Send a data message.
+   *
+   * @param {*} data The message to send
+   * @param {Object} [options] Options object
+   * @param {Boolean} [options.binary] Specifies whether `data` is binary or
+   *     text
+   * @param {Boolean} [options.compress] Specifies whether or not to compress
+   *     `data`
+   * @param {Boolean} [options.fin=true] Specifies whether the fragment is the
+   *     last one
+   * @param {Boolean} [options.mask] Specifies whether or not to mask `data`
+   * @param {Function} [cb] Callback which is executed when data is written out
+   * @public
+   */
+  send(data, options, cb) {
+    if (this.readyState === WebSocket.CONNECTING) {
+      throw new Error('WebSocket is not open: readyState 0 (CONNECTING)');
+    }
+
+    if (typeof options === 'function') {
+      cb = options;
+      options = {};
+    }
+
+    if (typeof data === 'number') data = data.toString();
+
+    if (this.readyState !== WebSocket.OPEN) {
+      sendAfterClose(this, data, cb);
+      return;
+    }
+
+    const opts = {
+      binary: typeof data !== 'string',
+      mask: !this._isServer,
+      compress: true,
+      fin: true,
+      ...options
+    };
+
+    if (!this._extensions[PerMessageDeflate.extensionName]) {
+      opts.compress = false;
+    }
+
+    this._sender.send(data || EMPTY_BUFFER, opts, cb);
+  }
+
+  /**
+   * Forcibly close the connection.
+   *
+   * @public
+   */
+  terminate() {
+    if (this.readyState === WebSocket.CLOSED) return;
+    if (this.readyState === WebSocket.CONNECTING) {
+      const msg = 'WebSocket was closed before the connection was established';
+      abortHandshake(this, this._req, msg);
+      return;
+    }
+
+    if (this._socket) {
+      this._readyState = WebSocket.CLOSING;
+      this._socket.destroy();
+    }
+  }
+}
+
+/**
+ * @constant {Number} CONNECTING
+ * @memberof WebSocket
+ */
+Object.defineProperty(WebSocket, 'CONNECTING', {
+  enumerable: true,
+  value: readyStates.indexOf('CONNECTING')
+});
+
+/**
+ * @constant {Number} CONNECTING
+ * @memberof WebSocket.prototype
+ */
+Object.defineProperty(WebSocket.prototype, 'CONNECTING', {
+  enumerable: true,
+  value: readyStates.indexOf('CONNECTING')
+});
+
+/**
+ * @constant {Number} OPEN
+ * @memberof WebSocket
+ */
+Object.defineProperty(WebSocket, 'OPEN', {
+  enumerable: true,
+  value: readyStates.indexOf('OPEN')
+});
+
+/**
+ * @constant {Number} OPEN
+ * @memberof WebSocket.prototype
+ */
+Object.defineProperty(WebSocket.prototype, 'OPEN', {
+  enumerable: true,
+  value: readyStates.indexOf('OPEN')
+});
+
+/**
+ * @constant {Number} CLOSING
+ * @memberof WebSocket
+ */
+Object.defineProperty(WebSocket, 'CLOSING', {
+  enumerable: true,
+  value: readyStates.indexOf('CLOSING')
+});
+
+/**
+ * @constant {Number} CLOSING
+ * @memberof WebSocket.prototype
+ */
+Object.defineProperty(WebSocket.prototype, 'CLOSING', {
+  enumerable: true,
+  value: readyStates.indexOf('CLOSING')
+});
+
+/**
+ * @constant {Number} CLOSED
+ * @memberof WebSocket
+ */
+Object.defineProperty(WebSocket, 'CLOSED', {
+  enumerable: true,
+  value: readyStates.indexOf('CLOSED')
+});
+
+/**
+ * @constant {Number} CLOSED
+ * @memberof WebSocket.prototype
+ */
+Object.defineProperty(WebSocket.prototype, 'CLOSED', {
+  enumerable: true,
+  value: readyStates.indexOf('CLOSED')
+});
+
+[
+  'binaryType',
+  'bufferedAmount',
+  'extensions',
+  'isPaused',
+  'protocol',
+  'readyState',
+  'url'
+].forEach((property) => {
+  Object.defineProperty(WebSocket.prototype, property, { enumerable: true });
+});
+
+//
+// Add the `onopen`, `onerror`, `onclose`, and `onmessage` attributes.
+// See https://html.spec.whatwg.org/multipage/comms.html#the-websocket-interface
+//
+['open', 'error', 'close', 'message'].forEach((method) => {
+  Object.defineProperty(WebSocket.prototype, `on${method}`, {
+    enumerable: true,
+    get() {
+      for (const listener of this.listeners(method)) {
+        if (listener[kForOnEventAttribute]) return listener[kListener];
+      }
+
+      return null;
+    },
+    set(handler) {
+      for (const listener of this.listeners(method)) {
+        if (listener[kForOnEventAttribute]) {
+          this.removeListener(method, listener);
+          break;
+        }
+      }
+
+      if (typeof handler !== 'function') return;
+
+      this.addEventListener(method, handler, {
+        [kForOnEventAttribute]: true
+      });
+    }
+  });
+});
+
+WebSocket.prototype.addEventListener = addEventListener;
+WebSocket.prototype.removeEventListener = removeEventListener;
+
+module.exports = WebSocket;
+
+/**
+ * Initialize a WebSocket client.
+ *
+ * @param {WebSocket} websocket The client to initialize
+ * @param {(String|URL)} address The URL to which to connect
+ * @param {Array} protocols The subprotocols
+ * @param {Object} [options] Connection options
+ * @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether any
+ *     of the `'message'`, `'ping'`, and `'pong'` events can be emitted multiple
+ *     times in the same tick
+ * @param {Boolean} [options.autoPong=true] Specifies whether or not to
+ *     automatically send a pong in response to a ping
+ * @param {Function} [options.finishRequest] A function which can be used to
+ *     customize the headers of each http request before it is sent
+ * @param {Boolean} [options.followRedirects=false] Whether or not to follow
+ *     redirects
+ * @param {Function} [options.generateMask] The function used to generate the
+ *     masking key
+ * @param {Number} [options.handshakeTimeout] Timeout in milliseconds for the
+ *     handshake request
+ * @param {Number} [options.maxPayload=104857600] The maximum allowed message
+ *     size
+ * @param {Number} [options.maxRedirects=10] The maximum number of redirects
+ *     allowed
+ * @param {String} [options.origin] Value of the `Origin` or
+ *     `Sec-WebSocket-Origin` header
+ * @param {(Boolean|Object)} [options.perMessageDeflate=true] Enable/disable
+ *     permessage-deflate
+ * @param {Number} [options.protocolVersion=13] Value of the
+ *     `Sec-WebSocket-Version` header
+ * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+ *     not to skip UTF-8 validation for text and close messages
+ * @private
+ */
+function initAsClient(websocket, address, protocols, options) {
+  const opts = {
+    allowSynchronousEvents: true,
+    autoPong: true,
+    protocolVersion: protocolVersions[1],
+    maxPayload: 100 * 1024 * 1024,
+    skipUTF8Validation: false,
+    perMessageDeflate: true,
+    followRedirects: false,
+    maxRedirects: 10,
+    ...options,
+    socketPath: undefined,
+    hostname: undefined,
+    protocol: undefined,
+    timeout: undefined,
+    method: 'GET',
+    host: undefined,
+    path: undefined,
+    port: undefined
+  };
+
+  websocket._autoPong = opts.autoPong;
+
+  if (!protocolVersions.includes(opts.protocolVersion)) {
+    throw new RangeError(
+      `Unsupported protocol version: ${opts.protocolVersion} ` +
+        `(supported versions: ${protocolVersions.join(', ')})`
+    );
+  }
+
+  let parsedUrl;
+
+  if (address instanceof URL) {
+    parsedUrl = address;
+  } else {
+    try {
+      parsedUrl = new URL(address);
+    } catch (e) {
+      throw new SyntaxError(`Invalid URL: ${address}`);
+    }
+  }
+
+  if (parsedUrl.protocol === 'http:') {
+    parsedUrl.protocol = 'ws:';
+  } else if (parsedUrl.protocol === 'https:') {
+    parsedUrl.protocol = 'wss:';
+  }
+
+  websocket._url = parsedUrl.href;
+
+  const isSecure = parsedUrl.protocol === 'wss:';
+  const isIpcUrl = parsedUrl.protocol === 'ws+unix:';
+  let invalidUrlMessage;
+
+  if (parsedUrl.protocol !== 'ws:' && !isSecure && !isIpcUrl) {
+    invalidUrlMessage =
+      'The URL\'s protocol must be one of "ws:", "wss:", ' +
+      '"http:", "https", or "ws+unix:"';
+  } else if (isIpcUrl && !parsedUrl.pathname) {
+    invalidUrlMessage = "The URL's pathname is empty";
+  } else if (parsedUrl.hash) {
+    invalidUrlMessage = 'The URL contains a fragment identifier';
+  }
+
+  if (invalidUrlMessage) {
+    const err = new SyntaxError(invalidUrlMessage);
+
+    if (websocket._redirects === 0) {
+      throw err;
+    } else {
+      emitErrorAndClose(websocket, err);
+      return;
+    }
+  }
+
+  const defaultPort = isSecure ? 443 : 80;
+  const key = randomBytes(16).toString('base64');
+  const request = isSecure ? https.request : http.request;
+  const protocolSet = new Set();
+  let perMessageDeflate;
+
+  opts.createConnection =
+    opts.createConnection || (isSecure ? tlsConnect : netConnect);
+  opts.defaultPort = opts.defaultPort || defaultPort;
+  opts.port = parsedUrl.port || defaultPort;
+  opts.host = parsedUrl.hostname.startsWith('[')
+    ? parsedUrl.hostname.slice(1, -1)
+    : parsedUrl.hostname;
+  opts.headers = {
+    ...opts.headers,
+    'Sec-WebSocket-Version': opts.protocolVersion,
+    'Sec-WebSocket-Key': key,
+    Connection: 'Upgrade',
+    Upgrade: 'websocket'
+  };
+  opts.path = parsedUrl.pathname + parsedUrl.search;
+  opts.timeout = opts.handshakeTimeout;
+
+  if (opts.perMessageDeflate) {
+    perMessageDeflate = new PerMessageDeflate(
+      opts.perMessageDeflate !== true ? opts.perMessageDeflate : {},
+      false,
+      opts.maxPayload
+    );
+    opts.headers['Sec-WebSocket-Extensions'] = format({
+      [PerMessageDeflate.extensionName]: perMessageDeflate.offer()
+    });
+  }
+  if (protocols.length) {
+    for (const protocol of protocols) {
+      if (
+        typeof protocol !== 'string' ||
+        !subprotocolRegex.test(protocol) ||
+        protocolSet.has(protocol)
+      ) {
+        throw new SyntaxError(
+          'An invalid or duplicated subprotocol was specified'
+        );
+      }
+
+      protocolSet.add(protocol);
+    }
+
+    opts.headers['Sec-WebSocket-Protocol'] = protocols.join(',');
+  }
+  if (opts.origin) {
+    if (opts.protocolVersion < 13) {
+      opts.headers['Sec-WebSocket-Origin'] = opts.origin;
+    } else {
+      opts.headers.Origin = opts.origin;
+    }
+  }
+  if (parsedUrl.username || parsedUrl.password) {
+    opts.auth = `${parsedUrl.username}:${parsedUrl.password}`;
+  }
+
+  if (isIpcUrl) {
+    const parts = opts.path.split(':');
+
+    opts.socketPath = parts[0];
+    opts.path = parts[1];
+  }
+
+  let req;
+
+  if (opts.followRedirects) {
+    if (websocket._redirects === 0) {
+      websocket._originalIpc = isIpcUrl;
+      websocket._originalSecure = isSecure;
+      websocket._originalHostOrSocketPath = isIpcUrl
+        ? opts.socketPath
+        : parsedUrl.host;
+
+      const headers = options && options.headers;
+
+      //
+      // Shallow copy the user provided options so that headers can be changed
+      // without mutating the original object.
+      //
+      options = { ...options, headers: {} };
+
+      if (headers) {
+        for (const [key, value] of Object.entries(headers)) {
+          options.headers[key.toLowerCase()] = value;
+        }
+      }
+    } else if (websocket.listenerCount('redirect') === 0) {
+      const isSameHost = isIpcUrl
+        ? websocket._originalIpc
+          ? opts.socketPath === websocket._originalHostOrSocketPath
+          : false
+        : websocket._originalIpc
+          ? false
+          : parsedUrl.host === websocket._originalHostOrSocketPath;
+
+      if (!isSameHost || (websocket._originalSecure && !isSecure)) {
+        //
+        // Match curl 7.77.0 behavior and drop the following headers. These
+        // headers are also dropped when following a redirect to a subdomain.
+        //
+        delete opts.headers.authorization;
+        delete opts.headers.cookie;
+
+        if (!isSameHost) delete opts.headers.host;
+
+        opts.auth = undefined;
+      }
+    }
+
+    //
+    // Match curl 7.77.0 behavior and make the first `Authorization` header win.
+    // If the `Authorization` header is set, then there is nothing to do as it
+    // will take precedence.
+    //
+    if (opts.auth && !options.headers.authorization) {
+      options.headers.authorization =
+        'Basic ' + Buffer.from(opts.auth).toString('base64');
+    }
+
+    req = websocket._req = request(opts);
+
+    if (websocket._redirects) {
+      //
+      // Unlike what is done for the `'upgrade'` event, no early exit is
+      // triggered here if the user calls `websocket.close()` or
+      // `websocket.terminate()` from a listener of the `'redirect'` event. This
+      // is because the user can also call `request.destroy()` with an error
+      // before calling `websocket.close()` or `websocket.terminate()` and this
+      // would result in an error being emitted on the `request` object with no
+      // `'error'` event listeners attached.
+      //
+      websocket.emit('redirect', websocket.url, req);
+    }
+  } else {
+    req = websocket._req = request(opts);
+  }
+
+  if (opts.timeout) {
+    req.on('timeout', () => {
+      abortHandshake(websocket, req, 'Opening handshake has timed out');
+    });
+  }
+
+  req.on('error', (err) => {
+    if (req === null || req[kAborted]) return;
+
+    req = websocket._req = null;
+    emitErrorAndClose(websocket, err);
+  });
+
+  req.on('response', (res) => {
+    const location = res.headers.location;
+    const statusCode = res.statusCode;
+
+    if (
+      location &&
+      opts.followRedirects &&
+      statusCode >= 300 &&
+      statusCode < 400
+    ) {
+      if (++websocket._redirects > opts.maxRedirects) {
+        abortHandshake(websocket, req, 'Maximum redirects exceeded');
+        return;
+      }
+
+      req.abort();
+
+      let addr;
+
+      try {
+        addr = new URL(location, address);
+      } catch (e) {
+        const err = new SyntaxError(`Invalid URL: ${location}`);
+        emitErrorAndClose(websocket, err);
+        return;
+      }
+
+      initAsClient(websocket, addr, protocols, options);
+    } else if (!websocket.emit('unexpected-response', req, res)) {
+      abortHandshake(
+        websocket,
+        req,
+        `Unexpected server response: ${res.statusCode}`
+      );
+    }
+  });
+
+  req.on('upgrade', (res, socket, head) => {
+    websocket.emit('upgrade', res);
+
+    //
+    // The user may have closed the connection from a listener of the
+    // `'upgrade'` event.
+    //
+    if (websocket.readyState !== WebSocket.CONNECTING) return;
+
+    req = websocket._req = null;
+
+    const upgrade = res.headers.upgrade;
+
+    if (upgrade === undefined || upgrade.toLowerCase() !== 'websocket') {
+      abortHandshake(websocket, socket, 'Invalid Upgrade header');
+      return;
+    }
+
+    const digest = createHash('sha1')
+      .update(key + GUID)
+      .digest('base64');
+
+    if (res.headers['sec-websocket-accept'] !== digest) {
+      abortHandshake(websocket, socket, 'Invalid Sec-WebSocket-Accept header');
+      return;
+    }
+
+    const serverProt = res.headers['sec-websocket-protocol'];
+    let protError;
+
+    if (serverProt !== undefined) {
+      if (!protocolSet.size) {
+        protError = 'Server sent a subprotocol but none was requested';
+      } else if (!protocolSet.has(serverProt)) {
+        protError = 'Server sent an invalid subprotocol';
+      }
+    } else if (protocolSet.size) {
+      protError = 'Server sent no subprotocol';
+    }
+
+    if (protError) {
+      abortHandshake(websocket, socket, protError);
+      return;
+    }
+
+    if (serverProt) websocket._protocol = serverProt;
+
+    const secWebSocketExtensions = res.headers['sec-websocket-extensions'];
+
+    if (secWebSocketExtensions !== undefined) {
+      if (!perMessageDeflate) {
+        const message =
+          'Server sent a Sec-WebSocket-Extensions header but no extension ' +
+          'was requested';
+        abortHandshake(websocket, socket, message);
+        return;
+      }
+
+      let extensions;
+
+      try {
+        extensions = parse(secWebSocketExtensions);
+      } catch (err) {
+        const message = 'Invalid Sec-WebSocket-Extensions header';
+        abortHandshake(websocket, socket, message);
+        return;
+      }
+
+      const extensionNames = Object.keys(extensions);
+
+      if (
+        extensionNames.length !== 1 ||
+        extensionNames[0] !== PerMessageDeflate.extensionName
+      ) {
+        const message = 'Server indicated an extension that was not requested';
+        abortHandshake(websocket, socket, message);
+        return;
+      }
+
+      try {
+        perMessageDeflate.accept(extensions[PerMessageDeflate.extensionName]);
+      } catch (err) {
+        const message = 'Invalid Sec-WebSocket-Extensions header';
+        abortHandshake(websocket, socket, message);
+        return;
+      }
+
+      websocket._extensions[PerMessageDeflate.extensionName] =
+        perMessageDeflate;
+    }
+
+    websocket.setSocket(socket, head, {
+      allowSynchronousEvents: opts.allowSynchronousEvents,
+      generateMask: opts.generateMask,
+      maxPayload: opts.maxPayload,
+      skipUTF8Validation: opts.skipUTF8Validation
+    });
+  });
+
+  if (opts.finishRequest) {
+    opts.finishRequest(req, websocket);
+  } else {
+    req.end();
+  }
+}
+
+/**
+ * Emit the `'error'` and `'close'` events.
+ *
+ * @param {WebSocket} websocket The WebSocket instance
+ * @param {Error} The error to emit
+ * @private
+ */
+function emitErrorAndClose(websocket, err) {
+  websocket._readyState = WebSocket.CLOSING;
+  websocket.emit('error', err);
+  websocket.emitClose();
+}
+
+/**
+ * Create a `net.Socket` and initiate a connection.
+ *
+ * @param {Object} options Connection options
+ * @return {net.Socket} The newly created socket used to start the connection
+ * @private
+ */
+function netConnect(options) {
+  options.path = options.socketPath;
+  return net.connect(options);
+}
+
+/**
+ * Create a `tls.TLSSocket` and initiate a connection.
+ *
+ * @param {Object} options Connection options
+ * @return {tls.TLSSocket} The newly created socket used to start the connection
+ * @private
+ */
+function tlsConnect(options) {
+  options.path = undefined;
+
+  if (!options.servername && options.servername !== '') {
+    options.servername = net.isIP(options.host) ? '' : options.host;
+  }
+
+  return tls.connect(options);
+}
+
+/**
+ * Abort the handshake and emit an error.
+ *
+ * @param {WebSocket} websocket The WebSocket instance
+ * @param {(http.ClientRequest|net.Socket|tls.Socket)} stream The request to
+ *     abort or the socket to destroy
+ * @param {String} message The error message
+ * @private
+ */
+function abortHandshake(websocket, stream, message) {
+  websocket._readyState = WebSocket.CLOSING;
+
+  const err = new Error(message);
+  Error.captureStackTrace(err, abortHandshake);
+
+  if (stream.setHeader) {
+    stream[kAborted] = true;
+    stream.abort();
+
+    if (stream.socket && !stream.socket.destroyed) {
+      //
+      // On Node.js >= 14.3.0 `request.abort()` does not destroy the socket if
+      // called after the request completed. See
+      // https://github.com/websockets/ws/issues/1869.
+      //
+      stream.socket.destroy();
+    }
+
+    process.nextTick(emitErrorAndClose, websocket, err);
+  } else {
+    stream.destroy(err);
+    stream.once('error', websocket.emit.bind(websocket, 'error'));
+    stream.once('close', websocket.emitClose.bind(websocket));
+  }
+}
+
+/**
+ * Handle cases where the `ping()`, `pong()`, or `send()` methods are called
+ * when the `readyState` attribute is `CLOSING` or `CLOSED`.
+ *
+ * @param {WebSocket} websocket The WebSocket instance
+ * @param {*} [data] The data to send
+ * @param {Function} [cb] Callback
+ * @private
+ */
+function sendAfterClose(websocket, data, cb) {
+  if (data) {
+    const length = toBuffer(data).length;
+
+    //
+    // The `_bufferedAmount` property is used only when the peer is a client and
+    // the opening handshake fails. Under these circumstances, in fact, the
+    // `setSocket()` method is not called, so the `_socket` and `_sender`
+    // properties are set to `null`.
+    //
+    if (websocket._socket) websocket._sender._bufferedBytes += length;
+    else websocket._bufferedAmount += length;
+  }
+
+  if (cb) {
+    const err = new Error(
+      `WebSocket is not open: readyState ${websocket.readyState} ` +
+        `(${readyStates[websocket.readyState]})`
+    );
+    process.nextTick(cb, err);
+  }
+}
+
+/**
+ * The listener of the `Receiver` `'conclude'` event.
+ *
+ * @param {Number} code The status code
+ * @param {Buffer} reason The reason for closing
+ * @private
+ */
+function receiverOnConclude(code, reason) {
+  const websocket = this[kWebSocket];
+
+  websocket._closeFrameReceived = true;
+  websocket._closeMessage = reason;
+  websocket._closeCode = code;
+
+  if (websocket._socket[kWebSocket] === undefined) return;
+
+  websocket._socket.removeListener('data', socketOnData);
+  process.nextTick(resume, websocket._socket);
+
+  if (code === 1005) websocket.close();
+  else websocket.close(code, reason);
+}
+
+/**
+ * The listener of the `Receiver` `'drain'` event.
+ *
+ * @private
+ */
+function receiverOnDrain() {
+  const websocket = this[kWebSocket];
+
+  if (!websocket.isPaused) websocket._socket.resume();
+}
+
+/**
+ * The listener of the `Receiver` `'error'` event.
+ *
+ * @param {(RangeError|Error)} err The emitted error
+ * @private
+ */
+function receiverOnError(err) {
+  const websocket = this[kWebSocket];
+
+  if (websocket._socket[kWebSocket] !== undefined) {
+    websocket._socket.removeListener('data', socketOnData);
+
+    //
+    // On Node.js < 14.0.0 the `'error'` event is emitted synchronously. See
+    // https://github.com/websockets/ws/issues/1940.
+    //
+    process.nextTick(resume, websocket._socket);
+
+    websocket.close(err[kStatusCode]);
+  }
+
+  websocket.emit('error', err);
+}
+
+/**
+ * The listener of the `Receiver` `'finish'` event.
+ *
+ * @private
+ */
+function receiverOnFinish() {
+  this[kWebSocket].emitClose();
+}
+
+/**
+ * The listener of the `Receiver` `'message'` event.
+ *
+ * @param {Buffer|ArrayBuffer|Buffer[])} data The message
+ * @param {Boolean} isBinary Specifies whether the message is binary or not
+ * @private
+ */
+function receiverOnMessage(data, isBinary) {
+  this[kWebSocket].emit('message', data, isBinary);
+}
+
+/**
+ * The listener of the `Receiver` `'ping'` event.
+ *
+ * @param {Buffer} data The data included in the ping frame
+ * @private
+ */
+function receiverOnPing(data) {
+  const websocket = this[kWebSocket];
+
+  if (websocket._autoPong) websocket.pong(data, !this._isServer, NOOP);
+  websocket.emit('ping', data);
+}
+
+/**
+ * The listener of the `Receiver` `'pong'` event.
+ *
+ * @param {Buffer} data The data included in the pong frame
+ * @private
+ */
+function receiverOnPong(data) {
+  this[kWebSocket].emit('pong', data);
+}
+
+/**
+ * Resume a readable stream
+ *
+ * @param {Readable} stream The readable stream
+ * @private
+ */
+function resume(stream) {
+  stream.resume();
+}
+
+/**
+ * The listener of the socket `'close'` event.
+ *
+ * @private
+ */
+function socketOnClose() {
+  const websocket = this[kWebSocket];
+
+  this.removeListener('close', socketOnClose);
+  this.removeListener('data', socketOnData);
+  this.removeListener('end', socketOnEnd);
+
+  websocket._readyState = WebSocket.CLOSING;
+
+  let chunk;
+
+  //
+  // The close frame might not have been received or the `'end'` event emitted,
+  // for example, if the socket was destroyed due to an error. Ensure that the
+  // `receiver` stream is closed after writing any remaining buffered data to
+  // it. If the readable side of the socket is in flowing mode then there is no
+  // buffered data as everything has been already written and `readable.read()`
+  // will return `null`. If instead, the socket is paused, any possible buffered
+  // data will be read as a single chunk.
+  //
+  if (
+    !this._readableState.endEmitted &&
+    !websocket._closeFrameReceived &&
+    !websocket._receiver._writableState.errorEmitted &&
+    (chunk = websocket._socket.read()) !== null
+  ) {
+    websocket._receiver.write(chunk);
+  }
+
+  websocket._receiver.end();
+
+  this[kWebSocket] = undefined;
+
+  clearTimeout(websocket._closeTimer);
+
+  if (
+    websocket._receiver._writableState.finished ||
+    websocket._receiver._writableState.errorEmitted
+  ) {
+    websocket.emitClose();
+  } else {
+    websocket._receiver.on('error', receiverOnFinish);
+    websocket._receiver.on('finish', receiverOnFinish);
+  }
+}
+
+/**
+ * The listener of the socket `'data'` event.
+ *
+ * @param {Buffer} chunk A chunk of data
+ * @private
+ */
+function socketOnData(chunk) {
+  if (!this[kWebSocket]._receiver.write(chunk)) {
+    this.pause();
+  }
+}
+
+/**
+ * The listener of the socket `'end'` event.
+ *
+ * @private
+ */
+function socketOnEnd() {
+  const websocket = this[kWebSocket];
+
+  websocket._readyState = WebSocket.CLOSING;
+  websocket._receiver.end();
+  this.end();
+}
+
+/**
+ * The listener of the socket `'error'` event.
+ *
+ * @private
+ */
+function socketOnError() {
+  const websocket = this[kWebSocket];
+
+  this.removeListener('error', socketOnError);
+  this.on('error', NOOP);
+
+  if (websocket) {
+    websocket._readyState = WebSocket.CLOSING;
+    this.destroy();
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
   }
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1615:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1615
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -7546,10 +10674,17 @@ const map = {
 exports.map = map;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1642:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1642
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -7603,6 +10738,7 @@ exports.floatExp = floatExp;
 exports.floatNaN = floatNaN;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1708:
@@ -7614,6 +10750,1295 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:process");
 
 /***/ 1828:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1708
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:process");
+
+/***/ },
+
+/***/ 1767
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Client = void 0;
+const socket_io_parser_1 = __webpack_require__(9834);
+const debugModule = __webpack_require__(8725);
+const url = __webpack_require__(7016);
+const debug = debugModule("socket.io:client");
+class Client {
+    /**
+     * Client constructor.
+     *
+     * @param server instance
+     * @param conn
+     * @package
+     */
+    constructor(server, conn) {
+        this.sockets = new Map();
+        this.nsps = new Map();
+        this.server = server;
+        this.conn = conn;
+        this.encoder = server.encoder;
+        this.decoder = new server._parser.Decoder();
+        this.id = conn.id;
+        this.setup();
+    }
+    /**
+     * @return the reference to the request that originated the Engine.IO connection
+     *
+     * @public
+     */
+    get request() {
+        return this.conn.request;
+    }
+    /**
+     * Sets up event listeners.
+     *
+     * @private
+     */
+    setup() {
+        this.onclose = this.onclose.bind(this);
+        this.ondata = this.ondata.bind(this);
+        this.onerror = this.onerror.bind(this);
+        this.ondecoded = this.ondecoded.bind(this);
+        // @ts-ignore
+        this.decoder.on("decoded", this.ondecoded);
+        this.conn.on("data", this.ondata);
+        this.conn.on("error", this.onerror);
+        this.conn.on("close", this.onclose);
+        this.connectTimeout = setTimeout(() => {
+            if (this.nsps.size === 0) {
+                debug("no namespace joined yet, close the client");
+                this.close();
+            }
+            else {
+                debug("the client has already joined a namespace, nothing to do");
+            }
+        }, this.server._connectTimeout);
+    }
+    /**
+     * Connects a client to a namespace.
+     *
+     * @param {String} name - the namespace
+     * @param {Object} auth - the auth parameters
+     * @private
+     */
+    connect(name, auth = {}) {
+        if (this.server._nsps.has(name)) {
+            debug("connecting to namespace %s", name);
+            return this.doConnect(name, auth);
+        }
+        this.server._checkNamespace(name, auth, (dynamicNspName) => {
+            if (dynamicNspName) {
+                this.doConnect(name, auth);
+            }
+            else {
+                debug("creation of namespace %s was denied", name);
+                this._packet({
+                    type: socket_io_parser_1.PacketType.CONNECT_ERROR,
+                    nsp: name,
+                    data: {
+                        message: "Invalid namespace",
+                    },
+                });
+            }
+        });
+    }
+    /**
+     * Connects a client to a namespace.
+     *
+     * @param name - the namespace
+     * @param {Object} auth - the auth parameters
+     *
+     * @private
+     */
+    doConnect(name, auth) {
+        const nsp = this.server.of(name);
+        nsp._add(this, auth, (socket) => {
+            this.sockets.set(socket.id, socket);
+            this.nsps.set(nsp.name, socket);
+            if (this.connectTimeout) {
+                clearTimeout(this.connectTimeout);
+                this.connectTimeout = undefined;
+            }
+        });
+    }
+    /**
+     * Disconnects from all namespaces and closes transport.
+     *
+     * @private
+     */
+    _disconnect() {
+        for (const socket of this.sockets.values()) {
+            socket.disconnect();
+        }
+        this.sockets.clear();
+        this.close();
+    }
+    /**
+     * Removes a socket. Called by each `Socket`.
+     *
+     * @private
+     */
+    _remove(socket) {
+        if (this.sockets.has(socket.id)) {
+            const nsp = this.sockets.get(socket.id).nsp.name;
+            this.sockets.delete(socket.id);
+            this.nsps.delete(nsp);
+        }
+        else {
+            debug("ignoring remove for %s", socket.id);
+        }
+    }
+    /**
+     * Closes the underlying connection.
+     *
+     * @private
+     */
+    close() {
+        if ("open" === this.conn.readyState) {
+            debug("forcing transport close");
+            this.conn.close();
+            this.onclose("forced server close");
+        }
+    }
+    /**
+     * Writes a packet to the transport.
+     *
+     * @param {Object} packet object
+     * @param {Object} opts
+     * @private
+     */
+    _packet(packet, opts = {}) {
+        if (this.conn.readyState !== "open") {
+            debug("ignoring packet write %j", packet);
+            return;
+        }
+        const encodedPackets = opts.preEncoded
+            ? packet // previous versions of the adapter incorrectly used socket.packet() instead of writeToEngine()
+            : this.encoder.encode(packet);
+        this.writeToEngine(encodedPackets, opts);
+    }
+    writeToEngine(encodedPackets, opts) {
+        if (opts.volatile && !this.conn.transport.writable) {
+            debug("volatile packet is discarded since the transport is not currently writable");
+            return;
+        }
+        const packets = Array.isArray(encodedPackets)
+            ? encodedPackets
+            : [encodedPackets];
+        for (const encodedPacket of packets) {
+            this.conn.write(encodedPacket, opts);
+        }
+    }
+    /**
+     * Called with incoming transport data.
+     *
+     * @private
+     */
+    ondata(data) {
+        // try/catch is needed for protocol violations (GH-1880)
+        try {
+            this.decoder.add(data);
+        }
+        catch (e) {
+            debug("invalid packet format");
+            this.onerror(e);
+        }
+    }
+    /**
+     * Called when parser fully decodes a packet.
+     *
+     * @private
+     */
+    ondecoded(packet) {
+        let namespace;
+        let authPayload;
+        if (this.conn.protocol === 3) {
+            const parsed = url.parse(packet.nsp, true);
+            namespace = parsed.pathname;
+            authPayload = parsed.query;
+        }
+        else {
+            namespace = packet.nsp;
+            authPayload = packet.data;
+        }
+        const socket = this.nsps.get(namespace);
+        if (!socket && packet.type === socket_io_parser_1.PacketType.CONNECT) {
+            this.connect(namespace, authPayload);
+        }
+        else if (socket &&
+            packet.type !== socket_io_parser_1.PacketType.CONNECT &&
+            packet.type !== socket_io_parser_1.PacketType.CONNECT_ERROR) {
+            process.nextTick(function () {
+                socket._onpacket(packet);
+            });
+        }
+        else {
+            debug("invalid state (packet type: %s)", packet.type);
+            this.close();
+        }
+    }
+    /**
+     * Handles an error.
+     *
+     * @param {Object} err object
+     * @private
+     */
+    onerror(err) {
+        for (const socket of this.sockets.values()) {
+            socket._onerror(err);
+        }
+        this.conn.close();
+    }
+    /**
+     * Called upon transport close.
+     *
+     * @param reason
+     * @param description
+     * @private
+     */
+    onclose(reason, description) {
+        debug("client close with reason %s", reason);
+        // ignore a potential subsequent `close` event
+        this.destroy();
+        // `nsps` and `sockets` are cleaned up seamlessly
+        for (const socket of this.sockets.values()) {
+            socket._onclose(reason, description);
+        }
+        this.sockets.clear();
+        this.decoder.destroy(); // clean up decoder
+    }
+    /**
+     * Cleans up event listeners.
+     * @private
+     */
+    destroy() {
+        this.conn.removeListener("data", this.ondata);
+        this.conn.removeListener("error", this.onerror);
+        this.conn.removeListener("close", this.onclose);
+        // @ts-ignore
+        this.decoder.removeListener("decoded", this.ondecoded);
+        if (this.connectTimeout) {
+            clearTimeout(this.connectTimeout);
+            this.connectTimeout = undefined;
+        }
+    }
+}
+exports.Client = Client;
+
+
+/***/ },
+
+/***/ 1790
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.MessageType = exports.ClusterAdapterWithHeartbeat = exports.ClusterAdapter = exports.SessionAwareAdapter = exports.Adapter = void 0;
+var in_memory_adapter_1 = __webpack_require__(6181);
+Object.defineProperty(exports, "Adapter", ({ enumerable: true, get: function () { return in_memory_adapter_1.Adapter; } }));
+Object.defineProperty(exports, "SessionAwareAdapter", ({ enumerable: true, get: function () { return in_memory_adapter_1.SessionAwareAdapter; } }));
+var cluster_adapter_1 = __webpack_require__(278);
+Object.defineProperty(exports, "ClusterAdapter", ({ enumerable: true, get: function () { return cluster_adapter_1.ClusterAdapter; } }));
+Object.defineProperty(exports, "ClusterAdapterWithHeartbeat", ({ enumerable: true, get: function () { return cluster_adapter_1.ClusterAdapterWithHeartbeat; } }));
+Object.defineProperty(exports, "MessageType", ({ enumerable: true, get: function () { return cluster_adapter_1.MessageType; } }));
+
+
+/***/ },
+
+/***/ 1825
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Socket = void 0;
+const socket_io_parser_1 = __webpack_require__(9834);
+const debug_1 = __importDefault(__webpack_require__(8725));
+const typed_events_1 = __webpack_require__(5510);
+const base64id_1 = __importDefault(__webpack_require__(6821));
+const broadcast_operator_1 = __webpack_require__(8594);
+const socket_types_1 = __webpack_require__(7857);
+const debug = (0, debug_1.default)("socket.io:socket");
+const RECOVERABLE_DISCONNECT_REASONS = new Set([
+    "transport error",
+    "transport close",
+    "forced close",
+    "ping timeout",
+    "server shutting down",
+    "forced server close",
+]);
+function noop() { }
+/**
+ * This is the main object for interacting with a client.
+ *
+ * A Socket belongs to a given {@link Namespace} and uses an underlying {@link Client} to communicate.
+ *
+ * Within each {@link Namespace}, you can also define arbitrary channels (called "rooms") that the {@link Socket} can
+ * join and leave. That provides a convenient way to broadcast to a group of socket instances.
+ *
+ * @example
+ * io.on("connection", (socket) => {
+ *   console.log(`socket ${socket.id} connected`);
+ *
+ *   // send an event to the client
+ *   socket.emit("foo", "bar");
+ *
+ *   socket.on("foobar", () => {
+ *     // an event was received from the client
+ *   });
+ *
+ *   // join the room named "room1"
+ *   socket.join("room1");
+ *
+ *   // broadcast to everyone in the room named "room1"
+ *   io.to("room1").emit("hello");
+ *
+ *   // upon disconnection
+ *   socket.on("disconnect", (reason) => {
+ *     console.log(`socket ${socket.id} disconnected due to ${reason}`);
+ *   });
+ * });
+ */
+class Socket extends typed_events_1.StrictEventEmitter {
+    /**
+     * Interface to a `Client` for a given `Namespace`.
+     *
+     * @param {Namespace} nsp
+     * @param {Client} client
+     * @param {Object} auth
+     * @package
+     */
+    constructor(nsp, client, auth, previousSession) {
+        super();
+        this.nsp = nsp;
+        this.client = client;
+        /**
+         * Whether the connection state was recovered after a temporary disconnection. In that case, any missed packets will
+         * be transmitted to the client, the data attribute and the rooms will be restored.
+         */
+        this.recovered = false;
+        /**
+         * Additional information that can be attached to the Socket instance and which will be used in the
+         * {@link Server.fetchSockets()} method.
+         */
+        this.data = {};
+        /**
+         * Whether the socket is currently connected or not.
+         *
+         * @example
+         * io.use((socket, next) => {
+         *   console.log(socket.connected); // false
+         *   next();
+         * });
+         *
+         * io.on("connection", (socket) => {
+         *   console.log(socket.connected); // true
+         * });
+         */
+        this.connected = false;
+        this.acks = new Map();
+        this.fns = [];
+        this.flags = {};
+        this.server = nsp.server;
+        this.adapter = this.nsp.adapter;
+        if (previousSession) {
+            this.id = previousSession.sid;
+            this.pid = previousSession.pid;
+            previousSession.rooms.forEach((room) => this.join(room));
+            this.data = previousSession.data;
+            previousSession.missedPackets.forEach((packet) => {
+                this.packet({
+                    type: socket_io_parser_1.PacketType.EVENT,
+                    data: packet,
+                });
+            });
+            this.recovered = true;
+        }
+        else {
+            if (client.conn.protocol === 3) {
+                // @ts-ignore
+                this.id = nsp.name !== "/" ? nsp.name + "#" + client.id : client.id;
+            }
+            else {
+                this.id = base64id_1.default.generateId(); // don't reuse the Engine.IO id because it's sensitive information
+            }
+            if (this.server._opts.connectionStateRecovery) {
+                this.pid = base64id_1.default.generateId();
+            }
+        }
+        this.handshake = this.buildHandshake(auth);
+        // prevents crash when the socket receives an "error" event without listener
+        this.on("error", noop);
+    }
+    /**
+     * Builds the `handshake` BC object
+     *
+     * @private
+     */
+    buildHandshake(auth) {
+        var _a, _b, _c, _d;
+        return {
+            headers: ((_a = this.request) === null || _a === void 0 ? void 0 : _a.headers) || {},
+            time: new Date() + "",
+            address: this.conn.remoteAddress,
+            xdomain: !!((_b = this.request) === null || _b === void 0 ? void 0 : _b.headers.origin),
+            // @ts-ignore
+            secure: !this.request || !!this.request.connection.encrypted,
+            issued: +new Date(),
+            url: (_c = this.request) === null || _c === void 0 ? void 0 : _c.url,
+            // @ts-ignore
+            query: ((_d = this.request) === null || _d === void 0 ? void 0 : _d._query) || {},
+            auth,
+        };
+    }
+    /**
+     * Emits to this client.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.emit("hello", "world");
+     *
+     *   // all serializable datastructures are supported (no need to call JSON.stringify)
+     *   socket.emit("hello", 1, "2", { 3: ["4"], 5: Buffer.from([6]) });
+     *
+     *   // with an acknowledgement from the client
+     *   socket.emit("hello", "world", (val) => {
+     *     // ...
+     *   });
+     * });
+     *
+     * @return Always returns `true`.
+     */
+    emit(ev, ...args) {
+        if (socket_types_1.RESERVED_EVENTS.has(ev)) {
+            throw new Error(`"${String(ev)}" is a reserved event name`);
+        }
+        const data = [ev, ...args];
+        const packet = {
+            type: socket_io_parser_1.PacketType.EVENT,
+            data: data,
+        };
+        // access last argument to see if it's an ACK callback
+        if (typeof data[data.length - 1] === "function") {
+            const id = this.nsp._ids++;
+            debug("emitting packet with ack id %d", id);
+            this.registerAckCallback(id, data.pop());
+            packet.id = id;
+        }
+        const flags = Object.assign({}, this.flags);
+        this.flags = {};
+        // @ts-ignore
+        if (this.nsp.server.opts.connectionStateRecovery) {
+            // this ensures the packet is stored and can be transmitted upon reconnection
+            this.adapter.broadcast(packet, {
+                rooms: new Set([this.id]),
+                except: new Set(),
+                flags,
+            });
+        }
+        else {
+            this.notifyOutgoingListeners(packet);
+            this.packet(packet, flags);
+        }
+        return true;
+    }
+    /**
+     * Emits an event and waits for an acknowledgement
+     *
+     * @example
+     * io.on("connection", async (socket) => {
+     *   // without timeout
+     *   const response = await socket.emitWithAck("hello", "world");
+     *
+     *   // with a specific timeout
+     *   try {
+     *     const response = await socket.timeout(1000).emitWithAck("hello", "world");
+     *   } catch (err) {
+     *     // the client did not acknowledge the event in the given delay
+     *   }
+     * });
+     *
+     * @return a Promise that will be fulfilled when the client acknowledges the event
+     */
+    emitWithAck(ev, ...args) {
+        // the timeout flag is optional
+        const withErr = this.flags.timeout !== undefined;
+        return new Promise((resolve, reject) => {
+            args.push((arg1, arg2) => {
+                if (withErr) {
+                    return arg1 ? reject(arg1) : resolve(arg2);
+                }
+                else {
+                    return resolve(arg1);
+                }
+            });
+            this.emit(ev, ...args);
+        });
+    }
+    /**
+     * @private
+     */
+    registerAckCallback(id, ack) {
+        const timeout = this.flags.timeout;
+        if (timeout === undefined) {
+            this.acks.set(id, ack);
+            return;
+        }
+        const timer = setTimeout(() => {
+            debug("event with ack id %d has timed out after %d ms", id, timeout);
+            this.acks.delete(id);
+            ack.call(this, new Error("operation has timed out"));
+        }, timeout);
+        this.acks.set(id, (...args) => {
+            clearTimeout(timer);
+            ack.apply(this, [null, ...args]);
+        });
+    }
+    /**
+     * Targets a room when broadcasting.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // the “foo” event will be broadcast to all connected clients in the “room-101” room, except this socket
+     *   socket.to("room-101").emit("foo", "bar");
+     *
+     *   // the code above is equivalent to:
+     *   io.to("room-101").except(socket.id).emit("foo", "bar");
+     *
+     *   // with an array of rooms (a client will be notified at most once)
+     *   socket.to(["room-101", "room-102"]).emit("foo", "bar");
+     *
+     *   // with multiple chained calls
+     *   socket.to("room-101").to("room-102").emit("foo", "bar");
+     * });
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    to(room) {
+        return this.newBroadcastOperator().to(room);
+    }
+    /**
+     * Targets a room when broadcasting. Similar to `to()`, but might feel clearer in some cases:
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // disconnect all clients in the "room-101" room, except this socket
+     *   socket.in("room-101").disconnectSockets();
+     * });
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    in(room) {
+        return this.newBroadcastOperator().in(room);
+    }
+    /**
+     * Excludes a room when broadcasting.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // the "foo" event will be broadcast to all connected clients, except the ones that are in the "room-101" room
+     *   // and this socket
+     *   socket.except("room-101").emit("foo", "bar");
+     *
+     *   // with an array of rooms
+     *   socket.except(["room-101", "room-102"]).emit("foo", "bar");
+     *
+     *   // with multiple chained calls
+     *   socket.except("room-101").except("room-102").emit("foo", "bar");
+     * });
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    except(room) {
+        return this.newBroadcastOperator().except(room);
+    }
+    /**
+     * Sends a `message` event.
+     *
+     * This method mimics the WebSocket.send() method.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.send("hello");
+     *
+     *   // this is equivalent to
+     *   socket.emit("message", "hello");
+     * });
+     *
+     * @return self
+     */
+    send(...args) {
+        this.emit("message", ...args);
+        return this;
+    }
+    /**
+     * Sends a `message` event. Alias of {@link send}.
+     *
+     * @return self
+     */
+    write(...args) {
+        this.emit("message", ...args);
+        return this;
+    }
+    /**
+     * Writes a packet.
+     *
+     * @param {Object} packet - packet object
+     * @param {Object} opts - options
+     * @private
+     */
+    packet(packet, opts = {}) {
+        packet.nsp = this.nsp.name;
+        opts.compress = false !== opts.compress;
+        this.client._packet(packet, opts);
+    }
+    /**
+     * Joins a room.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // join a single room
+     *   socket.join("room1");
+     *
+     *   // join multiple rooms
+     *   socket.join(["room1", "room2"]);
+     * });
+     *
+     * @param {String|Array} rooms - room or array of rooms
+     * @return a Promise or nothing, depending on the adapter
+     */
+    join(rooms) {
+        debug("join room %s", rooms);
+        return this.adapter.addAll(this.id, new Set(Array.isArray(rooms) ? rooms : [rooms]));
+    }
+    /**
+     * Leaves a room.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // leave a single room
+     *   socket.leave("room1");
+     *
+     *   // leave multiple rooms
+     *   socket.leave("room1").leave("room2");
+     * });
+     *
+     * @param {String} room
+     * @return a Promise or nothing, depending on the adapter
+     */
+    leave(room) {
+        debug("leave room %s", room);
+        return this.adapter.del(this.id, room);
+    }
+    /**
+     * Leave all rooms.
+     *
+     * @private
+     */
+    leaveAll() {
+        this.adapter.delAll(this.id);
+    }
+    /**
+     * Called by `Namespace` upon successful
+     * middleware execution (ie: authorization).
+     * Socket is added to namespace array before
+     * call to join, so adapters can access it.
+     *
+     * @private
+     */
+    _onconnect() {
+        debug("socket connected - writing packet");
+        this.connected = true;
+        this.join(this.id);
+        if (this.conn.protocol === 3) {
+            this.packet({ type: socket_io_parser_1.PacketType.CONNECT });
+        }
+        else {
+            this.packet({
+                type: socket_io_parser_1.PacketType.CONNECT,
+                data: { sid: this.id, pid: this.pid },
+            });
+        }
+    }
+    /**
+     * Called with each packet. Called by `Client`.
+     *
+     * @param {Object} packet
+     * @private
+     */
+    _onpacket(packet) {
+        debug("got packet %j", packet);
+        switch (packet.type) {
+            case socket_io_parser_1.PacketType.EVENT:
+                this.onevent(packet);
+                break;
+            case socket_io_parser_1.PacketType.BINARY_EVENT:
+                this.onevent(packet);
+                break;
+            case socket_io_parser_1.PacketType.ACK:
+                this.onack(packet);
+                break;
+            case socket_io_parser_1.PacketType.BINARY_ACK:
+                this.onack(packet);
+                break;
+            case socket_io_parser_1.PacketType.DISCONNECT:
+                this.ondisconnect();
+                break;
+        }
+    }
+    /**
+     * Called upon event packet.
+     *
+     * @param {Packet} packet - packet object
+     * @private
+     */
+    onevent(packet) {
+        const args = packet.data || [];
+        debug("emitting event %j", args);
+        if (null != packet.id) {
+            debug("attaching ack callback to event");
+            args.push(this.ack(packet.id));
+        }
+        if (this._anyListeners && this._anyListeners.length) {
+            const listeners = this._anyListeners.slice();
+            for (const listener of listeners) {
+                listener.apply(this, args);
+            }
+        }
+        this.dispatch(args);
+    }
+    /**
+     * Produces an ack callback to emit with an event.
+     *
+     * @param {Number} id - packet id
+     * @private
+     */
+    ack(id) {
+        const self = this;
+        let sent = false;
+        return function () {
+            // prevent double callbacks
+            if (sent)
+                return;
+            const args = Array.prototype.slice.call(arguments);
+            debug("sending ack %j", args);
+            self.packet({
+                id: id,
+                type: socket_io_parser_1.PacketType.ACK,
+                data: args,
+            });
+            sent = true;
+        };
+    }
+    /**
+     * Called upon ack packet.
+     *
+     * @private
+     */
+    onack(packet) {
+        const ack = this.acks.get(packet.id);
+        if ("function" == typeof ack) {
+            debug("calling ack %s with %j", packet.id, packet.data);
+            ack.apply(this, packet.data);
+            this.acks.delete(packet.id);
+        }
+        else {
+            debug("bad ack %s", packet.id);
+        }
+    }
+    /**
+     * Called upon client disconnect packet.
+     *
+     * @private
+     */
+    ondisconnect() {
+        debug("got disconnect packet");
+        this._onclose("client namespace disconnect");
+    }
+    /**
+     * Handles a client error.
+     *
+     * @private
+     */
+    _onerror(err) {
+        // FIXME the meaning of the "error" event is overloaded:
+        //  - it can be sent by the client (`socket.emit("error")`)
+        //  - it can be emitted when the connection encounters an error (an invalid packet for example)
+        //  - it can be emitted when a packet is rejected in a middleware (`socket.use()`)
+        this.emitReserved("error", err);
+    }
+    /**
+     * Called upon closing. Called by `Client`.
+     *
+     * @param {String} reason
+     * @param description
+     * @throw {Error} optional error object
+     *
+     * @private
+     */
+    _onclose(reason, description) {
+        if (!this.connected)
+            return this;
+        debug("closing socket - reason %s", reason);
+        this.emitReserved("disconnecting", reason, description);
+        if (this.server._opts.connectionStateRecovery &&
+            RECOVERABLE_DISCONNECT_REASONS.has(reason)) {
+            debug("connection state recovery is enabled for sid %s", this.id);
+            this.adapter.persistSession({
+                sid: this.id,
+                pid: this.pid,
+                rooms: [...this.rooms],
+                data: this.data,
+            });
+        }
+        this._cleanup();
+        this.client._remove(this);
+        this.connected = false;
+        this.emitReserved("disconnect", reason, description);
+        return;
+    }
+    /**
+     * Makes the socket leave all the rooms it was part of and prevents it from joining any other room
+     *
+     * @private
+     */
+    _cleanup() {
+        this.leaveAll();
+        this.nsp._remove(this);
+        this.join = noop;
+    }
+    /**
+     * Produces an `error` packet.
+     *
+     * @param {Object} err - error object
+     *
+     * @private
+     */
+    _error(err) {
+        this.packet({ type: socket_io_parser_1.PacketType.CONNECT_ERROR, data: err });
+    }
+    /**
+     * Disconnects this client.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // disconnect this socket (the connection might be kept alive for other namespaces)
+     *   socket.disconnect();
+     *
+     *   // disconnect this socket and close the underlying connection
+     *   socket.disconnect(true);
+     * })
+     *
+     * @param {Boolean} close - if `true`, closes the underlying connection
+     * @return self
+     */
+    disconnect(close = false) {
+        if (!this.connected)
+            return this;
+        if (close) {
+            this.client._disconnect();
+        }
+        else {
+            this.packet({ type: socket_io_parser_1.PacketType.DISCONNECT });
+            this._onclose("server namespace disconnect");
+        }
+        return this;
+    }
+    /**
+     * Sets the compress flag.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.compress(false).emit("hello");
+     * });
+     *
+     * @param {Boolean} compress - if `true`, compresses the sending data
+     * @return {Socket} self
+     */
+    compress(compress) {
+        this.flags.compress = compress;
+        return this;
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the event data may be lost if the client is not ready to
+     * receive messages (because of network slowness or other issues, or because they’re connected through long polling
+     * and is in the middle of a request-response cycle).
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.volatile.emit("hello"); // the client may or may not receive it
+     * });
+     *
+     * @return {Socket} self
+     */
+    get volatile() {
+        this.flags.volatile = true;
+        return this;
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the event data will only be broadcast to every sockets but the
+     * sender.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // the “foo” event will be broadcast to all connected clients, except this socket
+     *   socket.broadcast.emit("foo", "bar");
+     * });
+     *
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    get broadcast() {
+        return this.newBroadcastOperator();
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the event data will only be broadcast to the current node.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   // the “foo” event will be broadcast to all connected clients on this node, except this socket
+     *   socket.local.emit("foo", "bar");
+     * });
+     *
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    get local() {
+        return this.newBroadcastOperator().local;
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the callback will be called with an error when the
+     * given number of milliseconds have elapsed without an acknowledgement from the client:
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.timeout(5000).emit("my-event", (err) => {
+     *     if (err) {
+     *       // the client did not acknowledge the event in the given delay
+     *     }
+     *   });
+     * });
+     *
+     * @returns self
+     */
+    timeout(timeout) {
+        this.flags.timeout = timeout;
+        return this;
+    }
+    /**
+     * Dispatch incoming event to socket listeners.
+     *
+     * @param {Array} event - event that will get emitted
+     * @private
+     */
+    dispatch(event) {
+        debug("dispatching an event %j", event);
+        this.run(event, (err) => {
+            process.nextTick(() => {
+                if (err) {
+                    return this._onerror(err);
+                }
+                if (this.connected) {
+                    super.emitUntyped.apply(this, event);
+                }
+                else {
+                    debug("ignore packet received after disconnection");
+                }
+            });
+        });
+    }
+    /**
+     * Sets up socket middleware.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.use(([event, ...args], next) => {
+     *     if (isUnauthorized(event)) {
+     *       return next(new Error("unauthorized event"));
+     *     }
+     *     // do not forget to call next
+     *     next();
+     *   });
+     *
+     *   socket.on("error", (err) => {
+     *     if (err && err.message === "unauthorized event") {
+     *       socket.disconnect();
+     *     }
+     *   });
+     * });
+     *
+     * @param {Function} fn - middleware function (event, next)
+     * @return {Socket} self
+     */
+    use(fn) {
+        this.fns.push(fn);
+        return this;
+    }
+    /**
+     * Executes the middleware for an incoming event.
+     *
+     * @param {Array} event - event that will get emitted
+     * @param {Function} fn - last fn call in the middleware
+     * @private
+     */
+    run(event, fn) {
+        if (!this.fns.length)
+            return fn();
+        const fns = this.fns.slice(0);
+        function run(i) {
+            fns[i](event, (err) => {
+                // upon error, short-circuit
+                if (err)
+                    return fn(err);
+                // if no middleware left, summon callback
+                if (!fns[i + 1])
+                    return fn();
+                // go on to next
+                run(i + 1);
+            });
+        }
+        run(0);
+    }
+    /**
+     * Whether the socket is currently disconnected
+     */
+    get disconnected() {
+        return !this.connected;
+    }
+    /**
+     * A reference to the request that originated the underlying Engine.IO Socket.
+     */
+    get request() {
+        return this.client.request;
+    }
+    /**
+     * A reference to the underlying Client transport connection (Engine.IO Socket object).
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   console.log(socket.conn.transport.name); // prints "polling" or "websocket"
+     *
+     *   socket.conn.once("upgrade", () => {
+     *     console.log(socket.conn.transport.name); // prints "websocket"
+     *   });
+     * });
+     */
+    get conn() {
+        return this.client.conn;
+    }
+    /**
+     * Returns the rooms the socket is currently in.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   console.log(socket.rooms); // Set { <socket.id> }
+     *
+     *   socket.join("room1");
+     *
+     *   console.log(socket.rooms); // Set { <socket.id>, "room1" }
+     * });
+     */
+    get rooms() {
+        return this.adapter.socketRooms(this.id) || new Set();
+    }
+    /**
+     * Adds a listener that will be fired when any event is received. The event name is passed as the first argument to
+     * the callback.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.onAny((event, ...args) => {
+     *     console.log(`got event ${event}`);
+     *   });
+     * });
+     *
+     * @param listener
+     */
+    onAny(listener) {
+        this._anyListeners = this._anyListeners || [];
+        this._anyListeners.push(listener);
+        return this;
+    }
+    /**
+     * Adds a listener that will be fired when any event is received. The event name is passed as the first argument to
+     * the callback. The listener is added to the beginning of the listeners array.
+     *
+     * @param listener
+     */
+    prependAny(listener) {
+        this._anyListeners = this._anyListeners || [];
+        this._anyListeners.unshift(listener);
+        return this;
+    }
+    /**
+     * Removes the listener that will be fired when any event is received.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   const catchAllListener = (event, ...args) => {
+     *     console.log(`got event ${event}`);
+     *   }
+     *
+     *   socket.onAny(catchAllListener);
+     *
+     *   // remove a specific listener
+     *   socket.offAny(catchAllListener);
+     *
+     *   // or remove all listeners
+     *   socket.offAny();
+     * });
+     *
+     * @param listener
+     */
+    offAny(listener) {
+        if (!this._anyListeners) {
+            return this;
+        }
+        if (listener) {
+            const listeners = this._anyListeners;
+            for (let i = 0; i < listeners.length; i++) {
+                if (listener === listeners[i]) {
+                    listeners.splice(i, 1);
+                    return this;
+                }
+            }
+        }
+        else {
+            this._anyListeners = [];
+        }
+        return this;
+    }
+    /**
+     * Returns an array of listeners that are listening for any event that is specified. This array can be manipulated,
+     * e.g. to remove listeners.
+     */
+    listenersAny() {
+        return this._anyListeners || [];
+    }
+    /**
+     * Adds a listener that will be fired when any event is sent. The event name is passed as the first argument to
+     * the callback.
+     *
+     * Note: acknowledgements sent to the client are not included.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.onAnyOutgoing((event, ...args) => {
+     *     console.log(`sent event ${event}`);
+     *   });
+     * });
+     *
+     * @param listener
+     */
+    onAnyOutgoing(listener) {
+        this._anyOutgoingListeners = this._anyOutgoingListeners || [];
+        this._anyOutgoingListeners.push(listener);
+        return this;
+    }
+    /**
+     * Adds a listener that will be fired when any event is emitted. The event name is passed as the first argument to the
+     * callback. The listener is added to the beginning of the listeners array.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   socket.prependAnyOutgoing((event, ...args) => {
+     *     console.log(`sent event ${event}`);
+     *   });
+     * });
+     *
+     * @param listener
+     */
+    prependAnyOutgoing(listener) {
+        this._anyOutgoingListeners = this._anyOutgoingListeners || [];
+        this._anyOutgoingListeners.unshift(listener);
+        return this;
+    }
+    /**
+     * Removes the listener that will be fired when any event is sent.
+     *
+     * @example
+     * io.on("connection", (socket) => {
+     *   const catchAllListener = (event, ...args) => {
+     *     console.log(`sent event ${event}`);
+     *   }
+     *
+     *   socket.onAnyOutgoing(catchAllListener);
+     *
+     *   // remove a specific listener
+     *   socket.offAnyOutgoing(catchAllListener);
+     *
+     *   // or remove all listeners
+     *   socket.offAnyOutgoing();
+     * });
+     *
+     * @param listener - the catch-all listener
+     */
+    offAnyOutgoing(listener) {
+        if (!this._anyOutgoingListeners) {
+            return this;
+        }
+        if (listener) {
+            const listeners = this._anyOutgoingListeners;
+            for (let i = 0; i < listeners.length; i++) {
+                if (listener === listeners[i]) {
+                    listeners.splice(i, 1);
+                    return this;
+                }
+            }
+        }
+        else {
+            this._anyOutgoingListeners = [];
+        }
+        return this;
+    }
+    /**
+     * Returns an array of listeners that are listening for any event that is specified. This array can be manipulated,
+     * e.g. to remove listeners.
+     */
+    listenersAnyOutgoing() {
+        return this._anyOutgoingListeners || [];
+    }
+    /**
+     * Notify the listeners for each packet sent (emit or broadcast)
+     *
+     * @param packet
+     *
+     * @private
+     */
+    notifyOutgoingListeners(packet) {
+        if (this._anyOutgoingListeners && this._anyOutgoingListeners.length) {
+            const listeners = this._anyOutgoingListeners.slice();
+            for (const listener of listeners) {
+                listener.apply(this, packet.data);
+            }
+        }
+    }
+    newBroadcastOperator() {
+        const flags = Object.assign({}, this.flags);
+        this.flags = {};
+        return new broadcast_operator_1.BroadcastOperator(this.adapter, new Set(), new Set([this.id]), flags);
+    }
+}
+exports.Socket = Socket;
+
+
+/***/ },
+
+/***/ 1828
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -7839,10 +12264,17 @@ class Composer {
 exports.Composer = Composer;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1882:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1882
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*!
  * negotiator
@@ -7928,10 +12360,17 @@ Negotiator.prototype.preferredMediaType = Negotiator.prototype.mediaType;
 Negotiator.prototype.preferredMediaTypes = Negotiator.prototype.mediaTypes;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1948:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1948
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -7974,10 +12413,316 @@ class Schema {
 exports.Schema = Schema;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1976:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1972
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const { kForOnEventAttribute, kListener } = __webpack_require__(6261);
+
+const kCode = Symbol('kCode');
+const kData = Symbol('kData');
+const kError = Symbol('kError');
+const kMessage = Symbol('kMessage');
+const kReason = Symbol('kReason');
+const kTarget = Symbol('kTarget');
+const kType = Symbol('kType');
+const kWasClean = Symbol('kWasClean');
+
+/**
+ * Class representing an event.
+ */
+class Event {
+  /**
+   * Create a new `Event`.
+   *
+   * @param {String} type The name of the event
+   * @throws {TypeError} If the `type` argument is not specified
+   */
+  constructor(type) {
+    this[kTarget] = null;
+    this[kType] = type;
+  }
+
+  /**
+   * @type {*}
+   */
+  get target() {
+    return this[kTarget];
+  }
+
+  /**
+   * @type {String}
+   */
+  get type() {
+    return this[kType];
+  }
+}
+
+Object.defineProperty(Event.prototype, 'target', { enumerable: true });
+Object.defineProperty(Event.prototype, 'type', { enumerable: true });
+
+/**
+ * Class representing a close event.
+ *
+ * @extends Event
+ */
+class CloseEvent extends Event {
+  /**
+   * Create a new `CloseEvent`.
+   *
+   * @param {String} type The name of the event
+   * @param {Object} [options] A dictionary object that allows for setting
+   *     attributes via object members of the same name
+   * @param {Number} [options.code=0] The status code explaining why the
+   *     connection was closed
+   * @param {String} [options.reason=''] A human-readable string explaining why
+   *     the connection was closed
+   * @param {Boolean} [options.wasClean=false] Indicates whether or not the
+   *     connection was cleanly closed
+   */
+  constructor(type, options = {}) {
+    super(type);
+
+    this[kCode] = options.code === undefined ? 0 : options.code;
+    this[kReason] = options.reason === undefined ? '' : options.reason;
+    this[kWasClean] = options.wasClean === undefined ? false : options.wasClean;
+  }
+
+  /**
+   * @type {Number}
+   */
+  get code() {
+    return this[kCode];
+  }
+
+  /**
+   * @type {String}
+   */
+  get reason() {
+    return this[kReason];
+  }
+
+  /**
+   * @type {Boolean}
+   */
+  get wasClean() {
+    return this[kWasClean];
+  }
+}
+
+Object.defineProperty(CloseEvent.prototype, 'code', { enumerable: true });
+Object.defineProperty(CloseEvent.prototype, 'reason', { enumerable: true });
+Object.defineProperty(CloseEvent.prototype, 'wasClean', { enumerable: true });
+
+/**
+ * Class representing an error event.
+ *
+ * @extends Event
+ */
+class ErrorEvent extends Event {
+  /**
+   * Create a new `ErrorEvent`.
+   *
+   * @param {String} type The name of the event
+   * @param {Object} [options] A dictionary object that allows for setting
+   *     attributes via object members of the same name
+   * @param {*} [options.error=null] The error that generated this event
+   * @param {String} [options.message=''] The error message
+   */
+  constructor(type, options = {}) {
+    super(type);
+
+    this[kError] = options.error === undefined ? null : options.error;
+    this[kMessage] = options.message === undefined ? '' : options.message;
+  }
+
+  /**
+   * @type {*}
+   */
+  get error() {
+    return this[kError];
+  }
+
+  /**
+   * @type {String}
+   */
+  get message() {
+    return this[kMessage];
+  }
+}
+
+Object.defineProperty(ErrorEvent.prototype, 'error', { enumerable: true });
+Object.defineProperty(ErrorEvent.prototype, 'message', { enumerable: true });
+
+/**
+ * Class representing a message event.
+ *
+ * @extends Event
+ */
+class MessageEvent extends Event {
+  /**
+   * Create a new `MessageEvent`.
+   *
+   * @param {String} type The name of the event
+   * @param {Object} [options] A dictionary object that allows for setting
+   *     attributes via object members of the same name
+   * @param {*} [options.data=null] The message content
+   */
+  constructor(type, options = {}) {
+    super(type);
+
+    this[kData] = options.data === undefined ? null : options.data;
+  }
+
+  /**
+   * @type {*}
+   */
+  get data() {
+    return this[kData];
+  }
+}
+
+Object.defineProperty(MessageEvent.prototype, 'data', { enumerable: true });
+
+/**
+ * This provides methods for emulating the `EventTarget` interface. It's not
+ * meant to be used directly.
+ *
+ * @mixin
+ */
+const EventTarget = {
+  /**
+   * Register an event listener.
+   *
+   * @param {String} type A string representing the event type to listen for
+   * @param {(Function|Object)} handler The listener to add
+   * @param {Object} [options] An options object specifies characteristics about
+   *     the event listener
+   * @param {Boolean} [options.once=false] A `Boolean` indicating that the
+   *     listener should be invoked at most once after being added. If `true`,
+   *     the listener would be automatically removed when invoked.
+   * @public
+   */
+  addEventListener(type, handler, options = {}) {
+    for (const listener of this.listeners(type)) {
+      if (
+        !options[kForOnEventAttribute] &&
+        listener[kListener] === handler &&
+        !listener[kForOnEventAttribute]
+      ) {
+        return;
+      }
+    }
+
+    let wrapper;
+
+    if (type === 'message') {
+      wrapper = function onMessage(data, isBinary) {
+        const event = new MessageEvent('message', {
+          data: isBinary ? data : data.toString()
+        });
+
+        event[kTarget] = this;
+        callListener(handler, this, event);
+      };
+    } else if (type === 'close') {
+      wrapper = function onClose(code, message) {
+        const event = new CloseEvent('close', {
+          code,
+          reason: message.toString(),
+          wasClean: this._closeFrameReceived && this._closeFrameSent
+        });
+
+        event[kTarget] = this;
+        callListener(handler, this, event);
+      };
+    } else if (type === 'error') {
+      wrapper = function onError(error) {
+        const event = new ErrorEvent('error', {
+          error,
+          message: error.message
+        });
+
+        event[kTarget] = this;
+        callListener(handler, this, event);
+      };
+    } else if (type === 'open') {
+      wrapper = function onOpen() {
+        const event = new Event('open');
+
+        event[kTarget] = this;
+        callListener(handler, this, event);
+      };
+    } else {
+      return;
+    }
+
+    wrapper[kForOnEventAttribute] = !!options[kForOnEventAttribute];
+    wrapper[kListener] = handler;
+
+    if (options.once) {
+      this.once(type, wrapper);
+    } else {
+      this.on(type, wrapper);
+    }
+  },
+
+  /**
+   * Remove an event listener.
+   *
+   * @param {String} type A string representing the event type to remove
+   * @param {(Function|Object)} handler The listener to remove
+   * @public
+   */
+  removeEventListener(type, handler) {
+    for (const listener of this.listeners(type)) {
+      if (listener[kListener] === handler && !listener[kForOnEventAttribute]) {
+        this.removeListener(type, listener);
+        break;
+      }
+    }
+  }
+};
+
+module.exports = {
+  CloseEvent,
+  ErrorEvent,
+  Event,
+  EventTarget,
+  MessageEvent
+};
+
+/**
+ * Call an event listener
+ *
+ * @param {(Function|Object)} listener The listener to call
+ * @param {*} thisArg The value to use as `this`` when calling the listener
+ * @param {Event} event The event to pass to the listener
+ * @private
+ */
+function callListener(listener, thisArg, event) {
+  if (typeof listener === 'object' && listener.handleEvent) {
+    listener.handleEvent.call(listener, event);
+  } else {
+    listener.call(thisArg, event);
+  }
+}
+
+
+/***/ },
+
+/***/ 1976
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*!
  * mime-types
@@ -8169,6 +12914,7 @@ function populateMaps (extensions, types) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1978:
@@ -8253,6 +12999,12 @@ exports.WebSocket = WebSocket;
 
 /***/ 1984:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 1984
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -8492,10 +13244,17 @@ exports.visit = visit;
 exports.visitAsync = visitAsync;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 1995:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 1995
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -8523,6 +13282,7 @@ exports.lineComment = lineComment;
 exports.stringifyComment = stringifyComment;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2018:
@@ -8534,6 +13294,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("tty");
 
 /***/ 2075:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2018
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("tty");
+
+/***/ },
+
+/***/ 2075
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -8587,10 +13360,17 @@ exports.visit = visit.visit;
 exports.visitAsync = visit.visitAsync;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2081:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2081
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -8706,6 +13486,7 @@ exports.prettyToken = prettyToken;
 exports.tokenType = tokenType;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2203:
@@ -8911,6 +13692,19 @@ module.exports = {
 
 /***/ 2338:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 2203
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("stream");
+
+/***/ },
+
+/***/ 2338
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * negotiator
@@ -9093,6 +13887,7 @@ function isQuality(spec) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2350:
@@ -10064,6 +14859,74 @@ exports.ClusterAdapterWithHeartbeat = ClusterAdapterWithHeartbeat;
 
 /***/ 2464:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2384
+(module) {
+
+
+
+const kDone = Symbol('kDone');
+const kRun = Symbol('kRun');
+
+/**
+ * A very simple job queue with adjustable concurrency. Adapted from
+ * https://github.com/STRML/async-limiter
+ */
+class Limiter {
+  /**
+   * Creates a new `Limiter`.
+   *
+   * @param {Number} [concurrency=Infinity] The maximum number of jobs allowed
+   *     to run concurrently
+   */
+  constructor(concurrency) {
+    this[kDone] = () => {
+      this.pending--;
+      this[kRun]();
+    };
+    this.concurrency = concurrency || Infinity;
+    this.jobs = [];
+    this.pending = 0;
+  }
+
+  /**
+   * Adds a job to the queue.
+   *
+   * @param {Function} job The job to run
+   * @public
+   */
+  add(job) {
+    this.jobs.push(job);
+    this[kRun]();
+  }
+
+  /**
+   * Removes a job from the queue and runs it if possible.
+   *
+   * @private
+   */
+  [kRun]() {
+    if (this.pending === this.concurrency) return;
+
+    if (this.jobs.length) {
+      const job = this.jobs.shift();
+
+      this.pending++;
+      job(this[kDone]);
+    }
+  }
+}
+
+module.exports = Limiter;
+
+
+/***/ },
+
+/***/ 2464
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -10157,10 +15020,24 @@ function createNode(value, tagName, ctx) {
 exports.createNode = createNode;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2523:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 2481
+(module) {
+
+module.exports = {"rE":"4.8.1"};
+
+/***/ },
+
+/***/ 2523
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -10192,10 +15069,17 @@ function emptyScalarPosition(offset, before, pos) {
 exports.emptyScalarPosition = emptyScalarPosition;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2605:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2605
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -10275,10 +15159,17 @@ exports.intHex = intHex;
 exports.intOct = intOct;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2652:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2652
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -10307,6 +15198,7 @@ const schema = [
 exports.schema = schema;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2668:
@@ -10380,6 +15272,12 @@ module.exports = isValidUTF8;
 
 /***/ 2680:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2680
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -10547,10 +15445,17 @@ function createPacketDecoderStream(maxPayload, binaryType) {
 exports.protocol = 4;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2760:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2760
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -10592,6 +15497,7 @@ function encodePacketToBinary(packet, callback) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2822:
@@ -10637,6 +15543,559 @@ module.exports = { mask, unmask };
 
 /***/ 2823:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 2779
+(module, __unused_webpack_exports, __webpack_require__) {
+
+/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^Duplex$", "caughtErrors": "none" }] */
+
+
+
+const EventEmitter = __webpack_require__(4434);
+const http = __webpack_require__(8611);
+const { Duplex } = __webpack_require__(2203);
+const { createHash } = __webpack_require__(6982);
+
+const extension = __webpack_require__(5669);
+const PerMessageDeflate = __webpack_require__(6038);
+const subprotocol = __webpack_require__(3502);
+const WebSocket = __webpack_require__(1551);
+const { GUID, kWebSocket } = __webpack_require__(6261);
+
+const keyRegex = /^[+/0-9A-Za-z]{22}==$/;
+
+const RUNNING = 0;
+const CLOSING = 1;
+const CLOSED = 2;
+
+/**
+ * Class representing a WebSocket server.
+ *
+ * @extends EventEmitter
+ */
+class WebSocketServer extends EventEmitter {
+  /**
+   * Create a `WebSocketServer` instance.
+   *
+   * @param {Object} options Configuration options
+   * @param {Boolean} [options.allowSynchronousEvents=true] Specifies whether
+   *     any of the `'message'`, `'ping'`, and `'pong'` events can be emitted
+   *     multiple times in the same tick
+   * @param {Boolean} [options.autoPong=true] Specifies whether or not to
+   *     automatically send a pong in response to a ping
+   * @param {Number} [options.backlog=511] The maximum length of the queue of
+   *     pending connections
+   * @param {Boolean} [options.clientTracking=true] Specifies whether or not to
+   *     track clients
+   * @param {Function} [options.handleProtocols] A hook to handle protocols
+   * @param {String} [options.host] The hostname where to bind the server
+   * @param {Number} [options.maxPayload=104857600] The maximum allowed message
+   *     size
+   * @param {Boolean} [options.noServer=false] Enable no server mode
+   * @param {String} [options.path] Accept only connections matching this path
+   * @param {(Boolean|Object)} [options.perMessageDeflate=false] Enable/disable
+   *     permessage-deflate
+   * @param {Number} [options.port] The port where to bind the server
+   * @param {(http.Server|https.Server)} [options.server] A pre-created HTTP/S
+   *     server to use
+   * @param {Boolean} [options.skipUTF8Validation=false] Specifies whether or
+   *     not to skip UTF-8 validation for text and close messages
+   * @param {Function} [options.verifyClient] A hook to reject connections
+   * @param {Function} [options.WebSocket=WebSocket] Specifies the `WebSocket`
+   *     class to use. It must be the `WebSocket` class or class that extends it
+   * @param {Function} [callback] A listener for the `listening` event
+   */
+  constructor(options, callback) {
+    super();
+
+    options = {
+      allowSynchronousEvents: true,
+      autoPong: true,
+      maxPayload: 100 * 1024 * 1024,
+      skipUTF8Validation: false,
+      perMessageDeflate: false,
+      handleProtocols: null,
+      clientTracking: true,
+      verifyClient: null,
+      noServer: false,
+      backlog: null, // use default (511 as implemented in net.js)
+      server: null,
+      host: null,
+      path: null,
+      port: null,
+      WebSocket,
+      ...options
+    };
+
+    if (
+      (options.port == null && !options.server && !options.noServer) ||
+      (options.port != null && (options.server || options.noServer)) ||
+      (options.server && options.noServer)
+    ) {
+      throw new TypeError(
+        'One and only one of the "port", "server", or "noServer" options ' +
+          'must be specified'
+      );
+    }
+
+    if (options.port != null) {
+      this._server = http.createServer((req, res) => {
+        const body = http.STATUS_CODES[426];
+
+        res.writeHead(426, {
+          'Content-Length': body.length,
+          'Content-Type': 'text/plain'
+        });
+        res.end(body);
+      });
+      this._server.listen(
+        options.port,
+        options.host,
+        options.backlog,
+        callback
+      );
+    } else if (options.server) {
+      this._server = options.server;
+    }
+
+    if (this._server) {
+      const emitConnection = this.emit.bind(this, 'connection');
+
+      this._removeListeners = addListeners(this._server, {
+        listening: this.emit.bind(this, 'listening'),
+        error: this.emit.bind(this, 'error'),
+        upgrade: (req, socket, head) => {
+          this.handleUpgrade(req, socket, head, emitConnection);
+        }
+      });
+    }
+
+    if (options.perMessageDeflate === true) options.perMessageDeflate = {};
+    if (options.clientTracking) {
+      this.clients = new Set();
+      this._shouldEmitClose = false;
+    }
+
+    this.options = options;
+    this._state = RUNNING;
+  }
+
+  /**
+   * Returns the bound address, the address family name, and port of the server
+   * as reported by the operating system if listening on an IP socket.
+   * If the server is listening on a pipe or UNIX domain socket, the name is
+   * returned as a string.
+   *
+   * @return {(Object|String|null)} The address of the server
+   * @public
+   */
+  address() {
+    if (this.options.noServer) {
+      throw new Error('The server is operating in "noServer" mode');
+    }
+
+    if (!this._server) return null;
+    return this._server.address();
+  }
+
+  /**
+   * Stop the server from accepting new connections and emit the `'close'` event
+   * when all existing connections are closed.
+   *
+   * @param {Function} [cb] A one-time listener for the `'close'` event
+   * @public
+   */
+  close(cb) {
+    if (this._state === CLOSED) {
+      if (cb) {
+        this.once('close', () => {
+          cb(new Error('The server is not running'));
+        });
+      }
+
+      process.nextTick(emitClose, this);
+      return;
+    }
+
+    if (cb) this.once('close', cb);
+
+    if (this._state === CLOSING) return;
+    this._state = CLOSING;
+
+    if (this.options.noServer || this.options.server) {
+      if (this._server) {
+        this._removeListeners();
+        this._removeListeners = this._server = null;
+      }
+
+      if (this.clients) {
+        if (!this.clients.size) {
+          process.nextTick(emitClose, this);
+        } else {
+          this._shouldEmitClose = true;
+        }
+      } else {
+        process.nextTick(emitClose, this);
+      }
+    } else {
+      const server = this._server;
+
+      this._removeListeners();
+      this._removeListeners = this._server = null;
+
+      //
+      // The HTTP/S server was created internally. Close it, and rely on its
+      // `'close'` event.
+      //
+      server.close(() => {
+        emitClose(this);
+      });
+    }
+  }
+
+  /**
+   * See if a given request should be handled by this server instance.
+   *
+   * @param {http.IncomingMessage} req Request object to inspect
+   * @return {Boolean} `true` if the request is valid, else `false`
+   * @public
+   */
+  shouldHandle(req) {
+    if (this.options.path) {
+      const index = req.url.indexOf('?');
+      const pathname = index !== -1 ? req.url.slice(0, index) : req.url;
+
+      if (pathname !== this.options.path) return false;
+    }
+
+    return true;
+  }
+
+  /**
+   * Handle a HTTP Upgrade request.
+   *
+   * @param {http.IncomingMessage} req The request object
+   * @param {Duplex} socket The network socket between the server and client
+   * @param {Buffer} head The first packet of the upgraded stream
+   * @param {Function} cb Callback
+   * @public
+   */
+  handleUpgrade(req, socket, head, cb) {
+    socket.on('error', socketOnError);
+
+    const key = req.headers['sec-websocket-key'];
+    const upgrade = req.headers.upgrade;
+    const version = +req.headers['sec-websocket-version'];
+
+    if (req.method !== 'GET') {
+      const message = 'Invalid HTTP method';
+      abortHandshakeOrEmitwsClientError(this, req, socket, 405, message);
+      return;
+    }
+
+    if (upgrade === undefined || upgrade.toLowerCase() !== 'websocket') {
+      const message = 'Invalid Upgrade header';
+      abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+      return;
+    }
+
+    if (key === undefined || !keyRegex.test(key)) {
+      const message = 'Missing or invalid Sec-WebSocket-Key header';
+      abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+      return;
+    }
+
+    if (version !== 8 && version !== 13) {
+      const message = 'Missing or invalid Sec-WebSocket-Version header';
+      abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+      return;
+    }
+
+    if (!this.shouldHandle(req)) {
+      abortHandshake(socket, 400);
+      return;
+    }
+
+    const secWebSocketProtocol = req.headers['sec-websocket-protocol'];
+    let protocols = new Set();
+
+    if (secWebSocketProtocol !== undefined) {
+      try {
+        protocols = subprotocol.parse(secWebSocketProtocol);
+      } catch (err) {
+        const message = 'Invalid Sec-WebSocket-Protocol header';
+        abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+        return;
+      }
+    }
+
+    const secWebSocketExtensions = req.headers['sec-websocket-extensions'];
+    const extensions = {};
+
+    if (
+      this.options.perMessageDeflate &&
+      secWebSocketExtensions !== undefined
+    ) {
+      const perMessageDeflate = new PerMessageDeflate(
+        this.options.perMessageDeflate,
+        true,
+        this.options.maxPayload
+      );
+
+      try {
+        const offers = extension.parse(secWebSocketExtensions);
+
+        if (offers[PerMessageDeflate.extensionName]) {
+          perMessageDeflate.accept(offers[PerMessageDeflate.extensionName]);
+          extensions[PerMessageDeflate.extensionName] = perMessageDeflate;
+        }
+      } catch (err) {
+        const message =
+          'Invalid or unacceptable Sec-WebSocket-Extensions header';
+        abortHandshakeOrEmitwsClientError(this, req, socket, 400, message);
+        return;
+      }
+    }
+
+    //
+    // Optionally call external client verification handler.
+    //
+    if (this.options.verifyClient) {
+      const info = {
+        origin:
+          req.headers[`${version === 8 ? 'sec-websocket-origin' : 'origin'}`],
+        secure: !!(req.socket.authorized || req.socket.encrypted),
+        req
+      };
+
+      if (this.options.verifyClient.length === 2) {
+        this.options.verifyClient(info, (verified, code, message, headers) => {
+          if (!verified) {
+            return abortHandshake(socket, code || 401, message, headers);
+          }
+
+          this.completeUpgrade(
+            extensions,
+            key,
+            protocols,
+            req,
+            socket,
+            head,
+            cb
+          );
+        });
+        return;
+      }
+
+      if (!this.options.verifyClient(info)) return abortHandshake(socket, 401);
+    }
+
+    this.completeUpgrade(extensions, key, protocols, req, socket, head, cb);
+  }
+
+  /**
+   * Upgrade the connection to WebSocket.
+   *
+   * @param {Object} extensions The accepted extensions
+   * @param {String} key The value of the `Sec-WebSocket-Key` header
+   * @param {Set} protocols The subprotocols
+   * @param {http.IncomingMessage} req The request object
+   * @param {Duplex} socket The network socket between the server and client
+   * @param {Buffer} head The first packet of the upgraded stream
+   * @param {Function} cb Callback
+   * @throws {Error} If called more than once with the same socket
+   * @private
+   */
+  completeUpgrade(extensions, key, protocols, req, socket, head, cb) {
+    //
+    // Destroy the socket if the client has already sent a FIN packet.
+    //
+    if (!socket.readable || !socket.writable) return socket.destroy();
+
+    if (socket[kWebSocket]) {
+      throw new Error(
+        'server.handleUpgrade() was called more than once with the same ' +
+          'socket, possibly due to a misconfiguration'
+      );
+    }
+
+    if (this._state > RUNNING) return abortHandshake(socket, 503);
+
+    const digest = createHash('sha1')
+      .update(key + GUID)
+      .digest('base64');
+
+    const headers = [
+      'HTTP/1.1 101 Switching Protocols',
+      'Upgrade: websocket',
+      'Connection: Upgrade',
+      `Sec-WebSocket-Accept: ${digest}`
+    ];
+
+    const ws = new this.options.WebSocket(null, undefined, this.options);
+
+    if (protocols.size) {
+      //
+      // Optionally call external protocol selection handler.
+      //
+      const protocol = this.options.handleProtocols
+        ? this.options.handleProtocols(protocols, req)
+        : protocols.values().next().value;
+
+      if (protocol) {
+        headers.push(`Sec-WebSocket-Protocol: ${protocol}`);
+        ws._protocol = protocol;
+      }
+    }
+
+    if (extensions[PerMessageDeflate.extensionName]) {
+      const params = extensions[PerMessageDeflate.extensionName].params;
+      const value = extension.format({
+        [PerMessageDeflate.extensionName]: [params]
+      });
+      headers.push(`Sec-WebSocket-Extensions: ${value}`);
+      ws._extensions = extensions;
+    }
+
+    //
+    // Allow external modification/inspection of handshake headers.
+    //
+    this.emit('headers', headers, req);
+
+    socket.write(headers.concat('\r\n').join('\r\n'));
+    socket.removeListener('error', socketOnError);
+
+    ws.setSocket(socket, head, {
+      allowSynchronousEvents: this.options.allowSynchronousEvents,
+      maxPayload: this.options.maxPayload,
+      skipUTF8Validation: this.options.skipUTF8Validation
+    });
+
+    if (this.clients) {
+      this.clients.add(ws);
+      ws.on('close', () => {
+        this.clients.delete(ws);
+
+        if (this._shouldEmitClose && !this.clients.size) {
+          process.nextTick(emitClose, this);
+        }
+      });
+    }
+
+    cb(ws, req);
+  }
+}
+
+module.exports = WebSocketServer;
+
+/**
+ * Add event listeners on an `EventEmitter` using a map of <event, listener>
+ * pairs.
+ *
+ * @param {EventEmitter} server The event emitter
+ * @param {Object.<String, Function>} map The listeners to add
+ * @return {Function} A function that will remove the added listeners when
+ *     called
+ * @private
+ */
+function addListeners(server, map) {
+  for (const event of Object.keys(map)) server.on(event, map[event]);
+
+  return function removeListeners() {
+    for (const event of Object.keys(map)) {
+      server.removeListener(event, map[event]);
+    }
+  };
+}
+
+/**
+ * Emit a `'close'` event on an `EventEmitter`.
+ *
+ * @param {EventEmitter} server The event emitter
+ * @private
+ */
+function emitClose(server) {
+  server._state = CLOSED;
+  server.emit('close');
+}
+
+/**
+ * Handle socket errors.
+ *
+ * @private
+ */
+function socketOnError() {
+  this.destroy();
+}
+
+/**
+ * Close the connection when preconditions are not fulfilled.
+ *
+ * @param {Duplex} socket The socket of the upgrade request
+ * @param {Number} code The HTTP response status code
+ * @param {String} [message] The HTTP response body
+ * @param {Object} [headers] Additional HTTP response headers
+ * @private
+ */
+function abortHandshake(socket, code, message, headers) {
+  //
+  // The socket is writable unless the user destroyed or ended it before calling
+  // `server.handleUpgrade()` or in the `verifyClient` function, which is a user
+  // error. Handling this does not make much sense as the worst that can happen
+  // is that some of the data written by the user might be discarded due to the
+  // call to `socket.end()` below, which triggers an `'error'` event that in
+  // turn causes the socket to be destroyed.
+  //
+  message = message || http.STATUS_CODES[code];
+  headers = {
+    Connection: 'close',
+    'Content-Type': 'text/html',
+    'Content-Length': Buffer.byteLength(message),
+    ...headers
+  };
+
+  socket.once('finish', socket.destroy);
+
+  socket.end(
+    `HTTP/1.1 ${code} ${http.STATUS_CODES[code]}\r\n` +
+      Object.keys(headers)
+        .map((h) => `${h}: ${headers[h]}`)
+        .join('\r\n') +
+      '\r\n\r\n' +
+      message
+  );
+}
+
+/**
+ * Emit a `'wsClientError'` event on a `WebSocketServer` if there is at least
+ * one listener for it, otherwise call `abortHandshake()`.
+ *
+ * @param {WebSocketServer} server The WebSocket server
+ * @param {http.IncomingMessage} req The request object
+ * @param {Duplex} socket The socket of the upgrade request
+ * @param {Number} code The HTTP response status code
+ * @param {String} message The HTTP response body
+ * @private
+ */
+function abortHandshakeOrEmitwsClientError(server, req, socket, code, message) {
+  if (server.listenerCount('wsClientError')) {
+    const err = new Error(message);
+    Error.captureStackTrace(err, abortHandshakeOrEmitwsClientError);
+
+    server.emit('wsClientError', err, socket, req);
+  } else {
+    abortHandshake(socket, code, message);
+  }
+}
+
+
+/***/ },
+
+/***/ 2823
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -10739,10 +16198,17 @@ function _visit(path, item, visitor) {
 exports.visit = visit;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2853:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2853
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -10786,6 +16252,7 @@ class NodeBase {
 exports.NodeBase = NodeBase;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2879:
@@ -10914,6 +16381,436 @@ exports.Transport = Transport;
 
 /***/ 2935:
 /***/ (function(module, exports, __webpack_require__) {
+=======
+/***/ },
+
+/***/ 2893
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.uServer = void 0;
+const debug_1 = __webpack_require__(8725);
+const server_1 = __webpack_require__(4846);
+const transports_uws_1 = __webpack_require__(6300);
+const debug = (0, debug_1.default)("engine:uws");
+/**
+ * An Engine.IO server based on the `uWebSockets.js` package.
+ */
+// TODO export it into its own package
+class uServer extends server_1.BaseServer {
+    init() { }
+    cleanup() { }
+    /**
+     * Prepares a request by processing the query string.
+     *
+     * @private
+     */
+    prepare(req, res) {
+        req.method = req.getMethod().toUpperCase();
+        req.url = req.getUrl();
+        const params = new URLSearchParams(req.getQuery());
+        req._query = Object.fromEntries(params.entries());
+        req.headers = {};
+        req.forEach((key, value) => {
+            req.headers[key] = value;
+        });
+        req.connection = {
+            remoteAddress: Buffer.from(res.getRemoteAddressAsText()).toString(),
+        };
+        res.onAborted(() => {
+            debug("response has been aborted");
+        });
+    }
+    createTransport(transportName, req) {
+        return new transports_uws_1.default[transportName](req);
+    }
+    /**
+     * Attach the engine to a µWebSockets.js server
+     * @param app
+     * @param options
+     */
+    attach(app /* : TemplatedApp */, options = {}) {
+        const path = this._computePath(options);
+        app
+            .any(path, this.handleRequest.bind(this))
+            //
+            .ws(path, {
+            compression: options.compression,
+            idleTimeout: options.idleTimeout,
+            maxBackpressure: options.maxBackpressure,
+            maxPayloadLength: this.opts.maxHttpBufferSize,
+            upgrade: this.handleUpgrade.bind(this),
+            open: (ws) => {
+                const transport = ws.getUserData().transport;
+                transport.socket = ws;
+                transport.writable = true;
+                transport.emit("ready");
+            },
+            message: (ws, message, isBinary) => {
+                ws.getUserData().transport.onData(isBinary ? message : Buffer.from(message).toString());
+            },
+            close: (ws, code, message) => {
+                ws.getUserData().transport.onClose(code, message);
+            },
+        });
+    }
+    _applyMiddlewares(req, res, callback) {
+        if (this.middlewares.length === 0) {
+            return callback();
+        }
+        // needed to buffer headers until the status is computed
+        req.res = new ResponseWrapper(res);
+        super._applyMiddlewares(req, req.res, (err) => {
+            // some middlewares (like express-session) wait for the writeHead() call to flush their headers
+            // see https://github.com/expressjs/session/blob/1010fadc2f071ddf2add94235d72224cf65159c6/index.js#L220-L244
+            req.res.writeHead();
+            callback(err);
+        });
+    }
+    handleRequest(res, req) {
+        debug('handling "%s" http request "%s"', req.getMethod(), req.getUrl());
+        this.prepare(req, res);
+        req.res = res;
+        const callback = (errorCode, errorContext) => {
+            if (errorCode !== undefined) {
+                this.emit("connection_error", {
+                    req,
+                    code: errorCode,
+                    message: server_1.Server.errorMessages[errorCode],
+                    context: errorContext,
+                });
+                this.abortRequest(req.res, errorCode, errorContext);
+                return;
+            }
+            if (req._query.sid) {
+                debug("setting new request for existing client");
+                // @ts-ignore
+                this.clients[req._query.sid].transport.onRequest(req);
+            }
+            else {
+                const closeConnection = (errorCode, errorContext) => this.abortRequest(res, errorCode, errorContext);
+                this.handshake(req._query.transport, req, closeConnection);
+            }
+        };
+        this._applyMiddlewares(req, res, (err) => {
+            if (err) {
+                callback(server_1.Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+            }
+            else {
+                this.verify(req, false, callback);
+            }
+        });
+    }
+    handleUpgrade(res, req, context) {
+        debug("on upgrade");
+        this.prepare(req, res);
+        req.res = res;
+        const callback = async (errorCode, errorContext) => {
+            if (errorCode !== undefined) {
+                this.emit("connection_error", {
+                    req,
+                    code: errorCode,
+                    message: server_1.Server.errorMessages[errorCode],
+                    context: errorContext,
+                });
+                this.abortRequest(res, errorCode, errorContext);
+                return;
+            }
+            const id = req._query.sid;
+            let transport;
+            if (id) {
+                const client = this.clients[id];
+                if (!client) {
+                    debug("upgrade attempt for closed client");
+                    return res.close();
+                }
+                else if (client.upgrading) {
+                    debug("transport has already been trying to upgrade");
+                    return res.close();
+                }
+                else if (client.upgraded) {
+                    debug("transport had already been upgraded");
+                    return res.close();
+                }
+                else {
+                    debug("upgrading existing transport");
+                    transport = this.createTransport(req._query.transport, req);
+                    client._maybeUpgrade(transport);
+                }
+            }
+            else {
+                transport = await this.handshake(req._query.transport, req, (errorCode, errorContext) => this.abortRequest(res, errorCode, errorContext));
+                if (!transport) {
+                    return;
+                }
+            }
+            // calling writeStatus() triggers the flushing of any header added in a middleware
+            req.res.writeStatus("101 Switching Protocols");
+            res.upgrade({
+                transport,
+            }, req.getHeader("sec-websocket-key"), req.getHeader("sec-websocket-protocol"), req.getHeader("sec-websocket-extensions"), context);
+        };
+        this._applyMiddlewares(req, res, (err) => {
+            if (err) {
+                callback(server_1.Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+            }
+            else {
+                this.verify(req, true, callback);
+            }
+        });
+    }
+    abortRequest(res, errorCode, errorContext) {
+        const statusCode = errorCode === server_1.Server.errors.FORBIDDEN
+            ? "403 Forbidden"
+            : "400 Bad Request";
+        const message = errorContext && errorContext.message
+            ? errorContext.message
+            : server_1.Server.errorMessages[errorCode];
+        res.writeStatus(statusCode);
+        res.writeHeader("Content-Type", "application/json");
+        res.end(JSON.stringify({
+            code: errorCode,
+            message,
+        }));
+    }
+}
+exports.uServer = uServer;
+class ResponseWrapper {
+    constructor(res) {
+        this.res = res;
+        this.statusWritten = false;
+        this.headers = [];
+        this.isAborted = false;
+    }
+    set statusCode(status) {
+        if (!status) {
+            return;
+        }
+        // FIXME: handle all status codes?
+        this.writeStatus(status === 200 ? "200 OK" : "204 No Content");
+    }
+    writeHead(status) {
+        this.statusCode = status;
+    }
+    setHeader(key, value) {
+        if (Array.isArray(value)) {
+            value.forEach((val) => {
+                this.writeHeader(key, val);
+            });
+        }
+        else {
+            this.writeHeader(key, value);
+        }
+    }
+    removeHeader() {
+        // FIXME: not implemented
+    }
+    // needed by vary: https://github.com/jshttp/vary/blob/5d725d059b3871025cf753e9dfa08924d0bcfa8f/index.js#L134
+    getHeader() { }
+    writeStatus(status) {
+        if (this.isAborted)
+            return;
+        this.res.writeStatus(status);
+        this.statusWritten = true;
+        this.writeBufferedHeaders();
+        return this;
+    }
+    writeHeader(key, value) {
+        if (this.isAborted)
+            return;
+        if (key === "Content-Length") {
+            // the content length is automatically added by uWebSockets.js
+            return;
+        }
+        if (this.statusWritten) {
+            this.res.writeHeader(key, value);
+        }
+        else {
+            this.headers.push([key, value]);
+        }
+    }
+    writeBufferedHeaders() {
+        this.headers.forEach(([key, value]) => {
+            this.res.writeHeader(key, value);
+        });
+    }
+    end(data) {
+        if (this.isAborted)
+            return;
+        this.res.cork(() => {
+            if (!this.statusWritten) {
+                // status will be inferred as "200 OK"
+                this.writeBufferedHeaders();
+            }
+            this.res.end(data);
+        });
+    }
+    onData(fn) {
+        if (this.isAborted)
+            return;
+        this.res.onData(fn);
+    }
+    onAborted(fn) {
+        if (this.isAborted)
+            return;
+        this.res.onAborted(() => {
+            // Any attempt to use the UWS response object after abort will throw!
+            this.isAborted = true;
+            fn();
+        });
+    }
+    cork(fn) {
+        if (this.isAborted)
+            return;
+        this.res.cork(fn);
+    }
+}
+
+
+/***/ },
+
+/***/ 2905
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const { EMPTY_BUFFER } = __webpack_require__(6261);
+
+const FastBuffer = Buffer[Symbol.species];
+
+/**
+ * Merges an array of buffers into a new buffer.
+ *
+ * @param {Buffer[]} list The array of buffers to concat
+ * @param {Number} totalLength The total length of buffers in the list
+ * @return {Buffer} The resulting buffer
+ * @public
+ */
+function concat(list, totalLength) {
+  if (list.length === 0) return EMPTY_BUFFER;
+  if (list.length === 1) return list[0];
+
+  const target = Buffer.allocUnsafe(totalLength);
+  let offset = 0;
+
+  for (let i = 0; i < list.length; i++) {
+    const buf = list[i];
+    target.set(buf, offset);
+    offset += buf.length;
+  }
+
+  if (offset < totalLength) {
+    return new FastBuffer(target.buffer, target.byteOffset, offset);
+  }
+
+  return target;
+}
+
+/**
+ * Masks a buffer using the given mask.
+ *
+ * @param {Buffer} source The buffer to mask
+ * @param {Buffer} mask The mask to use
+ * @param {Buffer} output The buffer where to store the result
+ * @param {Number} offset The offset at which to start writing
+ * @param {Number} length The number of bytes to mask.
+ * @public
+ */
+function _mask(source, mask, output, offset, length) {
+  for (let i = 0; i < length; i++) {
+    output[offset + i] = source[i] ^ mask[i & 3];
+  }
+}
+
+/**
+ * Unmasks a buffer using the given mask.
+ *
+ * @param {Buffer} buffer The buffer to unmask
+ * @param {Buffer} mask The mask to use
+ * @public
+ */
+function _unmask(buffer, mask) {
+  for (let i = 0; i < buffer.length; i++) {
+    buffer[i] ^= mask[i & 3];
+  }
+}
+
+/**
+ * Converts a buffer to an `ArrayBuffer`.
+ *
+ * @param {Buffer} buf The buffer to convert
+ * @return {ArrayBuffer} Converted buffer
+ * @public
+ */
+function toArrayBuffer(buf) {
+  if (buf.length === buf.buffer.byteLength) {
+    return buf.buffer;
+  }
+
+  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.length);
+}
+
+/**
+ * Converts `data` to a `Buffer`.
+ *
+ * @param {*} data The data to convert
+ * @return {Buffer} The buffer
+ * @throws {TypeError}
+ * @public
+ */
+function toBuffer(data) {
+  toBuffer.readOnly = true;
+
+  if (Buffer.isBuffer(data)) return data;
+
+  let buf;
+
+  if (data instanceof ArrayBuffer) {
+    buf = new FastBuffer(data);
+  } else if (ArrayBuffer.isView(data)) {
+    buf = new FastBuffer(data.buffer, data.byteOffset, data.byteLength);
+  } else {
+    buf = Buffer.from(data);
+    toBuffer.readOnly = false;
+  }
+
+  return buf;
+}
+
+module.exports = {
+  concat,
+  mask: _mask,
+  toArrayBuffer,
+  toBuffer,
+  unmask: _unmask
+};
+
+/* istanbul ignore else  */
+if (!process.env.WS_NO_BUFFER_UTIL) {
+  try {
+    const bufferUtil = __webpack_require__(6498);
+
+    module.exports.mask = function (source, mask, output, offset, length) {
+      if (length < 48) _mask(source, mask, output, offset, length);
+      else bufferUtil.mask(source, mask, output, offset, length);
+    };
+
+    module.exports.unmask = function (buffer, mask) {
+      if (buffer.length < 32) _unmask(buffer, mask);
+      else bufferUtil.unmask(buffer, mask);
+    };
+  } catch (e) {
+    // Continue regardless of the error.
+  }
+}
+
+
+/***/ },
+
+/***/ 2935
+(module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /* module decorator */ module = __webpack_require__.nmd(module);
 var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -28120,10 +34017,17 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 }.call(this));
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 2967:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 2967
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -28144,6 +34048,7 @@ function flowIndentCheck(indent, fc, onError) {
 exports.flowIndentCheck = flowIndentCheck;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3001:
@@ -28175,6 +34080,80 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:fs");
 
 /***/ 3040:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3021
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.protocol = exports.Transport = exports.Socket = exports.uServer = exports.parser = exports.transports = exports.Server = void 0;
+exports.listen = listen;
+exports.attach = attach;
+const http_1 = __webpack_require__(8611);
+const server_1 = __webpack_require__(4846);
+Object.defineProperty(exports, "Server", ({ enumerable: true, get: function () { return server_1.Server; } }));
+const index_1 = __webpack_require__(188);
+exports.transports = index_1.default;
+const parser = __webpack_require__(2680);
+exports.parser = parser;
+var userver_1 = __webpack_require__(2893);
+Object.defineProperty(exports, "uServer", ({ enumerable: true, get: function () { return userver_1.uServer; } }));
+var socket_1 = __webpack_require__(4328);
+Object.defineProperty(exports, "Socket", ({ enumerable: true, get: function () { return socket_1.Socket; } }));
+var transport_1 = __webpack_require__(7388);
+Object.defineProperty(exports, "Transport", ({ enumerable: true, get: function () { return transport_1.Transport; } }));
+exports.protocol = parser.protocol;
+/**
+ * Creates an http.Server exclusively used for WS upgrades.
+ *
+ * @param {Number} port
+ * @param {Function} callback
+ * @param {Object} options
+ * @return {Server} websocket.io server
+ */
+function listen(port, options, fn) {
+    if ("function" === typeof options) {
+        fn = options;
+        options = {};
+    }
+    const server = (0, http_1.createServer)(function (req, res) {
+        res.writeHead(501);
+        res.end("Not Implemented");
+    });
+    // create engine server
+    const engine = attach(server, options);
+    engine.httpServer = server;
+    server.listen(port, fn);
+    return engine;
+}
+/**
+ * Captures upgrade requests for a http.Server.
+ *
+ * @param {http.Server} server
+ * @param {Object} options
+ * @return {Server} engine server
+ */
+function attach(server, options) {
+    const engine = new server_1.Server(options);
+    engine.attach(server, options);
+    return engine;
+}
+
+
+/***/ },
+
+/***/ 3024
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:fs");
+
+/***/ },
+
+/***/ 3040
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -28323,6 +34302,7 @@ function addCommentBefore({ indent, options: { commentString } }, lines, comment
 exports.stringifyCollection = stringifyCollection;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3106:
@@ -28334,6 +34314,571 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("zlib");
 
 /***/ 3352:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3106
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("zlib");
+
+/***/ },
+
+/***/ 3147
+(module, __unused_webpack_exports, __webpack_require__) {
+
+/* eslint no-unused-vars: ["error", { "varsIgnorePattern": "^Duplex" }] */
+
+
+
+const { Duplex } = __webpack_require__(2203);
+const { randomFillSync } = __webpack_require__(6982);
+
+const PerMessageDeflate = __webpack_require__(6038);
+const { EMPTY_BUFFER } = __webpack_require__(6261);
+const { isValidStatusCode } = __webpack_require__(6237);
+const { mask: applyMask, toBuffer } = __webpack_require__(2905);
+
+const kByteLength = Symbol('kByteLength');
+const maskBuffer = Buffer.alloc(4);
+const RANDOM_POOL_SIZE = 8 * 1024;
+let randomPool;
+let randomPoolPointer = RANDOM_POOL_SIZE;
+
+/**
+ * HyBi Sender implementation.
+ */
+class Sender {
+  /**
+   * Creates a Sender instance.
+   *
+   * @param {Duplex} socket The connection socket
+   * @param {Object} [extensions] An object containing the negotiated extensions
+   * @param {Function} [generateMask] The function used to generate the masking
+   *     key
+   */
+  constructor(socket, extensions, generateMask) {
+    this._extensions = extensions || {};
+
+    if (generateMask) {
+      this._generateMask = generateMask;
+      this._maskBuffer = Buffer.alloc(4);
+    }
+
+    this._socket = socket;
+
+    this._firstFragment = true;
+    this._compress = false;
+
+    this._bufferedBytes = 0;
+    this._deflating = false;
+    this._queue = [];
+  }
+
+  /**
+   * Frames a piece of data according to the HyBi WebSocket protocol.
+   *
+   * @param {(Buffer|String)} data The data to frame
+   * @param {Object} options Options object
+   * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+   *     FIN bit
+   * @param {Function} [options.generateMask] The function used to generate the
+   *     masking key
+   * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+   *     `data`
+   * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+   *     key
+   * @param {Number} options.opcode The opcode
+   * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+   *     modified
+   * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+   *     RSV1 bit
+   * @return {(Buffer|String)[]} The framed data
+   * @public
+   */
+  static frame(data, options) {
+    let mask;
+    let merge = false;
+    let offset = 2;
+    let skipMasking = false;
+
+    if (options.mask) {
+      mask = options.maskBuffer || maskBuffer;
+
+      if (options.generateMask) {
+        options.generateMask(mask);
+      } else {
+        if (randomPoolPointer === RANDOM_POOL_SIZE) {
+          /* istanbul ignore else  */
+          if (randomPool === undefined) {
+            //
+            // This is lazily initialized because server-sent frames must not
+            // be masked so it may never be used.
+            //
+            randomPool = Buffer.alloc(RANDOM_POOL_SIZE);
+          }
+
+          randomFillSync(randomPool, 0, RANDOM_POOL_SIZE);
+          randomPoolPointer = 0;
+        }
+
+        mask[0] = randomPool[randomPoolPointer++];
+        mask[1] = randomPool[randomPoolPointer++];
+        mask[2] = randomPool[randomPoolPointer++];
+        mask[3] = randomPool[randomPoolPointer++];
+      }
+
+      skipMasking = (mask[0] | mask[1] | mask[2] | mask[3]) === 0;
+      offset = 6;
+    }
+
+    let dataLength;
+
+    if (typeof data === 'string') {
+      if (
+        (!options.mask || skipMasking) &&
+        options[kByteLength] !== undefined
+      ) {
+        dataLength = options[kByteLength];
+      } else {
+        data = Buffer.from(data);
+        dataLength = data.length;
+      }
+    } else {
+      dataLength = data.length;
+      merge = options.mask && options.readOnly && !skipMasking;
+    }
+
+    let payloadLength = dataLength;
+
+    if (dataLength >= 65536) {
+      offset += 8;
+      payloadLength = 127;
+    } else if (dataLength > 125) {
+      offset += 2;
+      payloadLength = 126;
+    }
+
+    const target = Buffer.allocUnsafe(merge ? dataLength + offset : offset);
+
+    target[0] = options.fin ? options.opcode | 0x80 : options.opcode;
+    if (options.rsv1) target[0] |= 0x40;
+
+    target[1] = payloadLength;
+
+    if (payloadLength === 126) {
+      target.writeUInt16BE(dataLength, 2);
+    } else if (payloadLength === 127) {
+      target[2] = target[3] = 0;
+      target.writeUIntBE(dataLength, 4, 6);
+    }
+
+    if (!options.mask) return [target, data];
+
+    target[1] |= 0x80;
+    target[offset - 4] = mask[0];
+    target[offset - 3] = mask[1];
+    target[offset - 2] = mask[2];
+    target[offset - 1] = mask[3];
+
+    if (skipMasking) return [target, data];
+
+    if (merge) {
+      applyMask(data, mask, target, offset, dataLength);
+      return [target];
+    }
+
+    applyMask(data, mask, data, 0, dataLength);
+    return [target, data];
+  }
+
+  /**
+   * Sends a close message to the other peer.
+   *
+   * @param {Number} [code] The status code component of the body
+   * @param {(String|Buffer)} [data] The message component of the body
+   * @param {Boolean} [mask=false] Specifies whether or not to mask the message
+   * @param {Function} [cb] Callback
+   * @public
+   */
+  close(code, data, mask, cb) {
+    let buf;
+
+    if (code === undefined) {
+      buf = EMPTY_BUFFER;
+    } else if (typeof code !== 'number' || !isValidStatusCode(code)) {
+      throw new TypeError('First argument must be a valid error code number');
+    } else if (data === undefined || !data.length) {
+      buf = Buffer.allocUnsafe(2);
+      buf.writeUInt16BE(code, 0);
+    } else {
+      const length = Buffer.byteLength(data);
+
+      if (length > 123) {
+        throw new RangeError('The message must not be greater than 123 bytes');
+      }
+
+      buf = Buffer.allocUnsafe(2 + length);
+      buf.writeUInt16BE(code, 0);
+
+      if (typeof data === 'string') {
+        buf.write(data, 2);
+      } else {
+        buf.set(data, 2);
+      }
+    }
+
+    const options = {
+      [kByteLength]: buf.length,
+      fin: true,
+      generateMask: this._generateMask,
+      mask,
+      maskBuffer: this._maskBuffer,
+      opcode: 0x08,
+      readOnly: false,
+      rsv1: false
+    };
+
+    if (this._deflating) {
+      this.enqueue([this.dispatch, buf, false, options, cb]);
+    } else {
+      this.sendFrame(Sender.frame(buf, options), cb);
+    }
+  }
+
+  /**
+   * Sends a ping message to the other peer.
+   *
+   * @param {*} data The message to send
+   * @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+   * @param {Function} [cb] Callback
+   * @public
+   */
+  ping(data, mask, cb) {
+    let byteLength;
+    let readOnly;
+
+    if (typeof data === 'string') {
+      byteLength = Buffer.byteLength(data);
+      readOnly = false;
+    } else {
+      data = toBuffer(data);
+      byteLength = data.length;
+      readOnly = toBuffer.readOnly;
+    }
+
+    if (byteLength > 125) {
+      throw new RangeError('The data size must not be greater than 125 bytes');
+    }
+
+    const options = {
+      [kByteLength]: byteLength,
+      fin: true,
+      generateMask: this._generateMask,
+      mask,
+      maskBuffer: this._maskBuffer,
+      opcode: 0x09,
+      readOnly,
+      rsv1: false
+    };
+
+    if (this._deflating) {
+      this.enqueue([this.dispatch, data, false, options, cb]);
+    } else {
+      this.sendFrame(Sender.frame(data, options), cb);
+    }
+  }
+
+  /**
+   * Sends a pong message to the other peer.
+   *
+   * @param {*} data The message to send
+   * @param {Boolean} [mask=false] Specifies whether or not to mask `data`
+   * @param {Function} [cb] Callback
+   * @public
+   */
+  pong(data, mask, cb) {
+    let byteLength;
+    let readOnly;
+
+    if (typeof data === 'string') {
+      byteLength = Buffer.byteLength(data);
+      readOnly = false;
+    } else {
+      data = toBuffer(data);
+      byteLength = data.length;
+      readOnly = toBuffer.readOnly;
+    }
+
+    if (byteLength > 125) {
+      throw new RangeError('The data size must not be greater than 125 bytes');
+    }
+
+    const options = {
+      [kByteLength]: byteLength,
+      fin: true,
+      generateMask: this._generateMask,
+      mask,
+      maskBuffer: this._maskBuffer,
+      opcode: 0x0a,
+      readOnly,
+      rsv1: false
+    };
+
+    if (this._deflating) {
+      this.enqueue([this.dispatch, data, false, options, cb]);
+    } else {
+      this.sendFrame(Sender.frame(data, options), cb);
+    }
+  }
+
+  /**
+   * Sends a data message to the other peer.
+   *
+   * @param {*} data The message to send
+   * @param {Object} options Options object
+   * @param {Boolean} [options.binary=false] Specifies whether `data` is binary
+   *     or text
+   * @param {Boolean} [options.compress=false] Specifies whether or not to
+   *     compress `data`
+   * @param {Boolean} [options.fin=false] Specifies whether the fragment is the
+   *     last one
+   * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+   *     `data`
+   * @param {Function} [cb] Callback
+   * @public
+   */
+  send(data, options, cb) {
+    const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
+    let opcode = options.binary ? 2 : 1;
+    let rsv1 = options.compress;
+
+    let byteLength;
+    let readOnly;
+
+    if (typeof data === 'string') {
+      byteLength = Buffer.byteLength(data);
+      readOnly = false;
+    } else {
+      data = toBuffer(data);
+      byteLength = data.length;
+      readOnly = toBuffer.readOnly;
+    }
+
+    if (this._firstFragment) {
+      this._firstFragment = false;
+      if (
+        rsv1 &&
+        perMessageDeflate &&
+        perMessageDeflate.params[
+          perMessageDeflate._isServer
+            ? 'server_no_context_takeover'
+            : 'client_no_context_takeover'
+        ]
+      ) {
+        rsv1 = byteLength >= perMessageDeflate._threshold;
+      }
+      this._compress = rsv1;
+    } else {
+      rsv1 = false;
+      opcode = 0;
+    }
+
+    if (options.fin) this._firstFragment = true;
+
+    if (perMessageDeflate) {
+      const opts = {
+        [kByteLength]: byteLength,
+        fin: options.fin,
+        generateMask: this._generateMask,
+        mask: options.mask,
+        maskBuffer: this._maskBuffer,
+        opcode,
+        readOnly,
+        rsv1
+      };
+
+      if (this._deflating) {
+        this.enqueue([this.dispatch, data, this._compress, opts, cb]);
+      } else {
+        this.dispatch(data, this._compress, opts, cb);
+      }
+    } else {
+      this.sendFrame(
+        Sender.frame(data, {
+          [kByteLength]: byteLength,
+          fin: options.fin,
+          generateMask: this._generateMask,
+          mask: options.mask,
+          maskBuffer: this._maskBuffer,
+          opcode,
+          readOnly,
+          rsv1: false
+        }),
+        cb
+      );
+    }
+  }
+
+  /**
+   * Dispatches a message.
+   *
+   * @param {(Buffer|String)} data The message to send
+   * @param {Boolean} [compress=false] Specifies whether or not to compress
+   *     `data`
+   * @param {Object} options Options object
+   * @param {Boolean} [options.fin=false] Specifies whether or not to set the
+   *     FIN bit
+   * @param {Function} [options.generateMask] The function used to generate the
+   *     masking key
+   * @param {Boolean} [options.mask=false] Specifies whether or not to mask
+   *     `data`
+   * @param {Buffer} [options.maskBuffer] The buffer used to store the masking
+   *     key
+   * @param {Number} options.opcode The opcode
+   * @param {Boolean} [options.readOnly=false] Specifies whether `data` can be
+   *     modified
+   * @param {Boolean} [options.rsv1=false] Specifies whether or not to set the
+   *     RSV1 bit
+   * @param {Function} [cb] Callback
+   * @private
+   */
+  dispatch(data, compress, options, cb) {
+    if (!compress) {
+      this.sendFrame(Sender.frame(data, options), cb);
+      return;
+    }
+
+    const perMessageDeflate = this._extensions[PerMessageDeflate.extensionName];
+
+    this._bufferedBytes += options[kByteLength];
+    this._deflating = true;
+    perMessageDeflate.compress(data, options.fin, (_, buf) => {
+      if (this._socket.destroyed) {
+        const err = new Error(
+          'The socket was closed while data was being compressed'
+        );
+
+        if (typeof cb === 'function') cb(err);
+
+        for (let i = 0; i < this._queue.length; i++) {
+          const params = this._queue[i];
+          const callback = params[params.length - 1];
+
+          if (typeof callback === 'function') callback(err);
+        }
+
+        return;
+      }
+
+      this._bufferedBytes -= options[kByteLength];
+      this._deflating = false;
+      options.readOnly = false;
+      this.sendFrame(Sender.frame(buf, options), cb);
+      this.dequeue();
+    });
+  }
+
+  /**
+   * Executes queued send operations.
+   *
+   * @private
+   */
+  dequeue() {
+    while (!this._deflating && this._queue.length) {
+      const params = this._queue.shift();
+
+      this._bufferedBytes -= params[3][kByteLength];
+      Reflect.apply(params[0], this, params.slice(1));
+    }
+  }
+
+  /**
+   * Enqueues a send operation.
+   *
+   * @param {Array} params Send operation parameters.
+   * @private
+   */
+  enqueue(params) {
+    this._bufferedBytes += params[3][kByteLength];
+    this._queue.push(params);
+  }
+
+  /**
+   * Sends a frame.
+   *
+   * @param {Buffer[]} list The frame to send
+   * @param {Function} [cb] Callback
+   * @private
+   */
+  sendFrame(list, cb) {
+    if (list.length === 2) {
+      this._socket.cork();
+      this._socket.write(list[0]);
+      this._socket.write(list[1], cb);
+      this._socket.uncork();
+    } else {
+      this._socket.write(list[0], cb);
+    }
+  }
+}
+
+module.exports = Sender;
+
+
+/***/ },
+
+/***/ 3240
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.JSONP = void 0;
+const polling_1 = __webpack_require__(4571);
+const qs = __webpack_require__(3480);
+const rDoubleSlashes = /\\\\n/g;
+const rSlashes = /(\\)?\\n/g;
+class JSONP extends polling_1.Polling {
+    /**
+     * JSON-P polling transport.
+     */
+    constructor(req) {
+        super(req);
+        this.head = "___eio[" + (req._query.j || "").replace(/[^0-9]/g, "") + "](";
+        this.foot = ");";
+    }
+    onData(data) {
+        // we leverage the qs module so that we get built-in DoS protection
+        // and the fast alternative to decodeURIComponent
+        data = qs.parse(data).d;
+        if ("string" === typeof data) {
+            // client will send already escaped newlines as \\\\n and newlines as \\n
+            // \\n must be replaced with \n and \\\\n with \\n
+            data = data.replace(rSlashes, function (match, slashes) {
+                return slashes ? match : "\n";
+            });
+            super.onData(data.replace(rDoubleSlashes, "\\n"));
+        }
+    }
+    doWrite(data, options, callback) {
+        // we must output valid javascript, not valid json
+        // see: http://timelessrepo.com/json-isnt-a-javascript-subset
+        const js = JSON.stringify(data)
+            .replace(/\u2028/g, "\\u2028")
+            .replace(/\u2029/g, "\\u2029");
+        // prepare response
+        data = this.head + js + this.foot;
+        super.doWrite(data, options, callback);
+    }
+}
+exports.JSONP = JSONP;
+
+
+/***/ },
+
+/***/ 3352
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -28413,10 +34958,17 @@ exports.createNodeAnchors = createNodeAnchors;
 exports.findNewAnchor = findNewAnchor;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3353:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3353
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -28510,10 +35062,17 @@ function composeCollection(CN, ctx, token, props, onError) {
 exports.composeCollection = composeCollection;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3436:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3436
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -28613,6 +35172,7 @@ exports.YAMLSet = YAMLSet;
 exports.set = set;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3480:
@@ -28624,6 +35184,88 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("querystring");
 
 /***/ 3549:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3480
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("querystring");
+
+/***/ },
+
+/***/ 3502
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const { tokenChars } = __webpack_require__(6237);
+
+/**
+ * Parses the `Sec-WebSocket-Protocol` header into a set of subprotocol names.
+ *
+ * @param {String} header The field value of the header
+ * @return {Set} The subprotocol names
+ * @public
+ */
+function parse(header) {
+  const protocols = new Set();
+  let start = -1;
+  let end = -1;
+  let i = 0;
+
+  for (i; i < header.length; i++) {
+    const code = header.charCodeAt(i);
+
+    if (end === -1 && tokenChars[code] === 1) {
+      if (start === -1) start = i;
+    } else if (
+      i !== 0 &&
+      (code === 0x20 /* ' ' */ || code === 0x09) /* '\t' */
+    ) {
+      if (end === -1 && start !== -1) end = i;
+    } else if (code === 0x2c /* ',' */) {
+      if (start === -1) {
+        throw new SyntaxError(`Unexpected character at index ${i}`);
+      }
+
+      if (end === -1) end = i;
+
+      const protocol = header.slice(start, end);
+
+      if (protocols.has(protocol)) {
+        throw new SyntaxError(`The "${protocol}" subprotocol is duplicated`);
+      }
+
+      protocols.add(protocol);
+      start = end = -1;
+    } else {
+      throw new SyntaxError(`Unexpected character at index ${i}`);
+    }
+  }
+
+  if (start === -1 || end !== -1) {
+    throw new SyntaxError('Unexpected end of input');
+  }
+
+  const protocol = header.slice(start, i);
+
+  if (protocols.has(protocol)) {
+    throw new SyntaxError(`The "${protocol}" subprotocol is duplicated`);
+  }
+
+  protocols.add(protocol);
+  return protocols;
+}
+
+module.exports = { parse };
+
+
+/***/ },
+
+/***/ 3549
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -28732,6 +35374,7 @@ exports.composeEmptyNode = composeEmptyNode;
 exports.composeNode = composeNode;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3557:
@@ -28743,6 +35386,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("timers");
 
 /***/ 3619:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 3557
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("timers");
+
+/***/ },
+
+/***/ 3619
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -28799,10 +35455,17 @@ exports.isScalar = isScalar;
 exports.isSeq = isSeq;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3641:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3641
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -28894,10 +35557,17 @@ function _reconstructPacket(data, buffers) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3676:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3676
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -29006,6 +35676,7 @@ exports.intTime = intTime;
 exports.timestamp = timestamp;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 3761:
@@ -29453,6 +36124,12 @@ exports.RemoteSocket = RemoteSocket;
 
 /***/ 3939:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 3939
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -29571,10 +36248,87 @@ function asItemIndex(key) {
 exports.YAMLSeq = YAMLSeq;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4058:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 4013
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WebTransport = void 0;
+const transport_1 = __webpack_require__(7388);
+const debug_1 = __webpack_require__(8725);
+const engine_io_parser_1 = __webpack_require__(2680);
+const debug = (0, debug_1.default)("engine:webtransport");
+/**
+ * Reference: https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API
+ */
+class WebTransport extends transport_1.Transport {
+    constructor(session, stream, reader) {
+        super({ _query: { EIO: "4" } });
+        this.session = session;
+        const transformStream = (0, engine_io_parser_1.createPacketEncoderStream)();
+        transformStream.readable.pipeTo(stream.writable).catch(() => {
+            debug("the stream was closed");
+        });
+        this.writer = transformStream.writable.getWriter();
+        (async () => {
+            try {
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) {
+                        debug("session is closed");
+                        break;
+                    }
+                    debug("received chunk: %o", value);
+                    this.onPacket(value);
+                }
+            }
+            catch (e) {
+                debug("error while reading: %s", e.message);
+            }
+        })();
+        session.closed.then(() => this.onClose());
+        this.writable = true;
+    }
+    get name() {
+        return "webtransport";
+    }
+    async send(packets) {
+        this.writable = false;
+        try {
+            for (let i = 0; i < packets.length; i++) {
+                const packet = packets[i];
+                await this.writer.write(packet);
+            }
+        }
+        catch (e) {
+            debug("error while writing: %s", e.message);
+        }
+        this.emit("drain");
+        this.writable = true;
+        this.emit("ready");
+    }
+    doClose(fn) {
+        debug("closing WebTransport session");
+        this.session.close();
+        fn && fn();
+    }
+}
+exports.WebTransport = WebTransport;
+
+
+/***/ },
+
+/***/ 4058
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*!
  * cookie
@@ -29913,10 +36667,17 @@ function tryDecode(str, decode) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4059:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 4059
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*
 object-assign
@@ -30010,10 +36771,17 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4200:
 /***/ ((module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 4200
+(module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * Module dependencies.
@@ -30280,6 +37048,7 @@ formatters.O = function (v) {
 };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4229:
@@ -31352,6 +38121,823 @@ function abortHandshakeOrEmitwsClientError(server, req, socket, code, message) {
 
 /***/ 4321:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 4302
+(module, exports, __webpack_require__) {
+
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Namespace = exports.Socket = exports.Server = void 0;
+const http = __webpack_require__(8611);
+const fs_1 = __webpack_require__(9896);
+const zlib_1 = __webpack_require__(3106);
+const accepts = __webpack_require__(9);
+const stream_1 = __webpack_require__(2203);
+const path = __webpack_require__(6928);
+const engine_io_1 = __webpack_require__(3021);
+const client_1 = __webpack_require__(1767);
+const events_1 = __webpack_require__(4434);
+const namespace_1 = __webpack_require__(597);
+Object.defineProperty(exports, "Namespace", ({ enumerable: true, get: function () { return namespace_1.Namespace; } }));
+const parent_namespace_1 = __webpack_require__(9966);
+const socket_io_adapter_1 = __webpack_require__(1790);
+const parser = __importStar(__webpack_require__(9834));
+const debug_1 = __importDefault(__webpack_require__(8725));
+const socket_1 = __webpack_require__(1825);
+Object.defineProperty(exports, "Socket", ({ enumerable: true, get: function () { return socket_1.Socket; } }));
+const typed_events_1 = __webpack_require__(5510);
+const uws_1 = __webpack_require__(6839);
+const cors_1 = __importDefault(__webpack_require__(6388));
+const debug = (0, debug_1.default)("socket.io:server");
+const clientVersion = (__webpack_require__(2481)/* .version */ .rE);
+const dotMapRegex = /\.map/;
+/**
+ * Represents a Socket.IO server.
+ *
+ * @example
+ * import { Server } from "socket.io";
+ *
+ * const io = new Server();
+ *
+ * io.on("connection", (socket) => {
+ *   console.log(`socket ${socket.id} connected`);
+ *
+ *   // send an event to the client
+ *   socket.emit("foo", "bar");
+ *
+ *   socket.on("foobar", () => {
+ *     // an event was received from the client
+ *   });
+ *
+ *   // upon disconnection
+ *   socket.on("disconnect", (reason) => {
+ *     console.log(`socket ${socket.id} disconnected due to ${reason}`);
+ *   });
+ * });
+ *
+ * io.listen(3000);
+ */
+class Server extends typed_events_1.StrictEventEmitter {
+    constructor(srv, opts = {}) {
+        super();
+        /**
+         * @private
+         */
+        this._nsps = new Map();
+        this.parentNsps = new Map();
+        /**
+         * A subset of the {@link parentNsps} map, only containing {@link ParentNamespace} which are based on a regular
+         * expression.
+         *
+         * @private
+         */
+        this.parentNamespacesFromRegExp = new Map();
+        if ("object" === typeof srv &&
+            srv instanceof Object &&
+            !srv.listen) {
+            opts = srv;
+            srv = undefined;
+        }
+        this.path(opts.path || "/socket.io");
+        this.connectTimeout(opts.connectTimeout || 45000);
+        this.serveClient(false !== opts.serveClient);
+        this._parser = opts.parser || parser;
+        this.encoder = new this._parser.Encoder();
+        this.opts = opts;
+        if (opts.connectionStateRecovery) {
+            opts.connectionStateRecovery = Object.assign({
+                maxDisconnectionDuration: 2 * 60 * 1000,
+                skipMiddlewares: true,
+            }, opts.connectionStateRecovery);
+            this.adapter(opts.adapter || socket_io_adapter_1.SessionAwareAdapter);
+        }
+        else {
+            this.adapter(opts.adapter || socket_io_adapter_1.Adapter);
+        }
+        opts.cleanupEmptyChildNamespaces = !!opts.cleanupEmptyChildNamespaces;
+        this.sockets = this.of("/");
+        if (srv || typeof srv == "number")
+            this.attach(srv);
+        if (this.opts.cors) {
+            this._corsMiddleware = (0, cors_1.default)(this.opts.cors);
+        }
+    }
+    get _opts() {
+        return this.opts;
+    }
+    serveClient(v) {
+        if (!arguments.length)
+            return this._serveClient;
+        this._serveClient = v;
+        return this;
+    }
+    /**
+     * Executes the middleware for an incoming namespace not already created on the server.
+     *
+     * @param name - name of incoming namespace
+     * @param auth - the auth parameters
+     * @param fn - callback
+     *
+     * @private
+     */
+    _checkNamespace(name, auth, fn) {
+        if (this.parentNsps.size === 0)
+            return fn(false);
+        const keysIterator = this.parentNsps.keys();
+        const run = () => {
+            const nextFn = keysIterator.next();
+            if (nextFn.done) {
+                return fn(false);
+            }
+            nextFn.value(name, auth, (err, allow) => {
+                if (err || !allow) {
+                    return run();
+                }
+                if (this._nsps.has(name)) {
+                    // the namespace was created in the meantime
+                    debug("dynamic namespace %s already exists", name);
+                    return fn(this._nsps.get(name));
+                }
+                const namespace = this.parentNsps.get(nextFn.value).createChild(name);
+                debug("dynamic namespace %s was created", name);
+                fn(namespace);
+            });
+        };
+        run();
+    }
+    path(v) {
+        if (!arguments.length)
+            return this._path;
+        this._path = v.replace(/\/$/, "");
+        const escapedPath = this._path.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+        this.clientPathRegex = new RegExp("^" +
+            escapedPath +
+            "/socket\\.io(\\.msgpack|\\.esm)?(\\.min)?\\.js(\\.map)?(?:\\?|$)");
+        return this;
+    }
+    connectTimeout(v) {
+        if (v === undefined)
+            return this._connectTimeout;
+        this._connectTimeout = v;
+        return this;
+    }
+    adapter(v) {
+        if (!arguments.length)
+            return this._adapter;
+        this._adapter = v;
+        for (const nsp of this._nsps.values()) {
+            nsp._initAdapter();
+        }
+        return this;
+    }
+    /**
+     * Attaches socket.io to a server or port.
+     *
+     * @param srv - server or port
+     * @param opts - options passed to engine.io
+     * @return self
+     */
+    listen(srv, opts = {}) {
+        return this.attach(srv, opts);
+    }
+    /**
+     * Attaches socket.io to a server or port.
+     *
+     * @param srv - server or port
+     * @param opts - options passed to engine.io
+     * @return self
+     */
+    attach(srv, opts = {}) {
+        if ("function" == typeof srv) {
+            const msg = "You are trying to attach socket.io to an express " +
+                "request handler function. Please pass a http.Server instance.";
+            throw new Error(msg);
+        }
+        // handle a port as a string
+        if (Number(srv) == srv) {
+            srv = Number(srv);
+        }
+        if ("number" == typeof srv) {
+            debug("creating http server and binding to %d", srv);
+            const port = srv;
+            srv = http.createServer((req, res) => {
+                res.writeHead(404);
+                res.end();
+            });
+            srv.listen(port);
+        }
+        // merge the options passed to the Socket.IO server
+        Object.assign(opts, this.opts);
+        // set engine.io path to `/socket.io`
+        opts.path = opts.path || this._path;
+        this.initEngine(srv, opts);
+        return this;
+    }
+    attachApp(app /*: TemplatedApp */, opts = {}) {
+        // merge the options passed to the Socket.IO server
+        Object.assign(opts, this.opts);
+        // set engine.io path to `/socket.io`
+        opts.path = opts.path || this._path;
+        // initialize engine
+        debug("creating uWebSockets.js-based engine with opts %j", opts);
+        const engine = new engine_io_1.uServer(opts);
+        engine.attach(app, opts);
+        // bind to engine events
+        this.bind(engine);
+        if (this._serveClient) {
+            // attach static file serving
+            app.get(`${this._path}/*`, (res, req) => {
+                if (!this.clientPathRegex.test(req.getUrl())) {
+                    req.setYield(true);
+                    return;
+                }
+                const filename = req
+                    .getUrl()
+                    .replace(this._path, "")
+                    .replace(/\?.*$/, "")
+                    .replace(/^\//, "");
+                const isMap = dotMapRegex.test(filename);
+                const type = isMap ? "map" : "source";
+                // Per the standard, ETags must be quoted:
+                // https://tools.ietf.org/html/rfc7232#section-2.3
+                const expectedEtag = '"' + clientVersion + '"';
+                const weakEtag = "W/" + expectedEtag;
+                const etag = req.getHeader("if-none-match");
+                if (etag) {
+                    if (expectedEtag === etag || weakEtag === etag) {
+                        debug("serve client %s 304", type);
+                        res.writeStatus("304 Not Modified");
+                        res.end();
+                        return;
+                    }
+                }
+                debug("serve client %s", type);
+                res.writeHeader("cache-control", "public, max-age=0");
+                res.writeHeader("content-type", "application/" + (isMap ? "json" : "javascript") + "; charset=utf-8");
+                res.writeHeader("etag", expectedEtag);
+                const filepath = path.join(__webpack_dirname__, "../client-dist/", filename);
+                (0, uws_1.serveFile)(res, filepath);
+            });
+        }
+        (0, uws_1.patchAdapter)(app);
+    }
+    /**
+     * Initialize engine
+     *
+     * @param srv - the server to attach to
+     * @param opts - options passed to engine.io
+     * @private
+     */
+    initEngine(srv, opts) {
+        // initialize engine
+        debug("creating engine.io instance with opts %j", opts);
+        this.eio = (0, engine_io_1.attach)(srv, opts);
+        // attach static file serving
+        if (this._serveClient)
+            this.attachServe(srv);
+        // Export http server
+        this.httpServer = srv;
+        // bind to engine events
+        this.bind(this.eio);
+    }
+    /**
+     * Attaches the static file serving.
+     *
+     * @param srv http server
+     * @private
+     */
+    attachServe(srv) {
+        debug("attaching client serving req handler");
+        const evs = srv.listeners("request").slice(0);
+        srv.removeAllListeners("request");
+        srv.on("request", (req, res) => {
+            if (this.clientPathRegex.test(req.url)) {
+                if (this._corsMiddleware) {
+                    this._corsMiddleware(req, res, () => {
+                        this.serve(req, res);
+                    });
+                }
+                else {
+                    this.serve(req, res);
+                }
+            }
+            else {
+                for (let i = 0; i < evs.length; i++) {
+                    evs[i].call(srv, req, res);
+                }
+            }
+        });
+    }
+    /**
+     * Handles a request serving of client source and map
+     *
+     * @param req
+     * @param res
+     * @private
+     */
+    serve(req, res) {
+        const filename = req.url.replace(this._path, "").replace(/\?.*$/, "");
+        const isMap = dotMapRegex.test(filename);
+        const type = isMap ? "map" : "source";
+        // Per the standard, ETags must be quoted:
+        // https://tools.ietf.org/html/rfc7232#section-2.3
+        const expectedEtag = '"' + clientVersion + '"';
+        const weakEtag = "W/" + expectedEtag;
+        const etag = req.headers["if-none-match"];
+        if (etag) {
+            if (expectedEtag === etag || weakEtag === etag) {
+                debug("serve client %s 304", type);
+                res.writeHead(304);
+                res.end();
+                return;
+            }
+        }
+        debug("serve client %s", type);
+        res.setHeader("Cache-Control", "public, max-age=0");
+        res.setHeader("Content-Type", "application/" + (isMap ? "json" : "javascript") + "; charset=utf-8");
+        res.setHeader("ETag", expectedEtag);
+        Server.sendFile(filename, req, res);
+    }
+    /**
+     * @param filename
+     * @param req
+     * @param res
+     * @private
+     */
+    static sendFile(filename, req, res) {
+        const readStream = (0, fs_1.createReadStream)(path.join(__webpack_dirname__, "../client-dist/", filename));
+        const encoding = accepts(req).encodings(["br", "gzip", "deflate"]);
+        const onError = (err) => {
+            if (err) {
+                res.end();
+            }
+        };
+        switch (encoding) {
+            case "br":
+                res.writeHead(200, { "content-encoding": "br" });
+                (0, stream_1.pipeline)(readStream, (0, zlib_1.createBrotliCompress)(), res, onError);
+                break;
+            case "gzip":
+                res.writeHead(200, { "content-encoding": "gzip" });
+                (0, stream_1.pipeline)(readStream, (0, zlib_1.createGzip)(), res, onError);
+                break;
+            case "deflate":
+                res.writeHead(200, { "content-encoding": "deflate" });
+                (0, stream_1.pipeline)(readStream, (0, zlib_1.createDeflate)(), res, onError);
+                break;
+            default:
+                res.writeHead(200);
+                (0, stream_1.pipeline)(readStream, res, onError);
+        }
+    }
+    /**
+     * Binds socket.io to an engine.io instance.
+     *
+     * @param engine engine.io (or compatible) server
+     * @return self
+     */
+    bind(engine) {
+        // TODO apply strict types to the engine: "connection" event, `close()` and a method to serve static content
+        //  this would allow to provide any custom engine, like one based on Deno or Bun built-in HTTP server
+        this.engine = engine;
+        this.engine.on("connection", this.onconnection.bind(this));
+        return this;
+    }
+    /**
+     * Called with each incoming transport connection.
+     *
+     * @param {engine.Socket} conn
+     * @return self
+     * @private
+     */
+    onconnection(conn) {
+        debug("incoming connection with id %s", conn.id);
+        const client = new client_1.Client(this, conn);
+        if (conn.protocol === 3) {
+            // @ts-ignore
+            client.connect("/");
+        }
+        return this;
+    }
+    /**
+     * Looks up a namespace.
+     *
+     * @example
+     * // with a simple string
+     * const myNamespace = io.of("/my-namespace");
+     *
+     * // with a regex
+     * const dynamicNsp = io.of(/^\/dynamic-\d+$/).on("connection", (socket) => {
+     *   const namespace = socket.nsp; // newNamespace.name === "/dynamic-101"
+     *
+     *   // broadcast to all clients in the given sub-namespace
+     *   namespace.emit("hello");
+     * });
+     *
+     * @param name - nsp name
+     * @param fn optional, nsp `connection` ev handler
+     */
+    of(name, fn) {
+        if (typeof name === "function" || name instanceof RegExp) {
+            const parentNsp = new parent_namespace_1.ParentNamespace(this);
+            debug("initializing parent namespace %s", parentNsp.name);
+            if (typeof name === "function") {
+                this.parentNsps.set(name, parentNsp);
+            }
+            else {
+                this.parentNsps.set((nsp, conn, next) => next(null, name.test(nsp)), parentNsp);
+                this.parentNamespacesFromRegExp.set(name, parentNsp);
+            }
+            if (fn) {
+                // @ts-ignore
+                parentNsp.on("connect", fn);
+            }
+            return parentNsp;
+        }
+        if (String(name)[0] !== "/")
+            name = "/" + name;
+        let nsp = this._nsps.get(name);
+        if (!nsp) {
+            for (const [regex, parentNamespace] of this.parentNamespacesFromRegExp) {
+                if (regex.test(name)) {
+                    debug("attaching namespace %s to parent namespace %s", name, regex);
+                    return parentNamespace.createChild(name);
+                }
+            }
+            debug("initializing namespace %s", name);
+            nsp = new namespace_1.Namespace(this, name);
+            this._nsps.set(name, nsp);
+            if (name !== "/") {
+                // @ts-ignore
+                this.sockets.emitReserved("new_namespace", nsp);
+            }
+        }
+        if (fn)
+            nsp.on("connect", fn);
+        return nsp;
+    }
+    /**
+     * Closes server connection
+     *
+     * @param [fn] optional, called as `fn([err])` on error OR all conns closed
+     */
+    async close(fn) {
+        await Promise.allSettled([...this._nsps.values()].map(async (nsp) => {
+            nsp.sockets.forEach((socket) => {
+                socket._onclose("server shutting down");
+            });
+            await nsp.adapter.close();
+        }));
+        this.engine.close();
+        // restore the Adapter prototype, when the Socket.IO server was attached to a uWebSockets.js server
+        (0, uws_1.restoreAdapter)();
+        if (this.httpServer) {
+            this.httpServer.close(fn);
+        }
+        else {
+            fn && fn();
+        }
+    }
+    /**
+     * Registers a middleware, which is a function that gets executed for every incoming {@link Socket}.
+     *
+     * @example
+     * io.use((socket, next) => {
+     *   // ...
+     *   next();
+     * });
+     *
+     * @param fn - the middleware function
+     */
+    use(fn) {
+        this.sockets.use(fn);
+        return this;
+    }
+    /**
+     * Targets a room when emitting.
+     *
+     * @example
+     * // the “foo” event will be broadcast to all connected clients in the “room-101” room
+     * io.to("room-101").emit("foo", "bar");
+     *
+     * // with an array of rooms (a client will be notified at most once)
+     * io.to(["room-101", "room-102"]).emit("foo", "bar");
+     *
+     * // with multiple chained calls
+     * io.to("room-101").to("room-102").emit("foo", "bar");
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    to(room) {
+        return this.sockets.to(room);
+    }
+    /**
+     * Targets a room when emitting. Similar to `to()`, but might feel clearer in some cases:
+     *
+     * @example
+     * // disconnect all clients in the "room-101" room
+     * io.in("room-101").disconnectSockets();
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    in(room) {
+        return this.sockets.in(room);
+    }
+    /**
+     * Excludes a room when emitting.
+     *
+     * @example
+     * // the "foo" event will be broadcast to all connected clients, except the ones that are in the "room-101" room
+     * io.except("room-101").emit("foo", "bar");
+     *
+     * // with an array of rooms
+     * io.except(["room-101", "room-102"]).emit("foo", "bar");
+     *
+     * // with multiple chained calls
+     * io.except("room-101").except("room-102").emit("foo", "bar");
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    except(room) {
+        return this.sockets.except(room);
+    }
+    /**
+     * Sends a `message` event to all clients.
+     *
+     * This method mimics the WebSocket.send() method.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/WebSocket/send
+     *
+     * @example
+     * io.send("hello");
+     *
+     * // this is equivalent to
+     * io.emit("message", "hello");
+     *
+     * @return self
+     */
+    send(...args) {
+        // This type-cast is needed because EmitEvents likely doesn't have `message` as a key.
+        // if you specify the EmitEvents, the type of args will be never.
+        this.sockets.emit("message", ...args);
+        return this;
+    }
+    /**
+     * Sends a `message` event to all clients. Alias of {@link send}.
+     *
+     * @return self
+     */
+    write(...args) {
+        // This type-cast is needed because EmitEvents likely doesn't have `message` as a key.
+        // if you specify the EmitEvents, the type of args will be never.
+        this.sockets.emit("message", ...args);
+        return this;
+    }
+    /**
+     * Sends a message to the other Socket.IO servers of the cluster.
+     *
+     * @example
+     * io.serverSideEmit("hello", "world");
+     *
+     * io.on("hello", (arg1) => {
+     *   console.log(arg1); // prints "world"
+     * });
+     *
+     * // acknowledgements (without binary content) are supported too:
+     * io.serverSideEmit("ping", (err, responses) => {
+     *  if (err) {
+     *     // some servers did not acknowledge the event in the given delay
+     *   } else {
+     *     console.log(responses); // one response per server (except the current one)
+     *   }
+     * });
+     *
+     * io.on("ping", (cb) => {
+     *   cb("pong");
+     * });
+     *
+     * @param ev - the event name
+     * @param args - an array of arguments, which may include an acknowledgement callback at the end
+     */
+    serverSideEmit(ev, ...args) {
+        return this.sockets.serverSideEmit(ev, ...args);
+    }
+    /**
+     * Sends a message and expect an acknowledgement from the other Socket.IO servers of the cluster.
+     *
+     * @example
+     * try {
+     *   const responses = await io.serverSideEmitWithAck("ping");
+     *   console.log(responses); // one response per server (except the current one)
+     * } catch (e) {
+     *   // some servers did not acknowledge the event in the given delay
+     * }
+     *
+     * @param ev - the event name
+     * @param args - an array of arguments
+     *
+     * @return a Promise that will be fulfilled when all servers have acknowledged the event
+     */
+    serverSideEmitWithAck(ev, ...args) {
+        return this.sockets.serverSideEmitWithAck(ev, ...args);
+    }
+    /**
+     * Gets a list of socket ids.
+     *
+     * @deprecated this method will be removed in the next major release, please use {@link Server#serverSideEmit} or
+     * {@link Server#fetchSockets} instead.
+     */
+    allSockets() {
+        return this.sockets.allSockets();
+    }
+    /**
+     * Sets the compress flag.
+     *
+     * @example
+     * io.compress(false).emit("hello");
+     *
+     * @param compress - if `true`, compresses the sending data
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    compress(compress) {
+        return this.sockets.compress(compress);
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the event data may be lost if the client is not ready to
+     * receive messages (because of network slowness or other issues, or because they’re connected through long polling
+     * and is in the middle of a request-response cycle).
+     *
+     * @example
+     * io.volatile.emit("hello"); // the clients may or may not receive it
+     *
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    get volatile() {
+        return this.sockets.volatile;
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the event data will only be broadcast to the current node.
+     *
+     * @example
+     * // the “foo” event will be broadcast to all connected clients on this node
+     * io.local.emit("foo", "bar");
+     *
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    get local() {
+        return this.sockets.local;
+    }
+    /**
+     * Adds a timeout in milliseconds for the next operation.
+     *
+     * @example
+     * io.timeout(1000).emit("some-event", (err, responses) => {
+     *   if (err) {
+     *     // some clients did not acknowledge the event in the given delay
+     *   } else {
+     *     console.log(responses); // one response per client
+     *   }
+     * });
+     *
+     * @param timeout
+     */
+    timeout(timeout) {
+        return this.sockets.timeout(timeout);
+    }
+    /**
+     * Returns the matching socket instances.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     * // return all Socket instances
+     * const sockets = await io.fetchSockets();
+     *
+     * // return all Socket instances in the "room1" room
+     * const sockets = await io.in("room1").fetchSockets();
+     *
+     * for (const socket of sockets) {
+     *   console.log(socket.id);
+     *   console.log(socket.handshake);
+     *   console.log(socket.rooms);
+     *   console.log(socket.data);
+     *
+     *   socket.emit("hello");
+     *   socket.join("room1");
+     *   socket.leave("room2");
+     *   socket.disconnect();
+     * }
+     */
+    fetchSockets() {
+        return this.sockets.fetchSockets();
+    }
+    /**
+     * Makes the matching socket instances join the specified rooms.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     *
+     * // make all socket instances join the "room1" room
+     * io.socketsJoin("room1");
+     *
+     * // make all socket instances in the "room1" room join the "room2" and "room3" rooms
+     * io.in("room1").socketsJoin(["room2", "room3"]);
+     *
+     * @param room - a room, or an array of rooms
+     */
+    socketsJoin(room) {
+        return this.sockets.socketsJoin(room);
+    }
+    /**
+     * Makes the matching socket instances leave the specified rooms.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     * // make all socket instances leave the "room1" room
+     * io.socketsLeave("room1");
+     *
+     * // make all socket instances in the "room1" room leave the "room2" and "room3" rooms
+     * io.in("room1").socketsLeave(["room2", "room3"]);
+     *
+     * @param room - a room, or an array of rooms
+     */
+    socketsLeave(room) {
+        return this.sockets.socketsLeave(room);
+    }
+    /**
+     * Makes the matching socket instances disconnect.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     * // make all socket instances disconnect (the connections might be kept alive for other namespaces)
+     * io.disconnectSockets();
+     *
+     * // make all socket instances in the "room1" room disconnect and close the underlying connections
+     * io.in("room1").disconnectSockets(true);
+     *
+     * @param close - whether to close the underlying connection
+     */
+    disconnectSockets(close = false) {
+        return this.sockets.disconnectSockets(close);
+    }
+}
+exports.Server = Server;
+/**
+ * Expose main namespace (/).
+ */
+const emitterMethods = Object.keys(events_1.EventEmitter.prototype).filter(function (key) {
+    return typeof events_1.EventEmitter.prototype[key] === "function";
+});
+emitterMethods.forEach(function (fn) {
+    Server.prototype[fn] = function () {
+        return this.sockets[fn].apply(this.sockets, arguments);
+    };
+});
+module.exports = (srv, opts) => new Server(srv, opts);
+module.exports.Server = Server;
+module.exports.Namespace = namespace_1.Namespace;
+module.exports.Socket = socket_1.Socket;
+
+
+/***/ },
+
+/***/ 4321
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 var fs = __webpack_require__(9896)
 var path = __webpack_require__(6928)
@@ -31562,6 +39148,7 @@ load.matchTuple = matchTuple
 load.compareTuples = compareTuples
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4371:
@@ -31872,6 +39459,486 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("events");
 
 /***/ 4538:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 4328
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Socket = void 0;
+const events_1 = __webpack_require__(4434);
+const debug_1 = __webpack_require__(8725);
+const timers_1 = __webpack_require__(3557);
+const debug = (0, debug_1.default)("engine:socket");
+class Socket extends events_1.EventEmitter {
+    get readyState() {
+        return this._readyState;
+    }
+    set readyState(state) {
+        debug("readyState updated from %s to %s", this._readyState, state);
+        this._readyState = state;
+    }
+    constructor(id, server, transport, req, protocol) {
+        super();
+        /**
+         * The current state of the socket.
+         */
+        this._readyState = "opening";
+        /* private */ this.upgrading = false;
+        /* private */ this.upgraded = false;
+        this.writeBuffer = [];
+        this.packetsFn = [];
+        this.sentCallbackFn = [];
+        this.cleanupFn = [];
+        this.id = id;
+        this.server = server;
+        this.request = req;
+        this.protocol = protocol;
+        // Cache IP since it might not be in the req later
+        if (req) {
+            if (req.websocket && req.websocket._socket) {
+                this.remoteAddress = req.websocket._socket.remoteAddress;
+            }
+            else {
+                this.remoteAddress = req.connection.remoteAddress;
+            }
+        }
+        else {
+            // TODO there is currently no way to get the IP address of the client when it connects with WebTransport
+            //  see https://github.com/fails-components/webtransport/issues/114
+        }
+        this.pingTimeoutTimer = null;
+        this.pingIntervalTimer = null;
+        this.setTransport(transport);
+        this.onOpen();
+    }
+    /**
+     * Called upon transport considered open.
+     *
+     * @private
+     */
+    onOpen() {
+        this.readyState = "open";
+        // sends an `open` packet
+        this.transport.sid = this.id;
+        this.sendPacket("open", JSON.stringify({
+            sid: this.id,
+            upgrades: this.getAvailableUpgrades(),
+            pingInterval: this.server.opts.pingInterval,
+            pingTimeout: this.server.opts.pingTimeout,
+            maxPayload: this.server.opts.maxHttpBufferSize,
+        }));
+        if (this.server.opts.initialPacket) {
+            this.sendPacket("message", this.server.opts.initialPacket);
+        }
+        this.emit("open");
+        if (this.protocol === 3) {
+            // in protocol v3, the client sends a ping, and the server answers with a pong
+            this.resetPingTimeout();
+        }
+        else {
+            // in protocol v4, the server sends a ping, and the client answers with a pong
+            this.schedulePing();
+        }
+    }
+    /**
+     * Called upon transport packet.
+     *
+     * @param {Object} packet
+     * @private
+     */
+    onPacket(packet) {
+        if ("open" !== this.readyState) {
+            return debug("packet received with closed socket");
+        }
+        // export packet event
+        debug(`received packet ${packet.type}`);
+        this.emit("packet", packet);
+        switch (packet.type) {
+            case "ping":
+                if (this.transport.protocol !== 3) {
+                    this.onError(new Error("invalid heartbeat direction"));
+                    return;
+                }
+                debug("got ping");
+                this.pingTimeoutTimer.refresh();
+                this.sendPacket("pong");
+                this.emit("heartbeat");
+                break;
+            case "pong":
+                if (this.transport.protocol === 3) {
+                    this.onError(new Error("invalid heartbeat direction"));
+                    return;
+                }
+                debug("got pong");
+                (0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+                this.pingIntervalTimer.refresh();
+                this.emit("heartbeat");
+                break;
+            case "error":
+                this.onClose("parse error");
+                break;
+            case "message":
+                this.emit("data", packet.data);
+                this.emit("message", packet.data);
+                break;
+        }
+    }
+    /**
+     * Called upon transport error.
+     *
+     * @param {Error} err - error object
+     * @private
+     */
+    onError(err) {
+        debug("transport error");
+        this.onClose("transport error", err);
+    }
+    /**
+     * Pings client every `this.pingInterval` and expects response
+     * within `this.pingTimeout` or closes connection.
+     *
+     * @private
+     */
+    schedulePing() {
+        this.pingIntervalTimer = (0, timers_1.setTimeout)(() => {
+            debug("writing ping packet - expecting pong within %sms", this.server.opts.pingTimeout);
+            this.sendPacket("ping");
+            this.resetPingTimeout();
+        }, this.server.opts.pingInterval);
+    }
+    /**
+     * Resets ping timeout.
+     *
+     * @private
+     */
+    resetPingTimeout() {
+        (0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+        this.pingTimeoutTimer = (0, timers_1.setTimeout)(() => {
+            if (this.readyState === "closed")
+                return;
+            this.onClose("ping timeout");
+        }, this.protocol === 3
+            ? this.server.opts.pingInterval + this.server.opts.pingTimeout
+            : this.server.opts.pingTimeout);
+    }
+    /**
+     * Attaches handlers for the given transport.
+     *
+     * @param {Transport} transport
+     * @private
+     */
+    setTransport(transport) {
+        const onError = this.onError.bind(this);
+        const onReady = () => this.flush();
+        const onPacket = this.onPacket.bind(this);
+        const onDrain = this.onDrain.bind(this);
+        const onClose = this.onClose.bind(this, "transport close");
+        this.transport = transport;
+        this.transport.once("error", onError);
+        this.transport.on("ready", onReady);
+        this.transport.on("packet", onPacket);
+        this.transport.on("drain", onDrain);
+        this.transport.once("close", onClose);
+        this.cleanupFn.push(function () {
+            transport.removeListener("error", onError);
+            transport.removeListener("ready", onReady);
+            transport.removeListener("packet", onPacket);
+            transport.removeListener("drain", onDrain);
+            transport.removeListener("close", onClose);
+        });
+    }
+    /**
+     * Upon transport "drain" event
+     *
+     * @private
+     */
+    onDrain() {
+        if (this.sentCallbackFn.length > 0) {
+            debug("executing batch send callback");
+            const seqFn = this.sentCallbackFn.shift();
+            if (seqFn) {
+                for (let i = 0; i < seqFn.length; i++) {
+                    seqFn[i](this.transport);
+                }
+            }
+        }
+    }
+    /**
+     * Upgrades socket to the given transport
+     *
+     * @param {Transport} transport
+     * @private
+     */
+    /* private */ _maybeUpgrade(transport) {
+        debug('might upgrade socket transport from "%s" to "%s"', this.transport.name, transport.name);
+        this.upgrading = true;
+        // set transport upgrade timer
+        const upgradeTimeoutTimer = (0, timers_1.setTimeout)(() => {
+            debug("client did not complete upgrade - closing transport");
+            cleanup();
+            if ("open" === transport.readyState) {
+                transport.close();
+            }
+        }, this.server.opts.upgradeTimeout);
+        let checkIntervalTimer;
+        const onPacket = (packet) => {
+            if ("ping" === packet.type && "probe" === packet.data) {
+                debug("got probe ping packet, sending pong");
+                transport.send([{ type: "pong", data: "probe" }]);
+                this.emit("upgrading", transport);
+                clearInterval(checkIntervalTimer);
+                checkIntervalTimer = setInterval(check, 100);
+            }
+            else if ("upgrade" === packet.type && this.readyState !== "closed") {
+                debug("got upgrade packet - upgrading");
+                cleanup();
+                this.transport.discard();
+                this.upgraded = true;
+                this.clearTransport();
+                this.setTransport(transport);
+                this.emit("upgrade", transport);
+                this.flush();
+                if (this.readyState === "closing") {
+                    transport.close(() => {
+                        this.onClose("forced close");
+                    });
+                }
+            }
+            else {
+                cleanup();
+                transport.close();
+            }
+        };
+        // we force a polling cycle to ensure a fast upgrade
+        const check = () => {
+            if ("polling" === this.transport.name && this.transport.writable) {
+                debug("writing a noop packet to polling for fast upgrade");
+                this.transport.send([{ type: "noop" }]);
+            }
+        };
+        const cleanup = () => {
+            this.upgrading = false;
+            clearInterval(checkIntervalTimer);
+            (0, timers_1.clearTimeout)(upgradeTimeoutTimer);
+            transport.removeListener("packet", onPacket);
+            transport.removeListener("close", onTransportClose);
+            transport.removeListener("error", onError);
+            this.removeListener("close", onClose);
+        };
+        const onError = (err) => {
+            debug("client did not complete upgrade - %s", err);
+            cleanup();
+            transport.close();
+            transport = null;
+        };
+        const onTransportClose = () => {
+            onError("transport closed");
+        };
+        const onClose = () => {
+            onError("socket closed");
+        };
+        transport.on("packet", onPacket);
+        transport.once("close", onTransportClose);
+        transport.once("error", onError);
+        this.once("close", onClose);
+    }
+    /**
+     * Clears listeners and timers associated with current transport.
+     *
+     * @private
+     */
+    clearTransport() {
+        let cleanup;
+        const toCleanUp = this.cleanupFn.length;
+        for (let i = 0; i < toCleanUp; i++) {
+            cleanup = this.cleanupFn.shift();
+            cleanup();
+        }
+        // silence further transport errors and prevent uncaught exceptions
+        this.transport.on("error", function () {
+            debug("error triggered by discarded transport");
+        });
+        // ensure transport won't stay open
+        this.transport.close();
+        (0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+    }
+    /**
+     * Called upon transport considered closed.
+     * Possible reasons: `ping timeout`, `client error`, `parse error`,
+     * `transport error`, `server close`, `transport close`
+     */
+    onClose(reason, description) {
+        if ("closed" !== this.readyState) {
+            this.readyState = "closed";
+            // clear timers
+            (0, timers_1.clearTimeout)(this.pingIntervalTimer);
+            (0, timers_1.clearTimeout)(this.pingTimeoutTimer);
+            // clean writeBuffer in next tick, so developers can still
+            // grab the writeBuffer on 'close' event
+            process.nextTick(() => {
+                this.writeBuffer = [];
+            });
+            this.packetsFn = [];
+            this.sentCallbackFn = [];
+            this.clearTransport();
+            this.emit("close", reason, description);
+        }
+    }
+    /**
+     * Sends a message packet.
+     *
+     * @param {Object} data
+     * @param {Object} options
+     * @param {Function} callback
+     * @return {Socket} for chaining
+     */
+    send(data, options, callback) {
+        this.sendPacket("message", data, options, callback);
+        return this;
+    }
+    /**
+     * Alias of {@link send}.
+     *
+     * @param data
+     * @param options
+     * @param callback
+     */
+    write(data, options, callback) {
+        this.sendPacket("message", data, options, callback);
+        return this;
+    }
+    /**
+     * Sends a packet.
+     *
+     * @param {String} type - packet type
+     * @param {String} data
+     * @param {Object} options
+     * @param {Function} callback
+     *
+     * @private
+     */
+    sendPacket(type, data, options = {}, callback) {
+        if ("function" === typeof options) {
+            callback = options;
+            options = {};
+        }
+        if ("closing" !== this.readyState && "closed" !== this.readyState) {
+            debug('sending packet "%s" (%s)', type, data);
+            // compression is enabled by default
+            options.compress = options.compress !== false;
+            const packet = {
+                type,
+                options: options,
+            };
+            if (data)
+                packet.data = data;
+            // exports packetCreate event
+            this.emit("packetCreate", packet);
+            this.writeBuffer.push(packet);
+            // add send callback to object, if defined
+            if ("function" === typeof callback)
+                this.packetsFn.push(callback);
+            this.flush();
+        }
+    }
+    /**
+     * Attempts to flush the packets buffer.
+     *
+     * @private
+     */
+    flush() {
+        if ("closed" !== this.readyState &&
+            this.transport.writable &&
+            this.writeBuffer.length) {
+            debug("flushing buffer to transport");
+            this.emit("flush", this.writeBuffer);
+            this.server.emit("flush", this, this.writeBuffer);
+            const wbuf = this.writeBuffer;
+            this.writeBuffer = [];
+            if (this.packetsFn.length) {
+                this.sentCallbackFn.push(this.packetsFn);
+                this.packetsFn = [];
+            }
+            else {
+                this.sentCallbackFn.push(null);
+            }
+            this.transport.send(wbuf);
+            this.emit("drain");
+            this.server.emit("drain", this);
+        }
+    }
+    /**
+     * Get available upgrades for this socket.
+     *
+     * @private
+     */
+    getAvailableUpgrades() {
+        const availableUpgrades = [];
+        const allUpgrades = this.server.upgrades(this.transport.name);
+        for (let i = 0; i < allUpgrades.length; ++i) {
+            const upg = allUpgrades[i];
+            if (this.server.opts.transports.indexOf(upg) !== -1) {
+                availableUpgrades.push(upg);
+            }
+        }
+        return availableUpgrades;
+    }
+    /**
+     * Closes the socket and underlying transport.
+     *
+     * @param {Boolean} discard - optional, discard the transport
+     * @return {Socket} for chaining
+     */
+    close(discard) {
+        if (discard &&
+            (this.readyState === "open" || this.readyState === "closing")) {
+            return this.closeTransport(discard);
+        }
+        if ("open" !== this.readyState)
+            return;
+        this.readyState = "closing";
+        if (this.writeBuffer.length) {
+            debug("there are %d remaining packets in the buffer, waiting for the 'drain' event", this.writeBuffer.length);
+            this.once("drain", () => {
+                debug("all packets have been sent, closing the transport");
+                this.closeTransport(discard);
+            });
+            return;
+        }
+        debug("the buffer is empty, closing the transport right away");
+        this.closeTransport(discard);
+    }
+    /**
+     * Closes the underlying transport.
+     *
+     * @param {Boolean} discard
+     * @private
+     */
+    closeTransport(discard) {
+        debug("closing the transport (discard? %s)", !!discard);
+        if (discard)
+            this.transport.discard();
+        this.transport.close(this.onClose.bind(this, "forced close"));
+    }
+}
+exports.Socket = Socket;
+
+
+/***/ },
+
+/***/ 4434
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("events");
+
+/***/ },
+
+/***/ 4538
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -32022,6 +40089,7 @@ exports.YAMLMap = YAMLMap;
 exports.findPair = findPair;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4756:
@@ -32033,6 +40101,399 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("tls");
 
 /***/ 4795:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 4554
+(module) {
+
+
+
+/**
+ * Masks a buffer using the given mask.
+ *
+ * @param {Buffer} source The buffer to mask
+ * @param {Buffer} mask The mask to use
+ * @param {Buffer} output The buffer where to store the result
+ * @param {Number} offset The offset at which to start writing
+ * @param {Number} length The number of bytes to mask.
+ * @public
+ */
+const mask = (source, mask, output, offset, length) => {
+  for (var i = 0; i < length; i++) {
+    output[offset + i] = source[i] ^ mask[i & 3];
+  }
+};
+
+/**
+ * Unmasks a buffer using the given mask.
+ *
+ * @param {Buffer} buffer The buffer to unmask
+ * @param {Buffer} mask The mask to use
+ * @public
+ */
+const unmask = (buffer, mask) => {
+  // Required until https://github.com/nodejs/node/issues/9006 is resolved.
+  const length = buffer.length;
+  for (var i = 0; i < length; i++) {
+    buffer[i] ^= mask[i & 3];
+  }
+};
+
+module.exports = { mask, unmask };
+
+
+/***/ },
+
+/***/ 4571
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Polling = void 0;
+const transport_1 = __webpack_require__(7388);
+const zlib_1 = __webpack_require__(3106);
+const accepts = __webpack_require__(9);
+const debug_1 = __webpack_require__(8725);
+const debug = (0, debug_1.default)("engine:polling");
+const compressionMethods = {
+    gzip: zlib_1.createGzip,
+    deflate: zlib_1.createDeflate,
+};
+class Polling extends transport_1.Transport {
+    /**
+     * HTTP polling constructor.
+     */
+    constructor(req) {
+        super(req);
+        this.closeTimeout = 30 * 1000;
+    }
+    /**
+     * Transport name
+     */
+    get name() {
+        return "polling";
+    }
+    /**
+     * Overrides onRequest.
+     *
+     * @param {EngineRequest} req
+     * @package
+     */
+    onRequest(req) {
+        const res = req.res;
+        // remove the reference to the ServerResponse object (as the first request of the session is kept in memory by default)
+        req.res = null;
+        if ("GET" === req.method) {
+            this.onPollRequest(req, res);
+        }
+        else if ("POST" === req.method) {
+            this.onDataRequest(req, res);
+        }
+        else {
+            res.writeHead(500);
+            res.end();
+        }
+    }
+    /**
+     * The client sends a request awaiting for us to send data.
+     *
+     * @private
+     */
+    onPollRequest(req, res) {
+        if (this.req) {
+            debug("request overlap");
+            // assert: this.res, '.req and .res should be (un)set together'
+            this.onError("overlap from client");
+            res.writeHead(400);
+            res.end();
+            return;
+        }
+        debug("setting request");
+        this.req = req;
+        this.res = res;
+        const onClose = () => {
+            this.onError("poll connection closed prematurely");
+        };
+        const cleanup = () => {
+            req.removeListener("close", onClose);
+            this.req = this.res = null;
+        };
+        req.cleanup = cleanup;
+        req.on("close", onClose);
+        this.writable = true;
+        this.emit("ready");
+        // if we're still writable but had a pending close, trigger an empty send
+        if (this.writable && this.shouldClose) {
+            debug("triggering empty send to append close packet");
+            this.send([{ type: "noop" }]);
+        }
+    }
+    /**
+     * The client sends a request with data.
+     *
+     * @private
+     */
+    onDataRequest(req, res) {
+        if (this.dataReq) {
+            // assert: this.dataRes, '.dataReq and .dataRes should be (un)set together'
+            this.onError("data request overlap from client");
+            res.writeHead(400);
+            res.end();
+            return;
+        }
+        const isBinary = "application/octet-stream" === req.headers["content-type"];
+        if (isBinary && this.protocol === 4) {
+            return this.onError("invalid content");
+        }
+        this.dataReq = req;
+        this.dataRes = res;
+        let chunks = isBinary ? Buffer.concat([]) : "";
+        const cleanup = () => {
+            req.removeListener("data", onData);
+            req.removeListener("end", onEnd);
+            req.removeListener("close", onClose);
+            this.dataReq = this.dataRes = chunks = null;
+        };
+        const onClose = () => {
+            cleanup();
+            this.onError("data request connection closed prematurely");
+        };
+        const onData = (data) => {
+            let contentLength;
+            if (isBinary) {
+                chunks = Buffer.concat([chunks, data]);
+                contentLength = chunks.length;
+            }
+            else {
+                chunks += data;
+                contentLength = Buffer.byteLength(chunks);
+            }
+            if (contentLength > this.maxHttpBufferSize) {
+                res.writeHead(413).end();
+                cleanup();
+            }
+        };
+        const onEnd = () => {
+            this.onData(chunks);
+            const headers = {
+                // text/html is required instead of text/plain to avoid an
+                // unwanted download dialog on certain user-agents (GH-43)
+                "Content-Type": "text/html",
+                "Content-Length": "2",
+            };
+            res.writeHead(200, this.headers(req, headers));
+            res.end("ok");
+            cleanup();
+        };
+        req.on("close", onClose);
+        if (!isBinary)
+            req.setEncoding("utf8");
+        req.on("data", onData);
+        req.on("end", onEnd);
+    }
+    /**
+     * Processes the incoming data payload.
+     *
+     * @param data - encoded payload
+     * @protected
+     */
+    onData(data) {
+        debug('received "%s"', data);
+        const callback = (packet) => {
+            if ("close" === packet.type) {
+                debug("got xhr close packet");
+                this.onClose();
+                return false;
+            }
+            this.onPacket(packet);
+        };
+        if (this.protocol === 3) {
+            this.parser.decodePayload(data, callback);
+        }
+        else {
+            this.parser.decodePayload(data).forEach(callback);
+        }
+    }
+    /**
+     * Overrides onClose.
+     *
+     * @private
+     */
+    onClose() {
+        if (this.writable) {
+            // close pending poll request
+            this.send([{ type: "noop" }]);
+        }
+        super.onClose();
+    }
+    send(packets) {
+        this.writable = false;
+        if (this.shouldClose) {
+            debug("appending close packet to payload");
+            packets.push({ type: "close" });
+            this.shouldClose();
+            this.shouldClose = null;
+        }
+        const doWrite = (data) => {
+            const compress = packets.some((packet) => {
+                return packet.options && packet.options.compress;
+            });
+            this.write(data, { compress });
+        };
+        if (this.protocol === 3) {
+            this.parser.encodePayload(packets, this.supportsBinary, doWrite);
+        }
+        else {
+            this.parser.encodePayload(packets, doWrite);
+        }
+    }
+    /**
+     * Writes data as response to poll request.
+     *
+     * @param {String} data
+     * @param {Object} options
+     * @private
+     */
+    write(data, options) {
+        debug('writing "%s"', data);
+        this.doWrite(data, options, () => {
+            this.req.cleanup();
+            this.emit("drain");
+        });
+    }
+    /**
+     * Performs the write.
+     *
+     * @protected
+     */
+    doWrite(data, options, callback) {
+        // explicit UTF-8 is required for pages not served under utf
+        const isString = typeof data === "string";
+        const contentType = isString
+            ? "text/plain; charset=UTF-8"
+            : "application/octet-stream";
+        const headers = {
+            "Content-Type": contentType,
+        };
+        const respond = (data) => {
+            headers["Content-Length"] =
+                "string" === typeof data ? Buffer.byteLength(data) : data.length;
+            this.res.writeHead(200, this.headers(this.req, headers));
+            this.res.end(data);
+            callback();
+        };
+        if (!this.httpCompression || !options.compress) {
+            respond(data);
+            return;
+        }
+        const len = isString ? Buffer.byteLength(data) : data.length;
+        if (len < this.httpCompression.threshold) {
+            respond(data);
+            return;
+        }
+        const encoding = accepts(this.req).encodings(["gzip", "deflate"]);
+        if (!encoding) {
+            respond(data);
+            return;
+        }
+        this.compress(data, encoding, (err, data) => {
+            if (err) {
+                this.res.writeHead(500);
+                this.res.end();
+                callback(err);
+                return;
+            }
+            headers["Content-Encoding"] = encoding;
+            respond(data);
+        });
+    }
+    /**
+     * Compresses data.
+     *
+     * @private
+     */
+    compress(data, encoding, callback) {
+        debug("compressing");
+        const buffers = [];
+        let nread = 0;
+        compressionMethods[encoding](this.httpCompression)
+            .on("error", callback)
+            .on("data", function (chunk) {
+            buffers.push(chunk);
+            nread += chunk.length;
+        })
+            .on("end", function () {
+            callback(null, Buffer.concat(buffers, nread));
+        })
+            .end(data);
+    }
+    /**
+     * Closes the transport.
+     *
+     * @private
+     */
+    doClose(fn) {
+        debug("closing");
+        let closeTimeoutTimer;
+        if (this.dataReq) {
+            debug("aborting ongoing data request");
+            this.dataReq.destroy();
+        }
+        const onClose = () => {
+            clearTimeout(closeTimeoutTimer);
+            fn();
+            this.onClose();
+        };
+        if (this.writable) {
+            debug("transport writable - closing right away");
+            this.send([{ type: "close" }]);
+            onClose();
+        }
+        else if (this.discarded) {
+            debug("transport discarded - closing right away");
+            onClose();
+        }
+        else {
+            debug("transport not writable - buffering orderly close");
+            this.shouldClose = onClose;
+            closeTimeoutTimer = setTimeout(onClose, this.closeTimeout);
+        }
+    }
+    /**
+     * Returns headers for a response.
+     *
+     * @param {http.IncomingMessage} req
+     * @param {Object} headers - extra headers
+     * @private
+     */
+    headers(req, headers = {}) {
+        // prevent XSS warnings on IE
+        // https://github.com/LearnBoost/socket.io/pull/1333
+        const ua = req.headers["user-agent"];
+        if (ua && (~ua.indexOf(";MSIE") || ~ua.indexOf("Trident/"))) {
+            headers["X-XSS-Protection"] = "0";
+        }
+        headers["cache-control"] = "no-store";
+        this.emit("headers", headers, req);
+        return headers;
+    }
+}
+exports.Polling = Polling;
+
+
+/***/ },
+
+/***/ 4756
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("tls");
+
+/***/ },
+
+/***/ 4795
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*!
  * vary
@@ -32185,10 +40646,810 @@ function vary (res, field) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4884:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 4846
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Server = exports.BaseServer = void 0;
+const qs = __webpack_require__(3480);
+const url_1 = __webpack_require__(7016);
+const base64id = __webpack_require__(6821);
+const transports_1 = __webpack_require__(188);
+const events_1 = __webpack_require__(4434);
+const socket_1 = __webpack_require__(4328);
+const debug_1 = __webpack_require__(8725);
+const cookie_1 = __webpack_require__(4058);
+const ws_1 = __webpack_require__(6308);
+const webtransport_1 = __webpack_require__(4013);
+const engine_io_parser_1 = __webpack_require__(2680);
+const debug = (0, debug_1.default)("engine");
+const kResponseHeaders = Symbol("responseHeaders");
+function parseSessionId(data) {
+    try {
+        const parsed = JSON.parse(data);
+        if (typeof parsed.sid === "string") {
+            return parsed.sid;
+        }
+    }
+    catch (e) { }
+}
+class BaseServer extends events_1.EventEmitter {
+    /**
+     * Server constructor.
+     *
+     * @param {Object} opts - options
+     */
+    constructor(opts = {}) {
+        super();
+        this.middlewares = [];
+        this.clients = {};
+        this.clientsCount = 0;
+        this.opts = Object.assign({
+            wsEngine: ws_1.Server,
+            pingTimeout: 20000,
+            pingInterval: 25000,
+            upgradeTimeout: 10000,
+            maxHttpBufferSize: 1e6,
+            transports: ["polling", "websocket"], // WebTransport is disabled by default
+            allowUpgrades: true,
+            httpCompression: {
+                threshold: 1024,
+            },
+            cors: false,
+            allowEIO3: false,
+        }, opts);
+        if (opts.cookie) {
+            this.opts.cookie = Object.assign({
+                name: "io",
+                path: "/",
+                // @ts-ignore
+                httpOnly: opts.cookie.path !== false,
+                sameSite: "lax",
+            }, opts.cookie);
+        }
+        if (this.opts.cors) {
+            this.use(__webpack_require__(6388)(this.opts.cors));
+        }
+        if (opts.perMessageDeflate) {
+            this.opts.perMessageDeflate = Object.assign({
+                threshold: 1024,
+            }, opts.perMessageDeflate);
+        }
+        this.init();
+    }
+    /**
+     * Compute the pathname of the requests that are handled by the server
+     * @param options
+     * @protected
+     */
+    _computePath(options) {
+        let path = (options.path || "/engine.io").replace(/\/$/, "");
+        if (options.addTrailingSlash !== false) {
+            // normalize path
+            path += "/";
+        }
+        return path;
+    }
+    /**
+     * Returns a list of available transports for upgrade given a certain transport.
+     *
+     * @return {Array}
+     */
+    upgrades(transport) {
+        if (!this.opts.allowUpgrades)
+            return [];
+        return transports_1.default[transport].upgradesTo || [];
+    }
+    /**
+     * Verifies a request.
+     *
+     * @param {EngineRequest} req
+     * @param upgrade - whether it's an upgrade request
+     * @param fn
+     * @protected
+     */
+    verify(req, upgrade, fn) {
+        // transport check
+        const transport = req._query.transport;
+        // WebTransport does not go through the verify() method, see the onWebTransportSession() method
+        if (!~this.opts.transports.indexOf(transport) ||
+            transport === "webtransport") {
+            debug('unknown transport "%s"', transport);
+            return fn(Server.errors.UNKNOWN_TRANSPORT, { transport });
+        }
+        // 'Origin' header check
+        const isOriginInvalid = checkInvalidHeaderChar(req.headers.origin);
+        if (isOriginInvalid) {
+            const origin = req.headers.origin;
+            req.headers.origin = null;
+            debug("origin header invalid");
+            return fn(Server.errors.BAD_REQUEST, {
+                name: "INVALID_ORIGIN",
+                origin,
+            });
+        }
+        // sid check
+        const sid = req._query.sid;
+        if (sid) {
+            if (!this.clients.hasOwnProperty(sid)) {
+                debug('unknown sid "%s"', sid);
+                return fn(Server.errors.UNKNOWN_SID, {
+                    sid,
+                });
+            }
+            const previousTransport = this.clients[sid].transport.name;
+            if (!upgrade && previousTransport !== transport) {
+                debug("bad request: unexpected transport without upgrade");
+                return fn(Server.errors.BAD_REQUEST, {
+                    name: "TRANSPORT_MISMATCH",
+                    transport,
+                    previousTransport,
+                });
+            }
+        }
+        else {
+            // handshake is GET only
+            if ("GET" !== req.method) {
+                return fn(Server.errors.BAD_HANDSHAKE_METHOD, {
+                    method: req.method,
+                });
+            }
+            if (transport === "websocket" && !upgrade) {
+                debug("invalid transport upgrade");
+                return fn(Server.errors.BAD_REQUEST, {
+                    name: "TRANSPORT_HANDSHAKE_ERROR",
+                });
+            }
+            if (!this.opts.allowRequest)
+                return fn();
+            return this.opts.allowRequest(req, (message, success) => {
+                if (!success) {
+                    return fn(Server.errors.FORBIDDEN, {
+                        message,
+                    });
+                }
+                fn();
+            });
+        }
+        fn();
+    }
+    /**
+     * Adds a new middleware.
+     *
+     * @example
+     * import helmet from "helmet";
+     *
+     * engine.use(helmet());
+     *
+     * @param fn
+     */
+    use(fn) {
+        this.middlewares.push(fn);
+    }
+    /**
+     * Apply the middlewares to the request.
+     *
+     * @param req
+     * @param res
+     * @param callback
+     * @protected
+     */
+    _applyMiddlewares(req, res, callback) {
+        if (this.middlewares.length === 0) {
+            debug("no middleware to apply, skipping");
+            return callback();
+        }
+        const apply = (i) => {
+            debug("applying middleware n°%d", i + 1);
+            this.middlewares[i](req, res, (err) => {
+                if (err) {
+                    return callback(err);
+                }
+                if (i + 1 < this.middlewares.length) {
+                    apply(i + 1);
+                }
+                else {
+                    callback();
+                }
+            });
+        };
+        apply(0);
+    }
+    /**
+     * Closes all clients.
+     */
+    close() {
+        debug("closing all open clients");
+        for (let i in this.clients) {
+            if (this.clients.hasOwnProperty(i)) {
+                this.clients[i].close(true);
+            }
+        }
+        this.cleanup();
+        return this;
+    }
+    /**
+     * generate a socket id.
+     * Overwrite this method to generate your custom socket id
+     *
+     * @param {IncomingMessage} req - the request object
+     */
+    generateId(req) {
+        return base64id.generateId();
+    }
+    /**
+     * Handshakes a new client.
+     *
+     * @param {String} transportName
+     * @param {Object} req - the request object
+     * @param {Function} closeConnection
+     *
+     * @protected
+     */
+    async handshake(transportName, req, closeConnection) {
+        const protocol = req._query.EIO === "4" ? 4 : 3; // 3rd revision by default
+        if (protocol === 3 && !this.opts.allowEIO3) {
+            debug("unsupported protocol version");
+            this.emit("connection_error", {
+                req,
+                code: Server.errors.UNSUPPORTED_PROTOCOL_VERSION,
+                message: Server.errorMessages[Server.errors.UNSUPPORTED_PROTOCOL_VERSION],
+                context: {
+                    protocol,
+                },
+            });
+            closeConnection(Server.errors.UNSUPPORTED_PROTOCOL_VERSION);
+            return;
+        }
+        let id;
+        try {
+            id = await this.generateId(req);
+        }
+        catch (e) {
+            debug("error while generating an id");
+            this.emit("connection_error", {
+                req,
+                code: Server.errors.BAD_REQUEST,
+                message: Server.errorMessages[Server.errors.BAD_REQUEST],
+                context: {
+                    name: "ID_GENERATION_ERROR",
+                    error: e,
+                },
+            });
+            closeConnection(Server.errors.BAD_REQUEST);
+            return;
+        }
+        debug('handshaking client "%s"', id);
+        try {
+            var transport = this.createTransport(transportName, req);
+            if ("polling" === transportName) {
+                transport.maxHttpBufferSize = this.opts.maxHttpBufferSize;
+                transport.httpCompression = this.opts.httpCompression;
+            }
+            else if ("websocket" === transportName) {
+                transport.perMessageDeflate = this.opts.perMessageDeflate;
+            }
+        }
+        catch (e) {
+            debug('error handshaking to transport "%s"', transportName);
+            this.emit("connection_error", {
+                req,
+                code: Server.errors.BAD_REQUEST,
+                message: Server.errorMessages[Server.errors.BAD_REQUEST],
+                context: {
+                    name: "TRANSPORT_HANDSHAKE_ERROR",
+                    error: e,
+                },
+            });
+            closeConnection(Server.errors.BAD_REQUEST);
+            return;
+        }
+        const socket = new socket_1.Socket(id, this, transport, req, protocol);
+        transport.on("headers", (headers, req) => {
+            const isInitialRequest = !req._query.sid;
+            if (isInitialRequest) {
+                if (this.opts.cookie) {
+                    headers["Set-Cookie"] = [
+                        // @ts-ignore
+                        (0, cookie_1.serialize)(this.opts.cookie.name, id, this.opts.cookie),
+                    ];
+                }
+                this.emit("initial_headers", headers, req);
+            }
+            this.emit("headers", headers, req);
+        });
+        transport.onRequest(req);
+        this.clients[id] = socket;
+        this.clientsCount++;
+        socket.once("close", () => {
+            delete this.clients[id];
+            this.clientsCount--;
+        });
+        this.emit("connection", socket);
+        return transport;
+    }
+    async onWebTransportSession(session) {
+        const timeout = setTimeout(() => {
+            debug("the client failed to establish a bidirectional stream in the given period");
+            session.close();
+        }, this.opts.upgradeTimeout);
+        const streamReader = session.incomingBidirectionalStreams.getReader();
+        const result = await streamReader.read();
+        if (result.done) {
+            debug("session is closed");
+            return;
+        }
+        const stream = result.value;
+        const transformStream = (0, engine_io_parser_1.createPacketDecoderStream)(this.opts.maxHttpBufferSize, "nodebuffer");
+        const reader = stream.readable.pipeThrough(transformStream).getReader();
+        // reading the first packet of the stream
+        const { value, done } = await reader.read();
+        if (done) {
+            debug("stream is closed");
+            return;
+        }
+        clearTimeout(timeout);
+        if (value.type !== "open") {
+            debug("invalid WebTransport handshake");
+            return session.close();
+        }
+        if (value.data === undefined) {
+            const transport = new webtransport_1.WebTransport(session, stream, reader);
+            // note: we cannot use "this.generateId()", because there is no "req" argument
+            const id = base64id.generateId();
+            debug('handshaking client "%s" (WebTransport)', id);
+            const socket = new socket_1.Socket(id, this, transport, null, 4);
+            this.clients[id] = socket;
+            this.clientsCount++;
+            socket.once("close", () => {
+                delete this.clients[id];
+                this.clientsCount--;
+            });
+            this.emit("connection", socket);
+            return;
+        }
+        const sid = parseSessionId(value.data);
+        if (!sid) {
+            debug("invalid WebTransport handshake");
+            return session.close();
+        }
+        const client = this.clients[sid];
+        if (!client) {
+            debug("upgrade attempt for closed client");
+            session.close();
+        }
+        else if (client.upgrading) {
+            debug("transport has already been trying to upgrade");
+            session.close();
+        }
+        else if (client.upgraded) {
+            debug("transport had already been upgraded");
+            session.close();
+        }
+        else {
+            debug("upgrading existing transport");
+            const transport = new webtransport_1.WebTransport(session, stream, reader);
+            client._maybeUpgrade(transport);
+        }
+    }
+}
+exports.BaseServer = BaseServer;
+/**
+ * Protocol errors mappings.
+ */
+BaseServer.errors = {
+    UNKNOWN_TRANSPORT: 0,
+    UNKNOWN_SID: 1,
+    BAD_HANDSHAKE_METHOD: 2,
+    BAD_REQUEST: 3,
+    FORBIDDEN: 4,
+    UNSUPPORTED_PROTOCOL_VERSION: 5,
+};
+BaseServer.errorMessages = {
+    0: "Transport unknown",
+    1: "Session ID unknown",
+    2: "Bad handshake method",
+    3: "Bad request",
+    4: "Forbidden",
+    5: "Unsupported protocol version",
+};
+/**
+ * Exposes a subset of the http.ServerResponse interface, in order to be able to apply the middlewares to an upgrade
+ * request.
+ *
+ * @see https://nodejs.org/api/http.html#class-httpserverresponse
+ */
+class WebSocketResponse {
+    constructor(req, socket) {
+        this.req = req;
+        this.socket = socket;
+        // temporarily store the response headers on the req object (see the "headers" event)
+        req[kResponseHeaders] = {};
+    }
+    setHeader(name, value) {
+        this.req[kResponseHeaders][name] = value;
+    }
+    getHeader(name) {
+        return this.req[kResponseHeaders][name];
+    }
+    removeHeader(name) {
+        delete this.req[kResponseHeaders][name];
+    }
+    write() { }
+    writeHead() { }
+    end() {
+        // we could return a proper error code, but the WebSocket client will emit an "error" event anyway.
+        this.socket.destroy();
+    }
+}
+/**
+ * An Engine.IO server based on Node.js built-in HTTP server and the `ws` package for WebSocket connections.
+ */
+class Server extends BaseServer {
+    /**
+     * Initialize websocket server
+     *
+     * @protected
+     */
+    init() {
+        if (!~this.opts.transports.indexOf("websocket"))
+            return;
+        if (this.ws)
+            this.ws.close();
+        this.ws = new this.opts.wsEngine({
+            noServer: true,
+            clientTracking: false,
+            perMessageDeflate: this.opts.perMessageDeflate,
+            maxPayload: this.opts.maxHttpBufferSize,
+        });
+        if (typeof this.ws.on === "function") {
+            this.ws.on("headers", (headersArray, req) => {
+                // note: 'ws' uses an array of headers, while Engine.IO uses an object (response.writeHead() accepts both formats)
+                // we could also try to parse the array and then sync the values, but that will be error-prone
+                const additionalHeaders = req[kResponseHeaders] || {};
+                delete req[kResponseHeaders];
+                const isInitialRequest = !req._query.sid;
+                if (isInitialRequest) {
+                    this.emit("initial_headers", additionalHeaders, req);
+                }
+                this.emit("headers", additionalHeaders, req);
+                debug("writing headers: %j", additionalHeaders);
+                Object.keys(additionalHeaders).forEach((key) => {
+                    headersArray.push(`${key}: ${additionalHeaders[key]}`);
+                });
+            });
+        }
+    }
+    cleanup() {
+        if (this.ws) {
+            debug("closing webSocketServer");
+            this.ws.close();
+            // don't delete this.ws because it can be used again if the http server starts listening again
+        }
+    }
+    /**
+     * Prepares a request by processing the query string.
+     *
+     * @private
+     */
+    prepare(req) {
+        // try to leverage pre-existing `req._query` (e.g: from connect)
+        if (!req._query) {
+            req._query = (~req.url.indexOf("?") ? qs.parse((0, url_1.parse)(req.url).query) : {});
+        }
+    }
+    createTransport(transportName, req) {
+        return new transports_1.default[transportName](req);
+    }
+    /**
+     * Handles an Engine.IO HTTP request.
+     *
+     * @param {EngineRequest} req
+     * @param {ServerResponse} res
+     */
+    handleRequest(req, res) {
+        debug('handling "%s" http request "%s"', req.method, req.url);
+        this.prepare(req);
+        req.res = res;
+        const callback = (errorCode, errorContext) => {
+            if (errorCode !== undefined) {
+                this.emit("connection_error", {
+                    req,
+                    code: errorCode,
+                    message: Server.errorMessages[errorCode],
+                    context: errorContext,
+                });
+                abortRequest(res, errorCode, errorContext);
+                return;
+            }
+            if (req._query.sid) {
+                debug("setting new request for existing client");
+                this.clients[req._query.sid].transport.onRequest(req);
+            }
+            else {
+                const closeConnection = (errorCode, errorContext) => abortRequest(res, errorCode, errorContext);
+                this.handshake(req._query.transport, req, closeConnection);
+            }
+        };
+        this._applyMiddlewares(req, res, (err) => {
+            if (err) {
+                callback(Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+            }
+            else {
+                this.verify(req, false, callback);
+            }
+        });
+    }
+    /**
+     * Handles an Engine.IO HTTP Upgrade.
+     */
+    handleUpgrade(req, socket, upgradeHead) {
+        this.prepare(req);
+        const res = new WebSocketResponse(req, socket);
+        const callback = (errorCode, errorContext) => {
+            if (errorCode !== undefined) {
+                this.emit("connection_error", {
+                    req,
+                    code: errorCode,
+                    message: Server.errorMessages[errorCode],
+                    context: errorContext,
+                });
+                abortUpgrade(socket, errorCode, errorContext);
+                return;
+            }
+            const head = Buffer.from(upgradeHead);
+            upgradeHead = null;
+            // some middlewares (like express-session) wait for the writeHead() call to flush their headers
+            // see https://github.com/expressjs/session/blob/1010fadc2f071ddf2add94235d72224cf65159c6/index.js#L220-L244
+            res.writeHead();
+            // delegate to ws
+            this.ws.handleUpgrade(req, socket, head, (websocket) => {
+                this.onWebSocket(req, socket, websocket);
+            });
+        };
+        this._applyMiddlewares(req, res, (err) => {
+            if (err) {
+                callback(Server.errors.BAD_REQUEST, { name: "MIDDLEWARE_FAILURE" });
+            }
+            else {
+                this.verify(req, true, callback);
+            }
+        });
+    }
+    /**
+     * Called upon a ws.io connection.
+     *
+     * @param {ws.Socket} websocket
+     * @private
+     */
+    onWebSocket(req, socket, websocket) {
+        websocket.on("error", onUpgradeError);
+        if (transports_1.default[req._query.transport] !== undefined &&
+            !transports_1.default[req._query.transport].prototype.handlesUpgrades) {
+            debug("transport doesnt handle upgraded requests");
+            websocket.close();
+            return;
+        }
+        // get client id
+        const id = req._query.sid;
+        // keep a reference to the ws.Socket
+        req.websocket = websocket;
+        if (id) {
+            const client = this.clients[id];
+            if (!client) {
+                debug("upgrade attempt for closed client");
+                websocket.close();
+            }
+            else if (client.upgrading) {
+                debug("transport has already been trying to upgrade");
+                websocket.close();
+            }
+            else if (client.upgraded) {
+                debug("transport had already been upgraded");
+                websocket.close();
+            }
+            else {
+                debug("upgrading existing transport");
+                // transport error handling takes over
+                websocket.removeListener("error", onUpgradeError);
+                const transport = this.createTransport(req._query.transport, req);
+                transport.perMessageDeflate = this.opts.perMessageDeflate;
+                client._maybeUpgrade(transport);
+            }
+        }
+        else {
+            const closeConnection = (errorCode, errorContext) => abortUpgrade(socket, errorCode, errorContext);
+            this.handshake(req._query.transport, req, closeConnection);
+        }
+        function onUpgradeError() {
+            debug("websocket error before upgrade");
+            // websocket.close() not needed
+        }
+    }
+    /**
+     * Captures upgrade requests for a http.Server.
+     *
+     * @param {http.Server} server
+     * @param {Object} options
+     */
+    attach(server, options = {}) {
+        const path = this._computePath(options);
+        const destroyUpgradeTimeout = options.destroyUpgradeTimeout || 1000;
+        function check(req) {
+            // TODO use `path === new URL(...).pathname` in the next major release (ref: https://nodejs.org/api/url.html)
+            return path === req.url.slice(0, path.length);
+        }
+        // cache and clean up listeners
+        const listeners = server.listeners("request").slice(0);
+        server.removeAllListeners("request");
+        server.on("close", this.close.bind(this));
+        server.on("listening", this.init.bind(this));
+        // add request handler
+        server.on("request", (req, res) => {
+            if (check(req)) {
+                debug('intercepting request for path "%s"', path);
+                this.handleRequest(req, res);
+            }
+            else {
+                let i = 0;
+                const l = listeners.length;
+                for (; i < l; i++) {
+                    listeners[i].call(server, req, res);
+                }
+            }
+        });
+        if (~this.opts.transports.indexOf("websocket")) {
+            server.on("upgrade", (req, socket, head) => {
+                if (check(req)) {
+                    this.handleUpgrade(req, socket, head);
+                }
+                else if (false !== options.destroyUpgrade) {
+                    // default node behavior is to disconnect when no handlers
+                    // but by adding a handler, we prevent that
+                    // and if no eio thing handles the upgrade
+                    // then the socket needs to die!
+                    setTimeout(function () {
+                        // @ts-ignore
+                        if (socket.writable && socket.bytesWritten <= 0) {
+                            socket.on("error", (e) => {
+                                debug("error while destroying upgrade: %s", e.message);
+                            });
+                            return socket.end();
+                        }
+                    }, destroyUpgradeTimeout);
+                }
+            });
+        }
+    }
+}
+exports.Server = Server;
+/**
+ * Close the HTTP long-polling request
+ *
+ * @param res - the response object
+ * @param errorCode - the error code
+ * @param errorContext - additional error context
+ *
+ * @private
+ */
+function abortRequest(res, errorCode, errorContext) {
+    const statusCode = errorCode === Server.errors.FORBIDDEN ? 403 : 400;
+    const message = errorContext && errorContext.message
+        ? errorContext.message
+        : Server.errorMessages[errorCode];
+    res.writeHead(statusCode, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({
+        code: errorCode,
+        message,
+    }));
+}
+/**
+ * Close the WebSocket connection
+ *
+ * @param {net.Socket} socket
+ * @param {string} errorCode - the error code
+ * @param {object} errorContext - additional error context
+ */
+function abortUpgrade(socket, errorCode, errorContext = {}) {
+    socket.on("error", () => {
+        debug("ignoring error from closed connection");
+    });
+    if (socket.writable) {
+        const message = errorContext.message || Server.errorMessages[errorCode];
+        const length = Buffer.byteLength(message);
+        socket.write("HTTP/1.1 400 Bad Request\r\n" +
+            "Connection: close\r\n" +
+            "Content-type: text/html\r\n" +
+            "Content-Length: " +
+            length +
+            "\r\n" +
+            "\r\n" +
+            message);
+    }
+    socket.destroy();
+}
+/* eslint-disable */
+/**
+ * From https://github.com/nodejs/node/blob/v8.4.0/lib/_http_common.js#L303-L354
+ *
+ * True if val contains an invalid field-vchar
+ *  field-value    = *( field-content / obs-fold )
+ *  field-content  = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+ *  field-vchar    = VCHAR / obs-text
+ *
+ * checkInvalidHeaderChar() is currently designed to be inlinable by v8,
+ * so take care when making changes to the implementation so that the source
+ * code size does not exceed v8's default max_inlined_source_size setting.
+ **/
+// prettier-ignore
+const validHdrChars = [
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, // 0 - 15
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 16 - 31
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 32 - 47
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 48 - 63
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 64 - 79
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 80 - 95
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 96 - 111
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, // 112 - 127
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 128 ...
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 // ... 255
+];
+function checkInvalidHeaderChar(val) {
+    val += "";
+    if (val.length < 1)
+        return false;
+    if (!validHdrChars[val.charCodeAt(0)]) {
+        debug('invalid header, index 0, char "%s"', val.charCodeAt(0));
+        return true;
+    }
+    if (val.length < 2)
+        return false;
+    if (!validHdrChars[val.charCodeAt(1)]) {
+        debug('invalid header, index 1, char "%s"', val.charCodeAt(1));
+        return true;
+    }
+    if (val.length < 3)
+        return false;
+    if (!validHdrChars[val.charCodeAt(2)]) {
+        debug('invalid header, index 2, char "%s"', val.charCodeAt(2));
+        return true;
+    }
+    if (val.length < 4)
+        return false;
+    if (!validHdrChars[val.charCodeAt(3)]) {
+        debug('invalid header, index 3, char "%s"', val.charCodeAt(3));
+        return true;
+    }
+    for (let i = 4; i < val.length; ++i) {
+        if (!validHdrChars[val.charCodeAt(i)]) {
+            debug('invalid header, index "%i", char "%s"', i, val.charCodeAt(i));
+            return true;
+        }
+    }
+    return false;
+}
+
+
+/***/ },
+
+/***/ 4884
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -33164,6 +42425,7 @@ class Parser {
 exports.Parser = Parser;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 4898:
@@ -33539,6 +42801,12 @@ exports.Polling = Polling;
 
 /***/ 5009:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5009
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -33581,10 +42849,17 @@ exports.Pair = Pair;
 exports.createPair = createPair;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5025:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5025
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -33739,10 +43014,17 @@ exports.collectionFromPath = collectionFromPath;
 exports.isEmptyPath = isEmptyPath;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5075:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5075
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -33810,6 +43092,7 @@ const schema = [map.map, seq.seq].concat(jsonScalars, jsonError);
 exports.schema = schema;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5076:
@@ -34245,6 +43528,178 @@ function decodePayloadAsBinary(data, binaryType, callback) {
 
 /***/ 5158:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5134
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const { Duplex } = __webpack_require__(2203);
+
+/**
+ * Emits the `'close'` event on a stream.
+ *
+ * @param {Duplex} stream The stream.
+ * @private
+ */
+function emitClose(stream) {
+  stream.emit('close');
+}
+
+/**
+ * The listener of the `'end'` event.
+ *
+ * @private
+ */
+function duplexOnEnd() {
+  if (!this.destroyed && this._writableState.finished) {
+    this.destroy();
+  }
+}
+
+/**
+ * The listener of the `'error'` event.
+ *
+ * @param {Error} err The error
+ * @private
+ */
+function duplexOnError(err) {
+  this.removeListener('error', duplexOnError);
+  this.destroy();
+  if (this.listenerCount('error') === 0) {
+    // Do not suppress the throwing behavior.
+    this.emit('error', err);
+  }
+}
+
+/**
+ * Wraps a `WebSocket` in a duplex stream.
+ *
+ * @param {WebSocket} ws The `WebSocket` to wrap
+ * @param {Object} [options] The options for the `Duplex` constructor
+ * @return {Duplex} The duplex stream
+ * @public
+ */
+function createWebSocketStream(ws, options) {
+  let terminateOnDestroy = true;
+
+  const duplex = new Duplex({
+    ...options,
+    autoDestroy: false,
+    emitClose: false,
+    objectMode: false,
+    writableObjectMode: false
+  });
+
+  ws.on('message', function message(msg, isBinary) {
+    const data =
+      !isBinary && duplex._readableState.objectMode ? msg.toString() : msg;
+
+    if (!duplex.push(data)) ws.pause();
+  });
+
+  ws.once('error', function error(err) {
+    if (duplex.destroyed) return;
+
+    // Prevent `ws.terminate()` from being called by `duplex._destroy()`.
+    //
+    // - If the `'error'` event is emitted before the `'open'` event, then
+    //   `ws.terminate()` is a noop as no socket is assigned.
+    // - Otherwise, the error is re-emitted by the listener of the `'error'`
+    //   event of the `Receiver` object. The listener already closes the
+    //   connection by calling `ws.close()`. This allows a close frame to be
+    //   sent to the other peer. If `ws.terminate()` is called right after this,
+    //   then the close frame might not be sent.
+    terminateOnDestroy = false;
+    duplex.destroy(err);
+  });
+
+  ws.once('close', function close() {
+    if (duplex.destroyed) return;
+
+    duplex.push(null);
+  });
+
+  duplex._destroy = function (err, callback) {
+    if (ws.readyState === ws.CLOSED) {
+      callback(err);
+      process.nextTick(emitClose, duplex);
+      return;
+    }
+
+    let called = false;
+
+    ws.once('error', function error(err) {
+      called = true;
+      callback(err);
+    });
+
+    ws.once('close', function close() {
+      if (!called) callback(err);
+      process.nextTick(emitClose, duplex);
+    });
+
+    if (terminateOnDestroy) ws.terminate();
+  };
+
+  duplex._final = function (callback) {
+    if (ws.readyState === ws.CONNECTING) {
+      ws.once('open', function open() {
+        duplex._final(callback);
+      });
+      return;
+    }
+
+    // If the value of the `_socket` property is `null` it means that `ws` is a
+    // client websocket and the handshake failed. In fact, when this happens, a
+    // socket is never assigned to the websocket. Wait for the `'error'` event
+    // that will be emitted by the websocket.
+    if (ws._socket === null) return;
+
+    if (ws._socket._writableState.finished) {
+      callback();
+      if (duplex._readableState.endEmitted) duplex.destroy();
+    } else {
+      ws._socket.once('finish', function finish() {
+        // `duplex` is not destroyed here because the `'end'` event will be
+        // emitted on `duplex` after this `'finish'` event. The EOF signaling
+        // `null` chunk is, in fact, pushed when the websocket emits `'close'`.
+        callback();
+      });
+      ws.close();
+    }
+  };
+
+  duplex._read = function () {
+    if (ws.isPaused) ws.resume();
+  };
+
+  duplex._write = function (chunk, encoding, callback) {
+    if (ws.readyState === ws.CONNECTING) {
+      ws.once('open', function open() {
+        duplex._write(chunk, encoding, callback);
+      });
+      return;
+    }
+
+    ws.send(chunk, callback);
+  };
+
+  duplex.on('end', duplexOnEnd);
+  duplex.on('error', duplexOnError);
+  return duplex;
+}
+
+module.exports = createWebSocketStream;
+
+
+/***/ },
+
+/***/ 5158
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -34473,10 +43928,17 @@ function parseCharCode(source, offset, length, onError) {
 exports.resolveFlowScalar = resolveFlowScalar;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5173:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5173
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const runtimeRequire =  true ? __WEBPACK_EXTERNAL_createRequire_require : 0 // eslint-disable-line
 if (typeof runtimeRequire.addon === 'function') { // if the platform supports native resolving prefer that
@@ -34486,10 +43948,17 @@ if (typeof runtimeRequire.addon === 'function') { // if the platform supports na
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5193:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5193
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -34540,6 +44009,7 @@ exports.floatExp = floatExp;
 exports.floatNaN = floatNaN;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5263:
@@ -36149,6 +45619,26 @@ function checkInvalidHeaderChar(val) {
 
 /***/ 5434:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 5305
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+try {
+  module.exports = __webpack_require__(5173)(__webpack_dirname__);
+} catch (e) {
+  module.exports = __webpack_require__(143);
+}
+
+
+/***/ },
+
+/***/ 5434
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * negotiator
@@ -36446,10 +45936,17 @@ function splitParameters(str) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5509:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5509
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -36494,10 +45991,105 @@ const schema = [
 exports.schema = schema;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5552:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5510
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.StrictEventEmitter = void 0;
+const events_1 = __webpack_require__(4434);
+/**
+ * Strictly typed version of an `EventEmitter`. A `TypedEventEmitter` takes type
+ * parameters for mappings of event names to event data types, and strictly
+ * types method calls to the `EventEmitter` according to these event maps.
+ *
+ * @typeParam ListenEvents - `EventsMap` of user-defined events that can be
+ * listened to with `on` or `once`
+ * @typeParam EmitEvents - `EventsMap` of user-defined events that can be
+ * emitted with `emit`
+ * @typeParam ReservedEvents - `EventsMap` of reserved events, that can be
+ * emitted by socket.io with `emitReserved`, and can be listened to with
+ * `listen`.
+ */
+class StrictEventEmitter extends events_1.EventEmitter {
+    /**
+     * Adds the `listener` function as an event listener for `ev`.
+     *
+     * @param ev Name of the event
+     * @param listener Callback function
+     */
+    on(ev, listener) {
+        return super.on(ev, listener);
+    }
+    /**
+     * Adds a one-time `listener` function as an event listener for `ev`.
+     *
+     * @param ev Name of the event
+     * @param listener Callback function
+     */
+    once(ev, listener) {
+        return super.once(ev, listener);
+    }
+    /**
+     * Emits an event.
+     *
+     * @param ev Name of the event
+     * @param args Values to send to listeners of this event
+     */
+    emit(ev, ...args) {
+        return super.emit(ev, ...args);
+    }
+    /**
+     * Emits a reserved event.
+     *
+     * This method is `protected`, so that only a class extending
+     * `StrictEventEmitter` can emit its own reserved events.
+     *
+     * @param ev Reserved event name
+     * @param args Arguments to emit along with the event
+     */
+    emitReserved(ev, ...args) {
+        return super.emit(ev, ...args);
+    }
+    /**
+     * Emits an event.
+     *
+     * This method is `protected`, so that only a class extending
+     * `StrictEventEmitter` can get around the strict typing. This is useful for
+     * calling `emit.apply`, which can be called as `emitUntyped.apply`.
+     *
+     * @param ev Event name
+     * @param args Arguments to emit along with the event
+     */
+    emitUntyped(ev, ...args) {
+        return super.emit(ev, ...args);
+    }
+    /**
+     * Returns the listeners listening to an event.
+     *
+     * @param event Event name
+     * @returns Array of listeners subscribed to `event`
+     */
+    listeners(event) {
+        return super.listeners(event);
+    }
+}
+exports.StrictEventEmitter = StrictEventEmitter;
+
+
+/***/ },
+
+/***/ 5552
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -36560,10 +46152,17 @@ const mapBinary = (data, binaryType) => {
 };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5559:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5559
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -36582,6 +46181,7 @@ function mapIncludes(ctx, items, search) {
 exports.mapIncludes = mapIncludes;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5651:
@@ -36655,6 +46255,12 @@ module.exports = { parse };
 
 /***/ 5659:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5659
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -36735,6 +46341,7 @@ exports.YAMLOMap = YAMLOMap;
 exports.omap = omap;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5692:
@@ -37089,6 +46696,16 @@ exports.Polling = Polling;
 
 
 const { tokenChars } = __webpack_require__(1610);
+=======
+/***/ },
+
+/***/ 5669
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const { tokenChars } = __webpack_require__(6237);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * Adds an offer to the map of extension offers or a parameter to the map of
@@ -37291,6 +46908,7 @@ function format(extensions) {
 module.exports = { format, parse };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5838:
@@ -37356,6 +46974,120 @@ function attach(server, options) {
 
 /***/ 5849:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5692
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("https");
+
+/***/ },
+
+/***/ 5787
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.WebSocket = void 0;
+const transport_1 = __webpack_require__(7388);
+const debug_1 = __webpack_require__(8725);
+const debug = (0, debug_1.default)("engine:ws");
+class WebSocket extends transport_1.Transport {
+    /**
+     * WebSocket transport
+     *
+     * @param {EngineRequest} req
+     */
+    constructor(req) {
+        super(req);
+        this._doSend = (data) => {
+            this.socket.send(data, this._onSent);
+        };
+        this._doSendLast = (data) => {
+            this.socket.send(data, this._onSentLast);
+        };
+        this._onSent = (err) => {
+            if (err) {
+                this.onError("write error", err.stack);
+            }
+        };
+        this._onSentLast = (err) => {
+            if (err) {
+                this.onError("write error", err.stack);
+            }
+            else {
+                this.emit("drain");
+                this.writable = true;
+                this.emit("ready");
+            }
+        };
+        this.socket = req.websocket;
+        this.socket.on("message", (data, isBinary) => {
+            const message = isBinary ? data : data.toString();
+            debug('received "%s"', message);
+            super.onData(message);
+        });
+        this.socket.once("close", this.onClose.bind(this));
+        this.socket.on("error", this.onError.bind(this));
+        this.writable = true;
+        this.perMessageDeflate = null;
+    }
+    /**
+     * Transport name
+     */
+    get name() {
+        return "websocket";
+    }
+    /**
+     * Advertise upgrade support.
+     */
+    get handlesUpgrades() {
+        return true;
+    }
+    send(packets) {
+        this.writable = false;
+        for (let i = 0; i < packets.length; i++) {
+            const packet = packets[i];
+            const isLast = i + 1 === packets.length;
+            if (this._canSendPreEncodedFrame(packet)) {
+                // the WebSocket frame was computed with WebSocket.Sender.frame()
+                // see https://github.com/websockets/ws/issues/617#issuecomment-283002469
+                this.socket._sender.sendFrame(
+                // @ts-ignore
+                packet.options.wsPreEncodedFrame, isLast ? this._onSentLast : this._onSent);
+            }
+            else {
+                this.parser.encodePacket(packet, this.supportsBinary, isLast ? this._doSendLast : this._doSend);
+            }
+        }
+    }
+    /**
+     * Whether the encoding of the WebSocket frame can be skipped.
+     * @param packet
+     * @private
+     */
+    _canSendPreEncodedFrame(packet) {
+        var _a, _b, _c;
+        return (!this.perMessageDeflate &&
+            typeof ((_b = (_a = this.socket) === null || _a === void 0 ? void 0 : _a._sender) === null || _b === void 0 ? void 0 : _b.sendFrame) === "function" &&
+            // @ts-ignore
+            ((_c = packet.options) === null || _c === void 0 ? void 0 : _c.wsPreEncodedFrame) !== undefined);
+    }
+    doClose(fn) {
+        debug("closing");
+        this.socket.close();
+        fn && fn();
+    }
+}
+exports.WebSocket = WebSocket;
+
+
+/***/ },
+
+/***/ 5849
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -37447,10 +47179,17 @@ function findScalarTagByTest({ atKey, directives, schema }, value, token, onErro
 exports.composeScalar = composeScalar;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5921:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5921
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -37792,10 +47531,17 @@ function stringifyString(item, ctx, onComment, onChompKeep) {
 exports.stringifyString = stringifyString;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 5989:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 5989
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -38518,10 +48264,17 @@ class Lexer {
 exports.Lexer = Lexer;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6001:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6001
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -38612,10 +48365,538 @@ function stringifyDocument(doc, options) {
 exports.stringifyDocument = stringifyDocument;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6058:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6038
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const zlib = __webpack_require__(3106);
+
+const bufferUtil = __webpack_require__(2905);
+const Limiter = __webpack_require__(2384);
+const { kStatusCode } = __webpack_require__(6261);
+
+const FastBuffer = Buffer[Symbol.species];
+const TRAILER = Buffer.from([0x00, 0x00, 0xff, 0xff]);
+const kPerMessageDeflate = Symbol('permessage-deflate');
+const kTotalLength = Symbol('total-length');
+const kCallback = Symbol('callback');
+const kBuffers = Symbol('buffers');
+const kError = Symbol('error');
+
+//
+// We limit zlib concurrency, which prevents severe memory fragmentation
+// as documented in https://github.com/nodejs/node/issues/8871#issuecomment-250915913
+// and https://github.com/websockets/ws/issues/1202
+//
+// Intentionally global; it's the global thread pool that's an issue.
+//
+let zlibLimiter;
+
+/**
+ * permessage-deflate implementation.
+ */
+class PerMessageDeflate {
+  /**
+   * Creates a PerMessageDeflate instance.
+   *
+   * @param {Object} [options] Configuration options
+   * @param {(Boolean|Number)} [options.clientMaxWindowBits] Advertise support
+   *     for, or request, a custom client window size
+   * @param {Boolean} [options.clientNoContextTakeover=false] Advertise/
+   *     acknowledge disabling of client context takeover
+   * @param {Number} [options.concurrencyLimit=10] The number of concurrent
+   *     calls to zlib
+   * @param {(Boolean|Number)} [options.serverMaxWindowBits] Request/confirm the
+   *     use of a custom server window size
+   * @param {Boolean} [options.serverNoContextTakeover=false] Request/accept
+   *     disabling of server context takeover
+   * @param {Number} [options.threshold=1024] Size (in bytes) below which
+   *     messages should not be compressed if context takeover is disabled
+   * @param {Object} [options.zlibDeflateOptions] Options to pass to zlib on
+   *     deflate
+   * @param {Object} [options.zlibInflateOptions] Options to pass to zlib on
+   *     inflate
+   * @param {Boolean} [isServer=false] Create the instance in either server or
+   *     client mode
+   * @param {Number} [maxPayload=0] The maximum allowed message length
+   */
+  constructor(options, isServer, maxPayload) {
+    this._maxPayload = maxPayload | 0;
+    this._options = options || {};
+    this._threshold =
+      this._options.threshold !== undefined ? this._options.threshold : 1024;
+    this._isServer = !!isServer;
+    this._deflate = null;
+    this._inflate = null;
+
+    this.params = null;
+
+    if (!zlibLimiter) {
+      const concurrency =
+        this._options.concurrencyLimit !== undefined
+          ? this._options.concurrencyLimit
+          : 10;
+      zlibLimiter = new Limiter(concurrency);
+    }
+  }
+
+  /**
+   * @type {String}
+   */
+  static get extensionName() {
+    return 'permessage-deflate';
+  }
+
+  /**
+   * Create an extension negotiation offer.
+   *
+   * @return {Object} Extension parameters
+   * @public
+   */
+  offer() {
+    const params = {};
+
+    if (this._options.serverNoContextTakeover) {
+      params.server_no_context_takeover = true;
+    }
+    if (this._options.clientNoContextTakeover) {
+      params.client_no_context_takeover = true;
+    }
+    if (this._options.serverMaxWindowBits) {
+      params.server_max_window_bits = this._options.serverMaxWindowBits;
+    }
+    if (this._options.clientMaxWindowBits) {
+      params.client_max_window_bits = this._options.clientMaxWindowBits;
+    } else if (this._options.clientMaxWindowBits == null) {
+      params.client_max_window_bits = true;
+    }
+
+    return params;
+  }
+
+  /**
+   * Accept an extension negotiation offer/response.
+   *
+   * @param {Array} configurations The extension negotiation offers/reponse
+   * @return {Object} Accepted configuration
+   * @public
+   */
+  accept(configurations) {
+    configurations = this.normalizeParams(configurations);
+
+    this.params = this._isServer
+      ? this.acceptAsServer(configurations)
+      : this.acceptAsClient(configurations);
+
+    return this.params;
+  }
+
+  /**
+   * Releases all resources used by the extension.
+   *
+   * @public
+   */
+  cleanup() {
+    if (this._inflate) {
+      this._inflate.close();
+      this._inflate = null;
+    }
+
+    if (this._deflate) {
+      const callback = this._deflate[kCallback];
+
+      this._deflate.close();
+      this._deflate = null;
+
+      if (callback) {
+        callback(
+          new Error(
+            'The deflate stream was closed while data was being processed'
+          )
+        );
+      }
+    }
+  }
+
+  /**
+   *  Accept an extension negotiation offer.
+   *
+   * @param {Array} offers The extension negotiation offers
+   * @return {Object} Accepted configuration
+   * @private
+   */
+  acceptAsServer(offers) {
+    const opts = this._options;
+    const accepted = offers.find((params) => {
+      if (
+        (opts.serverNoContextTakeover === false &&
+          params.server_no_context_takeover) ||
+        (params.server_max_window_bits &&
+          (opts.serverMaxWindowBits === false ||
+            (typeof opts.serverMaxWindowBits === 'number' &&
+              opts.serverMaxWindowBits > params.server_max_window_bits))) ||
+        (typeof opts.clientMaxWindowBits === 'number' &&
+          !params.client_max_window_bits)
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+
+    if (!accepted) {
+      throw new Error('None of the extension offers can be accepted');
+    }
+
+    if (opts.serverNoContextTakeover) {
+      accepted.server_no_context_takeover = true;
+    }
+    if (opts.clientNoContextTakeover) {
+      accepted.client_no_context_takeover = true;
+    }
+    if (typeof opts.serverMaxWindowBits === 'number') {
+      accepted.server_max_window_bits = opts.serverMaxWindowBits;
+    }
+    if (typeof opts.clientMaxWindowBits === 'number') {
+      accepted.client_max_window_bits = opts.clientMaxWindowBits;
+    } else if (
+      accepted.client_max_window_bits === true ||
+      opts.clientMaxWindowBits === false
+    ) {
+      delete accepted.client_max_window_bits;
+    }
+
+    return accepted;
+  }
+
+  /**
+   * Accept the extension negotiation response.
+   *
+   * @param {Array} response The extension negotiation response
+   * @return {Object} Accepted configuration
+   * @private
+   */
+  acceptAsClient(response) {
+    const params = response[0];
+
+    if (
+      this._options.clientNoContextTakeover === false &&
+      params.client_no_context_takeover
+    ) {
+      throw new Error('Unexpected parameter "client_no_context_takeover"');
+    }
+
+    if (!params.client_max_window_bits) {
+      if (typeof this._options.clientMaxWindowBits === 'number') {
+        params.client_max_window_bits = this._options.clientMaxWindowBits;
+      }
+    } else if (
+      this._options.clientMaxWindowBits === false ||
+      (typeof this._options.clientMaxWindowBits === 'number' &&
+        params.client_max_window_bits > this._options.clientMaxWindowBits)
+    ) {
+      throw new Error(
+        'Unexpected or invalid parameter "client_max_window_bits"'
+      );
+    }
+
+    return params;
+  }
+
+  /**
+   * Normalize parameters.
+   *
+   * @param {Array} configurations The extension negotiation offers/reponse
+   * @return {Array} The offers/response with normalized parameters
+   * @private
+   */
+  normalizeParams(configurations) {
+    configurations.forEach((params) => {
+      Object.keys(params).forEach((key) => {
+        let value = params[key];
+
+        if (value.length > 1) {
+          throw new Error(`Parameter "${key}" must have only a single value`);
+        }
+
+        value = value[0];
+
+        if (key === 'client_max_window_bits') {
+          if (value !== true) {
+            const num = +value;
+            if (!Number.isInteger(num) || num < 8 || num > 15) {
+              throw new TypeError(
+                `Invalid value for parameter "${key}": ${value}`
+              );
+            }
+            value = num;
+          } else if (!this._isServer) {
+            throw new TypeError(
+              `Invalid value for parameter "${key}": ${value}`
+            );
+          }
+        } else if (key === 'server_max_window_bits') {
+          const num = +value;
+          if (!Number.isInteger(num) || num < 8 || num > 15) {
+            throw new TypeError(
+              `Invalid value for parameter "${key}": ${value}`
+            );
+          }
+          value = num;
+        } else if (
+          key === 'client_no_context_takeover' ||
+          key === 'server_no_context_takeover'
+        ) {
+          if (value !== true) {
+            throw new TypeError(
+              `Invalid value for parameter "${key}": ${value}`
+            );
+          }
+        } else {
+          throw new Error(`Unknown parameter "${key}"`);
+        }
+
+        params[key] = value;
+      });
+    });
+
+    return configurations;
+  }
+
+  /**
+   * Decompress data. Concurrency limited.
+   *
+   * @param {Buffer} data Compressed data
+   * @param {Boolean} fin Specifies whether or not this is the last fragment
+   * @param {Function} callback Callback
+   * @public
+   */
+  decompress(data, fin, callback) {
+    zlibLimiter.add((done) => {
+      this._decompress(data, fin, (err, result) => {
+        done();
+        callback(err, result);
+      });
+    });
+  }
+
+  /**
+   * Compress data. Concurrency limited.
+   *
+   * @param {(Buffer|String)} data Data to compress
+   * @param {Boolean} fin Specifies whether or not this is the last fragment
+   * @param {Function} callback Callback
+   * @public
+   */
+  compress(data, fin, callback) {
+    zlibLimiter.add((done) => {
+      this._compress(data, fin, (err, result) => {
+        done();
+        callback(err, result);
+      });
+    });
+  }
+
+  /**
+   * Decompress data.
+   *
+   * @param {Buffer} data Compressed data
+   * @param {Boolean} fin Specifies whether or not this is the last fragment
+   * @param {Function} callback Callback
+   * @private
+   */
+  _decompress(data, fin, callback) {
+    const endpoint = this._isServer ? 'client' : 'server';
+
+    if (!this._inflate) {
+      const key = `${endpoint}_max_window_bits`;
+      const windowBits =
+        typeof this.params[key] !== 'number'
+          ? zlib.Z_DEFAULT_WINDOWBITS
+          : this.params[key];
+
+      this._inflate = zlib.createInflateRaw({
+        ...this._options.zlibInflateOptions,
+        windowBits
+      });
+      this._inflate[kPerMessageDeflate] = this;
+      this._inflate[kTotalLength] = 0;
+      this._inflate[kBuffers] = [];
+      this._inflate.on('error', inflateOnError);
+      this._inflate.on('data', inflateOnData);
+    }
+
+    this._inflate[kCallback] = callback;
+
+    this._inflate.write(data);
+    if (fin) this._inflate.write(TRAILER);
+
+    this._inflate.flush(() => {
+      const err = this._inflate[kError];
+
+      if (err) {
+        this._inflate.close();
+        this._inflate = null;
+        callback(err);
+        return;
+      }
+
+      const data = bufferUtil.concat(
+        this._inflate[kBuffers],
+        this._inflate[kTotalLength]
+      );
+
+      if (this._inflate._readableState.endEmitted) {
+        this._inflate.close();
+        this._inflate = null;
+      } else {
+        this._inflate[kTotalLength] = 0;
+        this._inflate[kBuffers] = [];
+
+        if (fin && this.params[`${endpoint}_no_context_takeover`]) {
+          this._inflate.reset();
+        }
+      }
+
+      callback(null, data);
+    });
+  }
+
+  /**
+   * Compress data.
+   *
+   * @param {(Buffer|String)} data Data to compress
+   * @param {Boolean} fin Specifies whether or not this is the last fragment
+   * @param {Function} callback Callback
+   * @private
+   */
+  _compress(data, fin, callback) {
+    const endpoint = this._isServer ? 'server' : 'client';
+
+    if (!this._deflate) {
+      const key = `${endpoint}_max_window_bits`;
+      const windowBits =
+        typeof this.params[key] !== 'number'
+          ? zlib.Z_DEFAULT_WINDOWBITS
+          : this.params[key];
+
+      this._deflate = zlib.createDeflateRaw({
+        ...this._options.zlibDeflateOptions,
+        windowBits
+      });
+
+      this._deflate[kTotalLength] = 0;
+      this._deflate[kBuffers] = [];
+
+      this._deflate.on('data', deflateOnData);
+    }
+
+    this._deflate[kCallback] = callback;
+
+    this._deflate.write(data);
+    this._deflate.flush(zlib.Z_SYNC_FLUSH, () => {
+      if (!this._deflate) {
+        //
+        // The deflate stream was closed while data was being processed.
+        //
+        return;
+      }
+
+      let data = bufferUtil.concat(
+        this._deflate[kBuffers],
+        this._deflate[kTotalLength]
+      );
+
+      if (fin) {
+        data = new FastBuffer(data.buffer, data.byteOffset, data.length - 4);
+      }
+
+      //
+      // Ensure that the callback will not be called again in
+      // `PerMessageDeflate#cleanup()`.
+      //
+      this._deflate[kCallback] = null;
+
+      this._deflate[kTotalLength] = 0;
+      this._deflate[kBuffers] = [];
+
+      if (fin && this.params[`${endpoint}_no_context_takeover`]) {
+        this._deflate.reset();
+      }
+
+      callback(null, data);
+    });
+  }
+}
+
+module.exports = PerMessageDeflate;
+
+/**
+ * The listener of the `zlib.DeflateRaw` stream `'data'` event.
+ *
+ * @param {Buffer} chunk A chunk of data
+ * @private
+ */
+function deflateOnData(chunk) {
+  this[kBuffers].push(chunk);
+  this[kTotalLength] += chunk.length;
+}
+
+/**
+ * The listener of the `zlib.InflateRaw` stream `'data'` event.
+ *
+ * @param {Buffer} chunk A chunk of data
+ * @private
+ */
+function inflateOnData(chunk) {
+  this[kTotalLength] += chunk.length;
+
+  if (
+    this[kPerMessageDeflate]._maxPayload < 1 ||
+    this[kTotalLength] <= this[kPerMessageDeflate]._maxPayload
+  ) {
+    this[kBuffers].push(chunk);
+    return;
+  }
+
+  this[kError] = new RangeError('Max payload size exceeded');
+  this[kError].code = 'WS_ERR_UNSUPPORTED_MESSAGE_LENGTH';
+  this[kError][kStatusCode] = 1009;
+  this.removeListener('data', inflateOnData);
+  this.reset();
+}
+
+/**
+ * The listener of the `zlib.InflateRaw` stream `'error'` event.
+ *
+ * @param {Error} err The emitted error
+ * @private
+ */
+function inflateOnError(err) {
+  //
+  // There is no need to call `Zlib#close()` as the handle is automatically
+  // closed when an error is emitted.
+  //
+  this[kPerMessageDeflate]._inflate = null;
+  err[kStatusCode] = 1007;
+  this[kCallback](err);
+}
+
+
+/***/ },
+
+/***/ 6058
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -38670,10 +48951,17 @@ function resolveBlockSeq({ composeNode, composeEmptyNode }, ctx, bs, onError, ta
 exports.resolveBlockSeq = resolveBlockSeq;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6121:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6121
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -39014,10 +49302,17 @@ function assertCollection(contents) {
 exports.Document = Document;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6149:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6149
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -39137,10 +49432,609 @@ function getAliasCount(doc, node, anchors) {
 exports.Alias = Alias;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6388:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6181
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var _a;
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.SessionAwareAdapter = exports.Adapter = void 0;
+const events_1 = __webpack_require__(4434);
+const yeast_1 = __webpack_require__(6670);
+const WebSocket = __webpack_require__(6308);
+const canPreComputeFrame = typeof ((_a = WebSocket === null || WebSocket === void 0 ? void 0 : WebSocket.Sender) === null || _a === void 0 ? void 0 : _a.frame) === "function";
+class Adapter extends events_1.EventEmitter {
+    /**
+     * In-memory adapter constructor.
+     *
+     * @param {Namespace} nsp
+     */
+    constructor(nsp) {
+        super();
+        this.nsp = nsp;
+        this.rooms = new Map();
+        this.sids = new Map();
+        this.encoder = nsp.server.encoder;
+    }
+    /**
+     * To be overridden
+     */
+    init() { }
+    /**
+     * To be overridden
+     */
+    close() { }
+    /**
+     * Returns the number of Socket.IO servers in the cluster
+     *
+     * @public
+     */
+    serverCount() {
+        return Promise.resolve(1);
+    }
+    /**
+     * Adds a socket to a list of room.
+     *
+     * @param {SocketId}  id      the socket id
+     * @param {Set<Room>} rooms   a set of rooms
+     * @public
+     */
+    addAll(id, rooms) {
+        if (!this.sids.has(id)) {
+            this.sids.set(id, new Set());
+        }
+        for (const room of rooms) {
+            this.sids.get(id).add(room);
+            if (!this.rooms.has(room)) {
+                this.rooms.set(room, new Set());
+                this.emit("create-room", room);
+            }
+            if (!this.rooms.get(room).has(id)) {
+                this.rooms.get(room).add(id);
+                this.emit("join-room", room, id);
+            }
+        }
+    }
+    /**
+     * Removes a socket from a room.
+     *
+     * @param {SocketId} id     the socket id
+     * @param {Room}     room   the room name
+     */
+    del(id, room) {
+        if (this.sids.has(id)) {
+            this.sids.get(id).delete(room);
+        }
+        this._del(room, id);
+    }
+    _del(room, id) {
+        const _room = this.rooms.get(room);
+        if (_room != null) {
+            const deleted = _room.delete(id);
+            if (deleted) {
+                this.emit("leave-room", room, id);
+            }
+            if (_room.size === 0 && this.rooms.delete(room)) {
+                this.emit("delete-room", room);
+            }
+        }
+    }
+    /**
+     * Removes a socket from all rooms it's joined.
+     *
+     * @param {SocketId} id   the socket id
+     */
+    delAll(id) {
+        if (!this.sids.has(id)) {
+            return;
+        }
+        for (const room of this.sids.get(id)) {
+            this._del(room, id);
+        }
+        this.sids.delete(id);
+    }
+    /**
+     * Broadcasts a packet.
+     *
+     * Options:
+     *  - `flags` {Object} flags for this packet
+     *  - `except` {Array} sids that should be excluded
+     *  - `rooms` {Array} list of rooms to broadcast to
+     *
+     * @param {Object} packet   the packet object
+     * @param {Object} opts     the options
+     * @public
+     */
+    broadcast(packet, opts) {
+        const flags = opts.flags || {};
+        const packetOpts = {
+            preEncoded: true,
+            volatile: flags.volatile,
+            compress: flags.compress,
+        };
+        packet.nsp = this.nsp.name;
+        const encodedPackets = this._encode(packet, packetOpts);
+        this.apply(opts, (socket) => {
+            if (typeof socket.notifyOutgoingListeners === "function") {
+                socket.notifyOutgoingListeners(packet);
+            }
+            socket.client.writeToEngine(encodedPackets, packetOpts);
+        });
+    }
+    /**
+     * Broadcasts a packet and expects multiple acknowledgements.
+     *
+     * Options:
+     *  - `flags` {Object} flags for this packet
+     *  - `except` {Array} sids that should be excluded
+     *  - `rooms` {Array} list of rooms to broadcast to
+     *
+     * @param {Object} packet   the packet object
+     * @param {Object} opts     the options
+     * @param clientCountCallback - the number of clients that received the packet
+     * @param ack                 - the callback that will be called for each client response
+     *
+     * @public
+     */
+    broadcastWithAck(packet, opts, clientCountCallback, ack) {
+        const flags = opts.flags || {};
+        const packetOpts = {
+            preEncoded: true,
+            volatile: flags.volatile,
+            compress: flags.compress,
+        };
+        packet.nsp = this.nsp.name;
+        // we can use the same id for each packet, since the _ids counter is common (no duplicate)
+        packet.id = this.nsp._ids++;
+        const encodedPackets = this._encode(packet, packetOpts);
+        let clientCount = 0;
+        this.apply(opts, (socket) => {
+            // track the total number of acknowledgements that are expected
+            clientCount++;
+            // call the ack callback for each client response
+            socket.acks.set(packet.id, ack);
+            if (typeof socket.notifyOutgoingListeners === "function") {
+                socket.notifyOutgoingListeners(packet);
+            }
+            socket.client.writeToEngine(encodedPackets, packetOpts);
+        });
+        clientCountCallback(clientCount);
+    }
+    _encode(packet, packetOpts) {
+        const encodedPackets = this.encoder.encode(packet);
+        if (canPreComputeFrame &&
+            encodedPackets.length === 1 &&
+            typeof encodedPackets[0] === "string") {
+            // "4" being the "message" packet type in the Engine.IO protocol
+            const data = Buffer.from("4" + encodedPackets[0]);
+            // see https://github.com/websockets/ws/issues/617#issuecomment-283002469
+            packetOpts.wsPreEncodedFrame = WebSocket.Sender.frame(data, {
+                readOnly: false,
+                mask: false,
+                rsv1: false,
+                opcode: 1,
+                fin: true,
+            });
+        }
+        return encodedPackets;
+    }
+    /**
+     * Gets a list of sockets by sid.
+     *
+     * @param {Set<Room>} rooms   the explicit set of rooms to check.
+     */
+    sockets(rooms) {
+        const sids = new Set();
+        this.apply({ rooms }, (socket) => {
+            sids.add(socket.id);
+        });
+        return Promise.resolve(sids);
+    }
+    /**
+     * Gets the list of rooms a given socket has joined.
+     *
+     * @param {SocketId} id   the socket id
+     */
+    socketRooms(id) {
+        return this.sids.get(id);
+    }
+    /**
+     * Returns the matching socket instances
+     *
+     * @param opts - the filters to apply
+     */
+    fetchSockets(opts) {
+        const sockets = [];
+        this.apply(opts, (socket) => {
+            sockets.push(socket);
+        });
+        return Promise.resolve(sockets);
+    }
+    /**
+     * Makes the matching socket instances join the specified rooms
+     *
+     * @param opts - the filters to apply
+     * @param rooms - the rooms to join
+     */
+    addSockets(opts, rooms) {
+        this.apply(opts, (socket) => {
+            socket.join(rooms);
+        });
+    }
+    /**
+     * Makes the matching socket instances leave the specified rooms
+     *
+     * @param opts - the filters to apply
+     * @param rooms - the rooms to leave
+     */
+    delSockets(opts, rooms) {
+        this.apply(opts, (socket) => {
+            rooms.forEach((room) => socket.leave(room));
+        });
+    }
+    /**
+     * Makes the matching socket instances disconnect
+     *
+     * @param opts - the filters to apply
+     * @param close - whether to close the underlying connection
+     */
+    disconnectSockets(opts, close) {
+        this.apply(opts, (socket) => {
+            socket.disconnect(close);
+        });
+    }
+    apply(opts, callback) {
+        const rooms = opts.rooms;
+        const except = this.computeExceptSids(opts.except);
+        if (rooms.size) {
+            const ids = new Set();
+            for (const room of rooms) {
+                if (!this.rooms.has(room))
+                    continue;
+                for (const id of this.rooms.get(room)) {
+                    if (ids.has(id) || except.has(id))
+                        continue;
+                    const socket = this.nsp.sockets.get(id);
+                    if (socket) {
+                        callback(socket);
+                        ids.add(id);
+                    }
+                }
+            }
+        }
+        else {
+            for (const [id] of this.sids) {
+                if (except.has(id))
+                    continue;
+                const socket = this.nsp.sockets.get(id);
+                if (socket)
+                    callback(socket);
+            }
+        }
+    }
+    computeExceptSids(exceptRooms) {
+        const exceptSids = new Set();
+        if (exceptRooms && exceptRooms.size > 0) {
+            for (const room of exceptRooms) {
+                if (this.rooms.has(room)) {
+                    this.rooms.get(room).forEach((sid) => exceptSids.add(sid));
+                }
+            }
+        }
+        return exceptSids;
+    }
+    /**
+     * Send a packet to the other Socket.IO servers in the cluster
+     * @param packet - an array of arguments, which may include an acknowledgement callback at the end
+     */
+    serverSideEmit(packet) {
+        console.warn("this adapter does not support the serverSideEmit() functionality");
+    }
+    /**
+     * Save the client session in order to restore it upon reconnection.
+     */
+    persistSession(session) { }
+    /**
+     * Restore the session and find the packets that were missed by the client.
+     * @param pid
+     * @param offset
+     */
+    restoreSession(pid, offset) {
+        return null;
+    }
+}
+exports.Adapter = Adapter;
+class SessionAwareAdapter extends Adapter {
+    constructor(nsp) {
+        super(nsp);
+        this.nsp = nsp;
+        this.sessions = new Map();
+        this.packets = [];
+        this.maxDisconnectionDuration =
+            nsp.server.opts.connectionStateRecovery.maxDisconnectionDuration;
+        const timer = setInterval(() => {
+            const threshold = Date.now() - this.maxDisconnectionDuration;
+            this.sessions.forEach((session, sessionId) => {
+                const hasExpired = session.disconnectedAt < threshold;
+                if (hasExpired) {
+                    this.sessions.delete(sessionId);
+                }
+            });
+            for (let i = this.packets.length - 1; i >= 0; i--) {
+                const hasExpired = this.packets[i].emittedAt < threshold;
+                if (hasExpired) {
+                    this.packets.splice(0, i + 1);
+                    break;
+                }
+            }
+        }, 60 * 1000);
+        // prevents the timer from keeping the process alive
+        timer.unref();
+    }
+    persistSession(session) {
+        session.disconnectedAt = Date.now();
+        this.sessions.set(session.pid, session);
+    }
+    restoreSession(pid, offset) {
+        const session = this.sessions.get(pid);
+        if (!session) {
+            // the session may have expired
+            return null;
+        }
+        const hasExpired = session.disconnectedAt + this.maxDisconnectionDuration < Date.now();
+        if (hasExpired) {
+            // the session has expired
+            this.sessions.delete(pid);
+            return null;
+        }
+        const index = this.packets.findIndex((packet) => packet.id === offset);
+        if (index === -1) {
+            // the offset may be too old
+            return null;
+        }
+        const missedPackets = [];
+        for (let i = index + 1; i < this.packets.length; i++) {
+            const packet = this.packets[i];
+            if (shouldIncludePacket(session.rooms, packet.opts)) {
+                missedPackets.push(packet.data);
+            }
+        }
+        return Promise.resolve(Object.assign(Object.assign({}, session), { missedPackets }));
+    }
+    broadcast(packet, opts) {
+        var _a;
+        const isEventPacket = packet.type === 2;
+        // packets with acknowledgement are not stored because the acknowledgement function cannot be serialized and
+        // restored on another server upon reconnection
+        const withoutAcknowledgement = packet.id === undefined;
+        const notVolatile = ((_a = opts.flags) === null || _a === void 0 ? void 0 : _a.volatile) === undefined;
+        if (isEventPacket && withoutAcknowledgement && notVolatile) {
+            const id = (0, yeast_1.yeast)();
+            // the offset is stored at the end of the data array, so the client knows the ID of the last packet it has
+            // processed (and the format is backward-compatible)
+            packet.data.push(id);
+            this.packets.push({
+                id,
+                opts,
+                data: packet.data,
+                emittedAt: Date.now(),
+            });
+        }
+        super.broadcast(packet, opts);
+    }
+}
+exports.SessionAwareAdapter = SessionAwareAdapter;
+function shouldIncludePacket(sessionRooms, opts) {
+    const included = opts.rooms.size === 0 || sessionRooms.some((room) => opts.rooms.has(room));
+    const notExcluded = sessionRooms.every((room) => !opts.except.has(room));
+    return included && notExcluded;
+}
+
+
+/***/ },
+
+/***/ 6237
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const { isUtf8 } = __webpack_require__(181);
+
+//
+// Allowed token characters:
+//
+// '!', '#', '$', '%', '&', ''', '*', '+', '-',
+// '.', 0-9, A-Z, '^', '_', '`', a-z, '|', '~'
+//
+// tokenChars[32] === 0 // ' '
+// tokenChars[33] === 1 // '!'
+// tokenChars[34] === 0 // '"'
+// ...
+//
+// prettier-ignore
+const tokenChars = [
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 0 - 15
+  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 16 - 31
+  0, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, // 32 - 47
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, // 48 - 63
+  0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 64 - 79
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, // 80 - 95
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 96 - 111
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0 // 112 - 127
+];
+
+/**
+ * Checks if a status code is allowed in a close frame.
+ *
+ * @param {Number} code The status code
+ * @return {Boolean} `true` if the status code is valid, else `false`
+ * @public
+ */
+function isValidStatusCode(code) {
+  return (
+    (code >= 1000 &&
+      code <= 1014 &&
+      code !== 1004 &&
+      code !== 1005 &&
+      code !== 1006) ||
+    (code >= 3000 && code <= 4999)
+  );
+}
+
+/**
+ * Checks if a given buffer contains only correct UTF-8.
+ * Ported from https://www.cl.cam.ac.uk/%7Emgk25/ucs/utf8_check.c by
+ * Markus Kuhn.
+ *
+ * @param {Buffer} buf The buffer to check
+ * @return {Boolean} `true` if `buf` contains only correct UTF-8, else `false`
+ * @public
+ */
+function _isValidUTF8(buf) {
+  const len = buf.length;
+  let i = 0;
+
+  while (i < len) {
+    if ((buf[i] & 0x80) === 0) {
+      // 0xxxxxxx
+      i++;
+    } else if ((buf[i] & 0xe0) === 0xc0) {
+      // 110xxxxx 10xxxxxx
+      if (
+        i + 1 === len ||
+        (buf[i + 1] & 0xc0) !== 0x80 ||
+        (buf[i] & 0xfe) === 0xc0 // Overlong
+      ) {
+        return false;
+      }
+
+      i += 2;
+    } else if ((buf[i] & 0xf0) === 0xe0) {
+      // 1110xxxx 10xxxxxx 10xxxxxx
+      if (
+        i + 2 >= len ||
+        (buf[i + 1] & 0xc0) !== 0x80 ||
+        (buf[i + 2] & 0xc0) !== 0x80 ||
+        (buf[i] === 0xe0 && (buf[i + 1] & 0xe0) === 0x80) || // Overlong
+        (buf[i] === 0xed && (buf[i + 1] & 0xe0) === 0xa0) // Surrogate (U+D800 - U+DFFF)
+      ) {
+        return false;
+      }
+
+      i += 3;
+    } else if ((buf[i] & 0xf8) === 0xf0) {
+      // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+      if (
+        i + 3 >= len ||
+        (buf[i + 1] & 0xc0) !== 0x80 ||
+        (buf[i + 2] & 0xc0) !== 0x80 ||
+        (buf[i + 3] & 0xc0) !== 0x80 ||
+        (buf[i] === 0xf0 && (buf[i + 1] & 0xf0) === 0x80) || // Overlong
+        (buf[i] === 0xf4 && buf[i + 1] > 0x8f) ||
+        buf[i] > 0xf4 // > U+10FFFF
+      ) {
+        return false;
+      }
+
+      i += 4;
+    } else {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+module.exports = {
+  isValidStatusCode,
+  isValidUTF8: _isValidUTF8,
+  tokenChars
+};
+
+if (isUtf8) {
+  module.exports.isValidUTF8 = function (buf) {
+    return buf.length < 24 ? _isValidUTF8(buf) : isUtf8(buf);
+  };
+} /* istanbul ignore else  */ else if (!process.env.WS_NO_UTF_8_VALIDATE) {
+  try {
+    const isValidUTF8 = __webpack_require__(5305);
+
+    module.exports.isValidUTF8 = function (buf) {
+      return buf.length < 32 ? _isValidUTF8(buf) : isValidUTF8(buf);
+    };
+  } catch (e) {
+    // Continue regardless of the error.
+  }
+}
+
+
+/***/ },
+
+/***/ 6261
+(module) {
+
+
+
+module.exports = {
+  BINARY_TYPES: ['nodebuffer', 'arraybuffer', 'fragments'],
+  EMPTY_BUFFER: Buffer.alloc(0),
+  GUID: '258EAFA5-E914-47DA-95CA-C5AB0DC85B11',
+  kForOnEventAttribute: Symbol('kIsForOnEventAttribute'),
+  kListener: Symbol('kListener'),
+  kStatusCode: Symbol('status-code'),
+  kWebSocket: Symbol('websocket'),
+  NOOP: () => {}
+};
+
+
+/***/ },
+
+/***/ 6300
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const polling_1 = __webpack_require__(9435);
+const websocket_1 = __webpack_require__(987);
+exports["default"] = {
+    polling: polling_1.Polling,
+    websocket: websocket_1.WebSocket,
+};
+
+
+/***/ },
+
+/***/ 6308
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+const WebSocket = __webpack_require__(1551);
+
+WebSocket.createWebSocketStream = __webpack_require__(5134);
+WebSocket.Server = __webpack_require__(2779);
+WebSocket.Receiver = __webpack_require__(1407);
+WebSocket.Sender = __webpack_require__(3147);
+
+WebSocket.WebSocket = WebSocket;
+WebSocket.WebSocketServer = WebSocket.Server;
+
+module.exports = WebSocket;
+
+
+/***/ },
+
+/***/ 6388
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 (function () {
 
@@ -39382,10 +50276,31 @@ exports.Alias = Alias;
 }());
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6571:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 6498
+(module, __unused_webpack_exports, __webpack_require__) {
+
+
+
+try {
+  module.exports = __webpack_require__(5173)(__webpack_dirname__);
+} catch (e) {
+  module.exports = __webpack_require__(4554);
+}
+
+
+/***/ },
+
+/***/ 6571
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -39537,10 +50452,273 @@ function resolveProps(tokens, { flow, indicator, next, offset, onError, parentIn
 exports.resolveProps = resolveProps;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6713:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6670
+(__unused_webpack_module, exports) {
+
+// imported from https://github.com/unshiftio/yeast
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.yeast = exports.decode = exports.encode = void 0;
+const alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_".split(""), length = 64, map = {};
+let seed = 0, i = 0, prev;
+/**
+ * Return a string representing the specified number.
+ *
+ * @param {Number} num The number to convert.
+ * @returns {String} The string representation of the number.
+ * @api public
+ */
+function encode(num) {
+    let encoded = "";
+    do {
+        encoded = alphabet[num % length] + encoded;
+        num = Math.floor(num / length);
+    } while (num > 0);
+    return encoded;
+}
+exports.encode = encode;
+/**
+ * Return the integer value specified by the given string.
+ *
+ * @param {String} str The string to convert.
+ * @returns {Number} The integer value represented by the string.
+ * @api public
+ */
+function decode(str) {
+    let decoded = 0;
+    for (i = 0; i < str.length; i++) {
+        decoded = decoded * length + map[str.charAt(i)];
+    }
+    return decoded;
+}
+exports.decode = decode;
+/**
+ * Yeast: A tiny growing id generator.
+ *
+ * @returns {String} A unique id.
+ * @api public
+ */
+function yeast() {
+    const now = encode(+new Date());
+    if (now !== prev)
+        return (seed = 0), (prev = now);
+    return now + "." + encode(seed++);
+}
+exports.yeast = yeast;
+//
+// Map each character to its index.
+//
+for (; i < length; i++)
+    map[alphabet[i]] = i;
+
+
+/***/ },
+
+/***/ 6680
+(module) {
+
+/*! https://mths.be/utf8js v2.1.2 by @mathias */
+var stringFromCharCode = String.fromCharCode;
+// Taken from https://mths.be/punycode
+function ucs2decode(string) {
+    var output = [];
+    var counter = 0;
+    var length = string.length;
+    var value;
+    var extra;
+    while (counter < length) {
+        value = string.charCodeAt(counter++);
+        if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+            // high surrogate, and there is a next character
+            extra = string.charCodeAt(counter++);
+            if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+                output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+            }
+            else {
+                // unmatched surrogate; only append this code unit, in case the next
+                // code unit is the high surrogate of a surrogate pair
+                output.push(value);
+                counter--;
+            }
+        }
+        else {
+            output.push(value);
+        }
+    }
+    return output;
+}
+// Taken from https://mths.be/punycode
+function ucs2encode(array) {
+    var length = array.length;
+    var index = -1;
+    var value;
+    var output = '';
+    while (++index < length) {
+        value = array[index];
+        if (value > 0xFFFF) {
+            value -= 0x10000;
+            output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+            value = 0xDC00 | value & 0x3FF;
+        }
+        output += stringFromCharCode(value);
+    }
+    return output;
+}
+function checkScalarValue(codePoint, strict) {
+    if (codePoint >= 0xD800 && codePoint <= 0xDFFF) {
+        if (strict) {
+            throw Error('Lone surrogate U+' + codePoint.toString(16).toUpperCase() +
+                ' is not a scalar value');
+        }
+        return false;
+    }
+    return true;
+}
+/*--------------------------------------------------------------------------*/
+function createByte(codePoint, shift) {
+    return stringFromCharCode(((codePoint >> shift) & 0x3F) | 0x80);
+}
+function encodeCodePoint(codePoint, strict) {
+    if ((codePoint & 0xFFFFFF80) == 0) { // 1-byte sequence
+        return stringFromCharCode(codePoint);
+    }
+    var symbol = '';
+    if ((codePoint & 0xFFFFF800) == 0) { // 2-byte sequence
+        symbol = stringFromCharCode(((codePoint >> 6) & 0x1F) | 0xC0);
+    }
+    else if ((codePoint & 0xFFFF0000) == 0) { // 3-byte sequence
+        if (!checkScalarValue(codePoint, strict)) {
+            codePoint = 0xFFFD;
+        }
+        symbol = stringFromCharCode(((codePoint >> 12) & 0x0F) | 0xE0);
+        symbol += createByte(codePoint, 6);
+    }
+    else if ((codePoint & 0xFFE00000) == 0) { // 4-byte sequence
+        symbol = stringFromCharCode(((codePoint >> 18) & 0x07) | 0xF0);
+        symbol += createByte(codePoint, 12);
+        symbol += createByte(codePoint, 6);
+    }
+    symbol += stringFromCharCode((codePoint & 0x3F) | 0x80);
+    return symbol;
+}
+function utf8encode(string, opts) {
+    opts = opts || {};
+    var strict = false !== opts.strict;
+    var codePoints = ucs2decode(string);
+    var length = codePoints.length;
+    var index = -1;
+    var codePoint;
+    var byteString = '';
+    while (++index < length) {
+        codePoint = codePoints[index];
+        byteString += encodeCodePoint(codePoint, strict);
+    }
+    return byteString;
+}
+/*--------------------------------------------------------------------------*/
+function readContinuationByte() {
+    if (byteIndex >= byteCount) {
+        throw Error('Invalid byte index');
+    }
+    var continuationByte = byteArray[byteIndex] & 0xFF;
+    byteIndex++;
+    if ((continuationByte & 0xC0) == 0x80) {
+        return continuationByte & 0x3F;
+    }
+    // If we end up here, it’s not a continuation byte
+    throw Error('Invalid continuation byte');
+}
+function decodeSymbol(strict) {
+    var byte1;
+    var byte2;
+    var byte3;
+    var byte4;
+    var codePoint;
+    if (byteIndex > byteCount) {
+        throw Error('Invalid byte index');
+    }
+    if (byteIndex == byteCount) {
+        return false;
+    }
+    // Read first byte
+    byte1 = byteArray[byteIndex] & 0xFF;
+    byteIndex++;
+    // 1-byte sequence (no continuation bytes)
+    if ((byte1 & 0x80) == 0) {
+        return byte1;
+    }
+    // 2-byte sequence
+    if ((byte1 & 0xE0) == 0xC0) {
+        byte2 = readContinuationByte();
+        codePoint = ((byte1 & 0x1F) << 6) | byte2;
+        if (codePoint >= 0x80) {
+            return codePoint;
+        }
+        else {
+            throw Error('Invalid continuation byte');
+        }
+    }
+    // 3-byte sequence (may include unpaired surrogates)
+    if ((byte1 & 0xF0) == 0xE0) {
+        byte2 = readContinuationByte();
+        byte3 = readContinuationByte();
+        codePoint = ((byte1 & 0x0F) << 12) | (byte2 << 6) | byte3;
+        if (codePoint >= 0x0800) {
+            return checkScalarValue(codePoint, strict) ? codePoint : 0xFFFD;
+        }
+        else {
+            throw Error('Invalid continuation byte');
+        }
+    }
+    // 4-byte sequence
+    if ((byte1 & 0xF8) == 0xF0) {
+        byte2 = readContinuationByte();
+        byte3 = readContinuationByte();
+        byte4 = readContinuationByte();
+        codePoint = ((byte1 & 0x07) << 0x12) | (byte2 << 0x0C) |
+            (byte3 << 0x06) | byte4;
+        if (codePoint >= 0x010000 && codePoint <= 0x10FFFF) {
+            return codePoint;
+        }
+    }
+    throw Error('Invalid UTF-8 detected');
+}
+var byteArray;
+var byteCount;
+var byteIndex;
+function utf8decode(byteString, opts) {
+    opts = opts || {};
+    var strict = false !== opts.strict;
+    byteArray = ucs2decode(byteString);
+    byteCount = byteArray.length;
+    byteIndex = 0;
+    var codePoints = [];
+    var tmp;
+    while ((tmp = decodeSymbol(strict)) !== false) {
+        codePoints.push(tmp);
+    }
+    return ucs2encode(codePoints);
+}
+module.exports = {
+    version: '2.1.2',
+    encode: utf8encode,
+    decode: utf8decode
+};
+
+
+/***/ },
+
+/***/ 6713
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*!
  * mime-db
@@ -39556,10 +50734,17 @@ exports.resolveProps = resolveProps;
 module.exports = __webpack_require__(7080)
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6729:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 6729
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * CommanderError class
@@ -39602,10 +50787,17 @@ exports.CommanderError = CommanderError;
 exports.InvalidArgumentError = InvalidArgumentError;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6756:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6756
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -39626,6 +50818,7 @@ const nullTag = {
 exports.nullTag = nullTag;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6760:
@@ -39637,6 +50830,450 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:path");
 
 /***/ 6821:
 /***/ ((module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6759
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+// imported from https://github.com/socketio/engine.io-parser/tree/2.2.x
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.packets = exports.protocol = void 0;
+exports.encodePacket = encodePacket;
+exports.encodeBase64Packet = encodeBase64Packet;
+exports.decodePacket = decodePacket;
+exports.decodeBase64Packet = decodeBase64Packet;
+exports.encodePayload = encodePayload;
+exports.decodePayload = decodePayload;
+exports.encodePayloadAsBinary = encodePayloadAsBinary;
+exports.decodePayloadAsBinary = decodePayloadAsBinary;
+/**
+ * Module dependencies.
+ */
+var utf8 = __webpack_require__(6680);
+/**
+ * Current protocol version.
+ */
+exports.protocol = 3;
+const hasBinary = (packets) => {
+    for (const packet of packets) {
+        if (packet.data instanceof ArrayBuffer || ArrayBuffer.isView(packet.data)) {
+            return true;
+        }
+    }
+    return false;
+};
+/**
+ * Packet types.
+ */
+exports.packets = {
+    open: 0 // non-ws
+    ,
+    close: 1 // non-ws
+    ,
+    ping: 2,
+    pong: 3,
+    message: 4,
+    upgrade: 5,
+    noop: 6
+};
+var packetslist = Object.keys(exports.packets);
+/**
+ * Premade error packet.
+ */
+var err = { type: 'error', data: 'parser error' };
+const EMPTY_BUFFER = Buffer.concat([]);
+/**
+ * Encodes a packet.
+ *
+ *     <packet type id> [ <data> ]
+ *
+ * Example:
+ *
+ *     5hello world
+ *     3
+ *     4
+ *
+ * Binary is encoded in an identical principle
+ *
+ * @api private
+ */
+function encodePacket(packet, supportsBinary, utf8encode, callback) {
+    if (typeof supportsBinary === 'function') {
+        callback = supportsBinary;
+        supportsBinary = null;
+    }
+    if (typeof utf8encode === 'function') {
+        callback = utf8encode;
+        utf8encode = null;
+    }
+    if (Buffer.isBuffer(packet.data)) {
+        return encodeBuffer(packet, supportsBinary, callback);
+    }
+    else if (packet.data && (packet.data.buffer || packet.data) instanceof ArrayBuffer) {
+        return encodeBuffer({ type: packet.type, data: arrayBufferToBuffer(packet.data) }, supportsBinary, callback);
+    }
+    // Sending data as a utf-8 string
+    var encoded = exports.packets[packet.type];
+    // data fragment is optional
+    if (undefined !== packet.data) {
+        encoded += utf8encode ? utf8.encode(String(packet.data), { strict: false }) : String(packet.data);
+    }
+    return callback('' + encoded);
+}
+;
+/**
+ * Encode Buffer data
+ */
+function encodeBuffer(packet, supportsBinary, callback) {
+    if (!supportsBinary) {
+        return encodeBase64Packet(packet, callback);
+    }
+    var data = packet.data;
+    var typeBuffer = Buffer.allocUnsafe(1);
+    typeBuffer[0] = exports.packets[packet.type];
+    return callback(Buffer.concat([typeBuffer, data]));
+}
+/**
+ * Encodes a packet with binary data in a base64 string
+ *
+ * @param {Object} packet, has `type` and `data`
+ * @return {String} base64 encoded message
+ */
+function encodeBase64Packet(packet, callback) {
+    var data = Buffer.isBuffer(packet.data) ? packet.data : arrayBufferToBuffer(packet.data);
+    var message = 'b' + exports.packets[packet.type];
+    message += data.toString('base64');
+    return callback(message);
+}
+;
+/**
+ * Decodes a packet. Data also available as an ArrayBuffer if requested.
+ *
+ * @return {Object} with `type` and `data` (if any)
+ * @api private
+ */
+function decodePacket(data, binaryType, utf8decode) {
+    if (data === undefined) {
+        return err;
+    }
+    var type;
+    // String data
+    if (typeof data === 'string') {
+        type = data.charAt(0);
+        if (type === 'b') {
+            return decodeBase64Packet(data.slice(1), binaryType);
+        }
+        if (utf8decode) {
+            data = tryDecode(data);
+            if (data === false) {
+                return err;
+            }
+        }
+        if (Number(type) != type || !packetslist[type]) {
+            return err;
+        }
+        if (data.length > 1) {
+            return { type: packetslist[type], data: data.slice(1) };
+        }
+        else {
+            return { type: packetslist[type] };
+        }
+    }
+    // Binary data
+    if (binaryType === 'arraybuffer') {
+        // wrap Buffer/ArrayBuffer data into an Uint8Array
+        var intArray = new Uint8Array(data);
+        type = intArray[0];
+        return { type: packetslist[type], data: intArray.buffer.slice(1) };
+    }
+    if (data instanceof ArrayBuffer) {
+        data = arrayBufferToBuffer(data);
+    }
+    type = data[0];
+    return { type: packetslist[type], data: data.slice(1) };
+}
+;
+function tryDecode(data) {
+    try {
+        data = utf8.decode(data, { strict: false });
+    }
+    catch (e) {
+        return false;
+    }
+    return data;
+}
+/**
+ * Decodes a packet encoded in a base64 string.
+ *
+ * @param {String} base64 encoded message
+ * @return {Object} with `type` and `data` (if any)
+ */
+function decodeBase64Packet(msg, binaryType) {
+    var type = packetslist[msg.charAt(0)];
+    var data = Buffer.from(msg.slice(1), 'base64');
+    if (binaryType === 'arraybuffer') {
+        var abv = new Uint8Array(data.length);
+        for (var i = 0; i < abv.length; i++) {
+            abv[i] = data[i];
+        }
+        // @ts-ignore
+        data = abv.buffer;
+    }
+    return { type: type, data: data };
+}
+;
+/**
+ * Encodes multiple messages (payload).
+ *
+ *     <length>:data
+ *
+ * Example:
+ *
+ *     11:hello world2:hi
+ *
+ * If any contents are binary, they will be encoded as base64 strings. Base64
+ * encoded strings are marked with a b before the length specifier
+ *
+ * @param {Array} packets
+ * @api private
+ */
+function encodePayload(packets, supportsBinary, callback) {
+    if (typeof supportsBinary === 'function') {
+        callback = supportsBinary;
+        supportsBinary = null;
+    }
+    if (supportsBinary && hasBinary(packets)) {
+        return encodePayloadAsBinary(packets, callback);
+    }
+    if (!packets.length) {
+        return callback('0:');
+    }
+    function encodeOne(packet, doneCallback) {
+        encodePacket(packet, supportsBinary, false, function (message) {
+            doneCallback(null, setLengthHeader(message));
+        });
+    }
+    map(packets, encodeOne, function (err, results) {
+        return callback(results.join(''));
+    });
+}
+;
+function setLengthHeader(message) {
+    return message.length + ':' + message;
+}
+/**
+ * Async array map using after
+ */
+function map(ary, each, done) {
+    const results = new Array(ary.length);
+    let count = 0;
+    for (let i = 0; i < ary.length; i++) {
+        each(ary[i], (error, msg) => {
+            results[i] = msg;
+            if (++count === ary.length) {
+                done(null, results);
+            }
+        });
+    }
+}
+/*
+ * Decodes data when a payload is maybe expected. Possible binary contents are
+ * decoded from their base64 representation
+ *
+ * @param {String} data, callback method
+ * @api public
+ */
+function decodePayload(data, binaryType, callback) {
+    if (typeof data !== 'string') {
+        return decodePayloadAsBinary(data, binaryType, callback);
+    }
+    if (typeof binaryType === 'function') {
+        callback = binaryType;
+        binaryType = null;
+    }
+    if (data === '') {
+        // parser error - ignoring payload
+        return callback(err, 0, 1);
+    }
+    var length = '', n, msg, packet;
+    for (var i = 0, l = data.length; i < l; i++) {
+        var chr = data.charAt(i);
+        if (chr !== ':') {
+            length += chr;
+            continue;
+        }
+        // @ts-ignore
+        if (length === '' || (length != (n = Number(length)))) {
+            // parser error - ignoring payload
+            return callback(err, 0, 1);
+        }
+        msg = data.slice(i + 1, i + 1 + n);
+        if (length != msg.length) {
+            // parser error - ignoring payload
+            return callback(err, 0, 1);
+        }
+        if (msg.length) {
+            packet = decodePacket(msg, binaryType, false);
+            if (err.type === packet.type && err.data === packet.data) {
+                // parser error in individual packet - ignoring payload
+                return callback(err, 0, 1);
+            }
+            var more = callback(packet, i + n, l);
+            if (false === more)
+                return;
+        }
+        // advance cursor
+        i += n;
+        length = '';
+    }
+    if (length !== '') {
+        // parser error - ignoring payload
+        return callback(err, 0, 1);
+    }
+}
+;
+/**
+ *
+ * Converts a buffer to a utf8.js encoded string
+ *
+ * @api private
+ */
+function bufferToString(buffer) {
+    var str = '';
+    for (var i = 0, l = buffer.length; i < l; i++) {
+        str += String.fromCharCode(buffer[i]);
+    }
+    return str;
+}
+/**
+ *
+ * Converts a utf8.js encoded string to a buffer
+ *
+ * @api private
+ */
+function stringToBuffer(string) {
+    var buf = Buffer.allocUnsafe(string.length);
+    for (var i = 0, l = string.length; i < l; i++) {
+        buf.writeUInt8(string.charCodeAt(i), i);
+    }
+    return buf;
+}
+/**
+ *
+ * Converts an ArrayBuffer to a Buffer
+ *
+ * @api private
+ */
+function arrayBufferToBuffer(data) {
+    // data is either an ArrayBuffer or ArrayBufferView.
+    var length = data.byteLength || data.length;
+    var offset = data.byteOffset || 0;
+    return Buffer.from(data.buffer || data, offset, length);
+}
+/**
+ * Encodes multiple messages (payload) as binary.
+ *
+ * <1 = binary, 0 = string><number from 0-9><number from 0-9>[...]<number
+ * 255><data>
+ *
+ * Example:
+ * 1 3 255 1 2 3, if the binary contents are interpreted as 8 bit integers
+ *
+ * @param {Array} packets
+ * @return {Buffer} encoded payload
+ * @api private
+ */
+function encodePayloadAsBinary(packets, callback) {
+    if (!packets.length) {
+        return callback(EMPTY_BUFFER);
+    }
+    map(packets, encodeOneBinaryPacket, function (err, results) {
+        return callback(Buffer.concat(results));
+    });
+}
+;
+function encodeOneBinaryPacket(p, doneCallback) {
+    function onBinaryPacketEncode(packet) {
+        var encodingLength = '' + packet.length;
+        var sizeBuffer;
+        if (typeof packet === 'string') {
+            sizeBuffer = Buffer.allocUnsafe(encodingLength.length + 2);
+            sizeBuffer[0] = 0; // is a string (not true binary = 0)
+            for (var i = 0; i < encodingLength.length; i++) {
+                sizeBuffer[i + 1] = parseInt(encodingLength[i], 10);
+            }
+            sizeBuffer[sizeBuffer.length - 1] = 255;
+            return doneCallback(null, Buffer.concat([sizeBuffer, stringToBuffer(packet)]));
+        }
+        sizeBuffer = Buffer.allocUnsafe(encodingLength.length + 2);
+        sizeBuffer[0] = 1; // is binary (true binary = 1)
+        for (var i = 0; i < encodingLength.length; i++) {
+            sizeBuffer[i + 1] = parseInt(encodingLength[i], 10);
+        }
+        sizeBuffer[sizeBuffer.length - 1] = 255;
+        doneCallback(null, Buffer.concat([sizeBuffer, packet]));
+    }
+    encodePacket(p, true, true, onBinaryPacketEncode);
+}
+/*
+ * Decodes data when a payload is maybe expected. Strings are decoded by
+ * interpreting each byte as a key code for entries marked to start with 0. See
+ * description of encodePayloadAsBinary
+
+ * @param {Buffer} data, callback method
+ * @api public
+ */
+function decodePayloadAsBinary(data, binaryType, callback) {
+    if (typeof binaryType === 'function') {
+        callback = binaryType;
+        binaryType = null;
+    }
+    var bufferTail = data;
+    var buffers = [];
+    var i;
+    while (bufferTail.length > 0) {
+        var strLen = '';
+        var isString = bufferTail[0] === 0;
+        for (i = 1;; i++) {
+            if (bufferTail[i] === 255)
+                break;
+            // 310 = char length of Number.MAX_VALUE
+            if (strLen.length > 310) {
+                return callback(err, 0, 1);
+            }
+            strLen += '' + bufferTail[i];
+        }
+        bufferTail = bufferTail.slice(strLen.length + 1);
+        var msgLength = parseInt(strLen, 10);
+        var msg = bufferTail.slice(1, msgLength + 1);
+        if (isString)
+            msg = bufferToString(msg);
+        buffers.push(msg);
+        bufferTail = bufferTail.slice(msgLength + 1);
+    }
+    var total = buffers.length;
+    for (i = 0; i < total; i++) {
+        var buffer = buffers[i];
+        callback(decodePacket(buffer, binaryType, true), i, total);
+    }
+}
+;
+
+
+/***/ },
+
+/***/ 6760
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:path");
+
+/***/ },
+
+/***/ 6821
+(module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /*!
  * base64id v0.1.0
@@ -39743,10 +51380,160 @@ Base64Id.prototype.generateId = function () {
 exports = module.exports = new Base64Id();
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6848:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6839
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.patchAdapter = patchAdapter;
+exports.restoreAdapter = restoreAdapter;
+exports.serveFile = serveFile;
+const socket_io_adapter_1 = __webpack_require__(1790);
+const fs_1 = __webpack_require__(9896);
+const debug_1 = __importDefault(__webpack_require__(8725));
+const debug = (0, debug_1.default)("socket.io:adapter-uws");
+const SEPARATOR = "\x1f"; // see https://en.wikipedia.org/wiki/Delimiter#ASCII_delimited_text
+const { addAll, del, broadcast } = socket_io_adapter_1.Adapter.prototype;
+function patchAdapter(app /* : TemplatedApp */) {
+    socket_io_adapter_1.Adapter.prototype.addAll = function (id, rooms) {
+        const isNew = !this.sids.has(id);
+        addAll.call(this, id, rooms);
+        const socket = this.nsp.sockets.get(id) || this.nsp._preConnectSockets.get(id);
+        if (!socket) {
+            return;
+        }
+        if (socket.conn.transport.name === "websocket") {
+            subscribe(this.nsp.name, socket, isNew, rooms);
+            return;
+        }
+        if (isNew) {
+            socket.conn.on("upgrade", () => {
+                const rooms = this.sids.get(id);
+                if (rooms) {
+                    subscribe(this.nsp.name, socket, isNew, rooms);
+                }
+            });
+        }
+    };
+    socket_io_adapter_1.Adapter.prototype.del = function (id, room) {
+        del.call(this, id, room);
+        const socket = this.nsp.sockets.get(id) || this.nsp._preConnectSockets.get(id);
+        if (socket && socket.conn.transport.name === "websocket") {
+            // @ts-ignore
+            const sessionId = socket.conn.id;
+            // @ts-ignore
+            const websocket = socket.conn.transport.socket;
+            const topic = `${this.nsp.name}${SEPARATOR}${room}`;
+            debug("unsubscribe connection %s from topic %s", sessionId, topic);
+            websocket.unsubscribe(topic);
+        }
+    };
+    socket_io_adapter_1.Adapter.prototype.broadcast = function (packet, opts) {
+        const useFastPublish = opts.rooms.size <= 1 && opts.except.size === 0;
+        if (!useFastPublish) {
+            broadcast.call(this, packet, opts);
+            return;
+        }
+        const flags = opts.flags || {};
+        const basePacketOpts = {
+            preEncoded: true,
+            volatile: flags.volatile,
+            compress: flags.compress,
+        };
+        packet.nsp = this.nsp.name;
+        const encodedPackets = this.encoder.encode(packet);
+        const topic = opts.rooms.size === 0
+            ? this.nsp.name
+            : `${this.nsp.name}${SEPARATOR}${opts.rooms.keys().next().value}`;
+        debug("fast publish to %s", topic);
+        // fast publish for clients connected with WebSocket
+        encodedPackets.forEach((encodedPacket) => {
+            const isBinary = typeof encodedPacket !== "string";
+            // "4" being the message type in the Engine.IO protocol, see https://github.com/socketio/engine.io-protocol
+            app.publish(topic, isBinary ? encodedPacket : "4" + encodedPacket, isBinary);
+        });
+        this.apply(opts, (socket) => {
+            if (socket.conn.transport.name !== "websocket") {
+                // classic publish for clients connected with HTTP long-polling
+                socket.client.writeToEngine(encodedPackets, basePacketOpts);
+            }
+        });
+    };
+}
+function subscribe(namespaceName, socket, isNew, rooms) {
+    // @ts-ignore
+    const sessionId = socket.conn.id;
+    // @ts-ignore
+    const websocket = socket.conn.transport.socket;
+    if (isNew) {
+        debug("subscribe connection %s to topic %s", sessionId, namespaceName);
+        websocket.subscribe(namespaceName);
+    }
+    rooms.forEach((room) => {
+        const topic = `${namespaceName}${SEPARATOR}${room}`; // '#' can be used as wildcard
+        debug("subscribe connection %s to topic %s", sessionId, topic);
+        websocket.subscribe(topic);
+    });
+}
+function restoreAdapter() {
+    socket_io_adapter_1.Adapter.prototype.addAll = addAll;
+    socket_io_adapter_1.Adapter.prototype.del = del;
+    socket_io_adapter_1.Adapter.prototype.broadcast = broadcast;
+}
+const toArrayBuffer = (buffer) => {
+    const { buffer: arrayBuffer, byteOffset, byteLength } = buffer;
+    return arrayBuffer.slice(byteOffset, byteOffset + byteLength);
+};
+// imported from https://github.com/kolodziejczak-sz/uwebsocket-serve
+function serveFile(res /* : HttpResponse */, filepath) {
+    const { size } = (0, fs_1.statSync)(filepath);
+    const readStream = (0, fs_1.createReadStream)(filepath);
+    const destroyReadStream = () => !readStream.destroyed && readStream.destroy();
+    const onError = (error) => {
+        destroyReadStream();
+        throw error;
+    };
+    const onDataChunk = (chunk) => {
+        const arrayBufferChunk = toArrayBuffer(chunk);
+        res.cork(() => {
+            const lastOffset = res.getWriteOffset();
+            const [ok, done] = res.tryEnd(arrayBufferChunk, size);
+            if (!done && !ok) {
+                readStream.pause();
+                res.onWritable((offset) => {
+                    const [ok, done] = res.tryEnd(arrayBufferChunk.slice(offset - lastOffset), size);
+                    if (!done && ok) {
+                        readStream.resume();
+                    }
+                    return ok;
+                });
+            }
+        });
+    };
+    res.onAborted(destroyReadStream);
+    readStream
+        .on("data", onDataChunk)
+        .on("error", onError)
+        .on("end", destroyReadStream);
+}
+
+
+/***/ },
+
+/***/ 6848
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -39881,6 +51668,7 @@ exports.createStringifyContext = createStringifyContext;
 exports.stringify = stringify;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6928:
@@ -39892,6 +51680,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("path");
 
 /***/ 6965:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6928
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("path");
+
+/***/ },
+
+/***/ 6965
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -40095,6 +51896,7 @@ function splitLines(source) {
 exports.resolveBlockScalar = resolveBlockScalar;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 6982:
@@ -40106,6 +51908,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("crypto");
 
 /***/ 6987:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 6982
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("crypto");
+
+/***/ },
+
+/***/ 6987
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -40130,6 +51945,7 @@ const boolTag = {
 exports.boolTag = boolTag;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7013:
@@ -40355,6 +52171,19 @@ exports.JSONP = JSONP;
 
 /***/ 7034:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 7016
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("url");
+
+/***/ },
+
+/***/ 7034
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -40536,6 +52365,7 @@ Directives.defaultTags = { '!!': 'tag:yaml.org,2002:' };
 exports.Directives = Directives;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7062:
@@ -40562,6 +52392,19 @@ module.exports = /*#__PURE__*/JSON.parse('{"application/1d-interleaved-parityfec
 
 /***/ 7201:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 7080
+(module) {
+
+module.exports = /*#__PURE__*/JSON.parse('{"application/1d-interleaved-parityfec":{"source":"iana"},"application/3gpdash-qoe-report+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/3gpp-ims+xml":{"source":"iana","compressible":true},"application/3gpphal+json":{"source":"iana","compressible":true},"application/3gpphalforms+json":{"source":"iana","compressible":true},"application/a2l":{"source":"iana"},"application/ace+cbor":{"source":"iana"},"application/activemessage":{"source":"iana"},"application/activity+json":{"source":"iana","compressible":true},"application/alto-costmap+json":{"source":"iana","compressible":true},"application/alto-costmapfilter+json":{"source":"iana","compressible":true},"application/alto-directory+json":{"source":"iana","compressible":true},"application/alto-endpointcost+json":{"source":"iana","compressible":true},"application/alto-endpointcostparams+json":{"source":"iana","compressible":true},"application/alto-endpointprop+json":{"source":"iana","compressible":true},"application/alto-endpointpropparams+json":{"source":"iana","compressible":true},"application/alto-error+json":{"source":"iana","compressible":true},"application/alto-networkmap+json":{"source":"iana","compressible":true},"application/alto-networkmapfilter+json":{"source":"iana","compressible":true},"application/alto-updatestreamcontrol+json":{"source":"iana","compressible":true},"application/alto-updatestreamparams+json":{"source":"iana","compressible":true},"application/aml":{"source":"iana"},"application/andrew-inset":{"source":"iana","extensions":["ez"]},"application/applefile":{"source":"iana"},"application/applixware":{"source":"apache","extensions":["aw"]},"application/at+jwt":{"source":"iana"},"application/atf":{"source":"iana"},"application/atfx":{"source":"iana"},"application/atom+xml":{"source":"iana","compressible":true,"extensions":["atom"]},"application/atomcat+xml":{"source":"iana","compressible":true,"extensions":["atomcat"]},"application/atomdeleted+xml":{"source":"iana","compressible":true,"extensions":["atomdeleted"]},"application/atomicmail":{"source":"iana"},"application/atomsvc+xml":{"source":"iana","compressible":true,"extensions":["atomsvc"]},"application/atsc-dwd+xml":{"source":"iana","compressible":true,"extensions":["dwd"]},"application/atsc-dynamic-event-message":{"source":"iana"},"application/atsc-held+xml":{"source":"iana","compressible":true,"extensions":["held"]},"application/atsc-rdt+json":{"source":"iana","compressible":true},"application/atsc-rsat+xml":{"source":"iana","compressible":true,"extensions":["rsat"]},"application/atxml":{"source":"iana"},"application/auth-policy+xml":{"source":"iana","compressible":true},"application/bacnet-xdd+zip":{"source":"iana","compressible":false},"application/batch-smtp":{"source":"iana"},"application/bdoc":{"compressible":false,"extensions":["bdoc"]},"application/beep+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/calendar+json":{"source":"iana","compressible":true},"application/calendar+xml":{"source":"iana","compressible":true,"extensions":["xcs"]},"application/call-completion":{"source":"iana"},"application/cals-1840":{"source":"iana"},"application/captive+json":{"source":"iana","compressible":true},"application/cbor":{"source":"iana"},"application/cbor-seq":{"source":"iana"},"application/cccex":{"source":"iana"},"application/ccmp+xml":{"source":"iana","compressible":true},"application/ccxml+xml":{"source":"iana","compressible":true,"extensions":["ccxml"]},"application/cdfx+xml":{"source":"iana","compressible":true,"extensions":["cdfx"]},"application/cdmi-capability":{"source":"iana","extensions":["cdmia"]},"application/cdmi-container":{"source":"iana","extensions":["cdmic"]},"application/cdmi-domain":{"source":"iana","extensions":["cdmid"]},"application/cdmi-object":{"source":"iana","extensions":["cdmio"]},"application/cdmi-queue":{"source":"iana","extensions":["cdmiq"]},"application/cdni":{"source":"iana"},"application/cea":{"source":"iana"},"application/cea-2018+xml":{"source":"iana","compressible":true},"application/cellml+xml":{"source":"iana","compressible":true},"application/cfw":{"source":"iana"},"application/city+json":{"source":"iana","compressible":true},"application/clr":{"source":"iana"},"application/clue+xml":{"source":"iana","compressible":true},"application/clue_info+xml":{"source":"iana","compressible":true},"application/cms":{"source":"iana"},"application/cnrp+xml":{"source":"iana","compressible":true},"application/coap-group+json":{"source":"iana","compressible":true},"application/coap-payload":{"source":"iana"},"application/commonground":{"source":"iana"},"application/conference-info+xml":{"source":"iana","compressible":true},"application/cose":{"source":"iana"},"application/cose-key":{"source":"iana"},"application/cose-key-set":{"source":"iana"},"application/cpl+xml":{"source":"iana","compressible":true,"extensions":["cpl"]},"application/csrattrs":{"source":"iana"},"application/csta+xml":{"source":"iana","compressible":true},"application/cstadata+xml":{"source":"iana","compressible":true},"application/csvm+json":{"source":"iana","compressible":true},"application/cu-seeme":{"source":"apache","extensions":["cu"]},"application/cwt":{"source":"iana"},"application/cybercash":{"source":"iana"},"application/dart":{"compressible":true},"application/dash+xml":{"source":"iana","compressible":true,"extensions":["mpd"]},"application/dash-patch+xml":{"source":"iana","compressible":true,"extensions":["mpp"]},"application/dashdelta":{"source":"iana"},"application/davmount+xml":{"source":"iana","compressible":true,"extensions":["davmount"]},"application/dca-rft":{"source":"iana"},"application/dcd":{"source":"iana"},"application/dec-dx":{"source":"iana"},"application/dialog-info+xml":{"source":"iana","compressible":true},"application/dicom":{"source":"iana"},"application/dicom+json":{"source":"iana","compressible":true},"application/dicom+xml":{"source":"iana","compressible":true},"application/dii":{"source":"iana"},"application/dit":{"source":"iana"},"application/dns":{"source":"iana"},"application/dns+json":{"source":"iana","compressible":true},"application/dns-message":{"source":"iana"},"application/docbook+xml":{"source":"apache","compressible":true,"extensions":["dbk"]},"application/dots+cbor":{"source":"iana"},"application/dskpp+xml":{"source":"iana","compressible":true},"application/dssc+der":{"source":"iana","extensions":["dssc"]},"application/dssc+xml":{"source":"iana","compressible":true,"extensions":["xdssc"]},"application/dvcs":{"source":"iana"},"application/ecmascript":{"source":"iana","compressible":true,"extensions":["es","ecma"]},"application/edi-consent":{"source":"iana"},"application/edi-x12":{"source":"iana","compressible":false},"application/edifact":{"source":"iana","compressible":false},"application/efi":{"source":"iana"},"application/elm+json":{"source":"iana","charset":"UTF-8","compressible":true},"application/elm+xml":{"source":"iana","compressible":true},"application/emergencycalldata.cap+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/emergencycalldata.comment+xml":{"source":"iana","compressible":true},"application/emergencycalldata.control+xml":{"source":"iana","compressible":true},"application/emergencycalldata.deviceinfo+xml":{"source":"iana","compressible":true},"application/emergencycalldata.ecall.msd":{"source":"iana"},"application/emergencycalldata.providerinfo+xml":{"source":"iana","compressible":true},"application/emergencycalldata.serviceinfo+xml":{"source":"iana","compressible":true},"application/emergencycalldata.subscriberinfo+xml":{"source":"iana","compressible":true},"application/emergencycalldata.veds+xml":{"source":"iana","compressible":true},"application/emma+xml":{"source":"iana","compressible":true,"extensions":["emma"]},"application/emotionml+xml":{"source":"iana","compressible":true,"extensions":["emotionml"]},"application/encaprtp":{"source":"iana"},"application/epp+xml":{"source":"iana","compressible":true},"application/epub+zip":{"source":"iana","compressible":false,"extensions":["epub"]},"application/eshop":{"source":"iana"},"application/exi":{"source":"iana","extensions":["exi"]},"application/expect-ct-report+json":{"source":"iana","compressible":true},"application/express":{"source":"iana","extensions":["exp"]},"application/fastinfoset":{"source":"iana"},"application/fastsoap":{"source":"iana"},"application/fdt+xml":{"source":"iana","compressible":true,"extensions":["fdt"]},"application/fhir+json":{"source":"iana","charset":"UTF-8","compressible":true},"application/fhir+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/fido.trusted-apps+json":{"compressible":true},"application/fits":{"source":"iana"},"application/flexfec":{"source":"iana"},"application/font-sfnt":{"source":"iana"},"application/font-tdpfr":{"source":"iana","extensions":["pfr"]},"application/font-woff":{"source":"iana","compressible":false},"application/framework-attributes+xml":{"source":"iana","compressible":true},"application/geo+json":{"source":"iana","compressible":true,"extensions":["geojson"]},"application/geo+json-seq":{"source":"iana"},"application/geopackage+sqlite3":{"source":"iana"},"application/geoxacml+xml":{"source":"iana","compressible":true},"application/gltf-buffer":{"source":"iana"},"application/gml+xml":{"source":"iana","compressible":true,"extensions":["gml"]},"application/gpx+xml":{"source":"apache","compressible":true,"extensions":["gpx"]},"application/gxf":{"source":"apache","extensions":["gxf"]},"application/gzip":{"source":"iana","compressible":false,"extensions":["gz"]},"application/h224":{"source":"iana"},"application/held+xml":{"source":"iana","compressible":true},"application/hjson":{"extensions":["hjson"]},"application/http":{"source":"iana"},"application/hyperstudio":{"source":"iana","extensions":["stk"]},"application/ibe-key-request+xml":{"source":"iana","compressible":true},"application/ibe-pkg-reply+xml":{"source":"iana","compressible":true},"application/ibe-pp-data":{"source":"iana"},"application/iges":{"source":"iana"},"application/im-iscomposing+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/index":{"source":"iana"},"application/index.cmd":{"source":"iana"},"application/index.obj":{"source":"iana"},"application/index.response":{"source":"iana"},"application/index.vnd":{"source":"iana"},"application/inkml+xml":{"source":"iana","compressible":true,"extensions":["ink","inkml"]},"application/iotp":{"source":"iana"},"application/ipfix":{"source":"iana","extensions":["ipfix"]},"application/ipp":{"source":"iana"},"application/isup":{"source":"iana"},"application/its+xml":{"source":"iana","compressible":true,"extensions":["its"]},"application/java-archive":{"source":"apache","compressible":false,"extensions":["jar","war","ear"]},"application/java-serialized-object":{"source":"apache","compressible":false,"extensions":["ser"]},"application/java-vm":{"source":"apache","compressible":false,"extensions":["class"]},"application/javascript":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["js","mjs"]},"application/jf2feed+json":{"source":"iana","compressible":true},"application/jose":{"source":"iana"},"application/jose+json":{"source":"iana","compressible":true},"application/jrd+json":{"source":"iana","compressible":true},"application/jscalendar+json":{"source":"iana","compressible":true},"application/json":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["json","map"]},"application/json-patch+json":{"source":"iana","compressible":true},"application/json-seq":{"source":"iana"},"application/json5":{"extensions":["json5"]},"application/jsonml+json":{"source":"apache","compressible":true,"extensions":["jsonml"]},"application/jwk+json":{"source":"iana","compressible":true},"application/jwk-set+json":{"source":"iana","compressible":true},"application/jwt":{"source":"iana"},"application/kpml-request+xml":{"source":"iana","compressible":true},"application/kpml-response+xml":{"source":"iana","compressible":true},"application/ld+json":{"source":"iana","compressible":true,"extensions":["jsonld"]},"application/lgr+xml":{"source":"iana","compressible":true,"extensions":["lgr"]},"application/link-format":{"source":"iana"},"application/load-control+xml":{"source":"iana","compressible":true},"application/lost+xml":{"source":"iana","compressible":true,"extensions":["lostxml"]},"application/lostsync+xml":{"source":"iana","compressible":true},"application/lpf+zip":{"source":"iana","compressible":false},"application/lxf":{"source":"iana"},"application/mac-binhex40":{"source":"iana","extensions":["hqx"]},"application/mac-compactpro":{"source":"apache","extensions":["cpt"]},"application/macwriteii":{"source":"iana"},"application/mads+xml":{"source":"iana","compressible":true,"extensions":["mads"]},"application/manifest+json":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["webmanifest"]},"application/marc":{"source":"iana","extensions":["mrc"]},"application/marcxml+xml":{"source":"iana","compressible":true,"extensions":["mrcx"]},"application/mathematica":{"source":"iana","extensions":["ma","nb","mb"]},"application/mathml+xml":{"source":"iana","compressible":true,"extensions":["mathml"]},"application/mathml-content+xml":{"source":"iana","compressible":true},"application/mathml-presentation+xml":{"source":"iana","compressible":true},"application/mbms-associated-procedure-description+xml":{"source":"iana","compressible":true},"application/mbms-deregister+xml":{"source":"iana","compressible":true},"application/mbms-envelope+xml":{"source":"iana","compressible":true},"application/mbms-msk+xml":{"source":"iana","compressible":true},"application/mbms-msk-response+xml":{"source":"iana","compressible":true},"application/mbms-protection-description+xml":{"source":"iana","compressible":true},"application/mbms-reception-report+xml":{"source":"iana","compressible":true},"application/mbms-register+xml":{"source":"iana","compressible":true},"application/mbms-register-response+xml":{"source":"iana","compressible":true},"application/mbms-schedule+xml":{"source":"iana","compressible":true},"application/mbms-user-service-description+xml":{"source":"iana","compressible":true},"application/mbox":{"source":"iana","extensions":["mbox"]},"application/media-policy-dataset+xml":{"source":"iana","compressible":true,"extensions":["mpf"]},"application/media_control+xml":{"source":"iana","compressible":true},"application/mediaservercontrol+xml":{"source":"iana","compressible":true,"extensions":["mscml"]},"application/merge-patch+json":{"source":"iana","compressible":true},"application/metalink+xml":{"source":"apache","compressible":true,"extensions":["metalink"]},"application/metalink4+xml":{"source":"iana","compressible":true,"extensions":["meta4"]},"application/mets+xml":{"source":"iana","compressible":true,"extensions":["mets"]},"application/mf4":{"source":"iana"},"application/mikey":{"source":"iana"},"application/mipc":{"source":"iana"},"application/missing-blocks+cbor-seq":{"source":"iana"},"application/mmt-aei+xml":{"source":"iana","compressible":true,"extensions":["maei"]},"application/mmt-usd+xml":{"source":"iana","compressible":true,"extensions":["musd"]},"application/mods+xml":{"source":"iana","compressible":true,"extensions":["mods"]},"application/moss-keys":{"source":"iana"},"application/moss-signature":{"source":"iana"},"application/mosskey-data":{"source":"iana"},"application/mosskey-request":{"source":"iana"},"application/mp21":{"source":"iana","extensions":["m21","mp21"]},"application/mp4":{"source":"iana","extensions":["mp4s","m4p"]},"application/mpeg4-generic":{"source":"iana"},"application/mpeg4-iod":{"source":"iana"},"application/mpeg4-iod-xmt":{"source":"iana"},"application/mrb-consumer+xml":{"source":"iana","compressible":true},"application/mrb-publish+xml":{"source":"iana","compressible":true},"application/msc-ivr+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/msc-mixer+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/msword":{"source":"iana","compressible":false,"extensions":["doc","dot"]},"application/mud+json":{"source":"iana","compressible":true},"application/multipart-core":{"source":"iana"},"application/mxf":{"source":"iana","extensions":["mxf"]},"application/n-quads":{"source":"iana","extensions":["nq"]},"application/n-triples":{"source":"iana","extensions":["nt"]},"application/nasdata":{"source":"iana"},"application/news-checkgroups":{"source":"iana","charset":"US-ASCII"},"application/news-groupinfo":{"source":"iana","charset":"US-ASCII"},"application/news-transmission":{"source":"iana"},"application/nlsml+xml":{"source":"iana","compressible":true},"application/node":{"source":"iana","extensions":["cjs"]},"application/nss":{"source":"iana"},"application/oauth-authz-req+jwt":{"source":"iana"},"application/oblivious-dns-message":{"source":"iana"},"application/ocsp-request":{"source":"iana"},"application/ocsp-response":{"source":"iana"},"application/octet-stream":{"source":"iana","compressible":false,"extensions":["bin","dms","lrf","mar","so","dist","distz","pkg","bpk","dump","elc","deploy","exe","dll","deb","dmg","iso","img","msi","msp","msm","buffer"]},"application/oda":{"source":"iana","extensions":["oda"]},"application/odm+xml":{"source":"iana","compressible":true},"application/odx":{"source":"iana"},"application/oebps-package+xml":{"source":"iana","compressible":true,"extensions":["opf"]},"application/ogg":{"source":"iana","compressible":false,"extensions":["ogx"]},"application/omdoc+xml":{"source":"apache","compressible":true,"extensions":["omdoc"]},"application/onenote":{"source":"apache","extensions":["onetoc","onetoc2","onetmp","onepkg"]},"application/opc-nodeset+xml":{"source":"iana","compressible":true},"application/oscore":{"source":"iana"},"application/oxps":{"source":"iana","extensions":["oxps"]},"application/p21":{"source":"iana"},"application/p21+zip":{"source":"iana","compressible":false},"application/p2p-overlay+xml":{"source":"iana","compressible":true,"extensions":["relo"]},"application/parityfec":{"source":"iana"},"application/passport":{"source":"iana"},"application/patch-ops-error+xml":{"source":"iana","compressible":true,"extensions":["xer"]},"application/pdf":{"source":"iana","compressible":false,"extensions":["pdf"]},"application/pdx":{"source":"iana"},"application/pem-certificate-chain":{"source":"iana"},"application/pgp-encrypted":{"source":"iana","compressible":false,"extensions":["pgp"]},"application/pgp-keys":{"source":"iana","extensions":["asc"]},"application/pgp-signature":{"source":"iana","extensions":["asc","sig"]},"application/pics-rules":{"source":"apache","extensions":["prf"]},"application/pidf+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/pidf-diff+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/pkcs10":{"source":"iana","extensions":["p10"]},"application/pkcs12":{"source":"iana"},"application/pkcs7-mime":{"source":"iana","extensions":["p7m","p7c"]},"application/pkcs7-signature":{"source":"iana","extensions":["p7s"]},"application/pkcs8":{"source":"iana","extensions":["p8"]},"application/pkcs8-encrypted":{"source":"iana"},"application/pkix-attr-cert":{"source":"iana","extensions":["ac"]},"application/pkix-cert":{"source":"iana","extensions":["cer"]},"application/pkix-crl":{"source":"iana","extensions":["crl"]},"application/pkix-pkipath":{"source":"iana","extensions":["pkipath"]},"application/pkixcmp":{"source":"iana","extensions":["pki"]},"application/pls+xml":{"source":"iana","compressible":true,"extensions":["pls"]},"application/poc-settings+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/postscript":{"source":"iana","compressible":true,"extensions":["ai","eps","ps"]},"application/ppsp-tracker+json":{"source":"iana","compressible":true},"application/problem+json":{"source":"iana","compressible":true},"application/problem+xml":{"source":"iana","compressible":true},"application/provenance+xml":{"source":"iana","compressible":true,"extensions":["provx"]},"application/prs.alvestrand.titrax-sheet":{"source":"iana"},"application/prs.cww":{"source":"iana","extensions":["cww"]},"application/prs.cyn":{"source":"iana","charset":"7-BIT"},"application/prs.hpub+zip":{"source":"iana","compressible":false},"application/prs.nprend":{"source":"iana"},"application/prs.plucker":{"source":"iana"},"application/prs.rdf-xml-crypt":{"source":"iana"},"application/prs.xsf+xml":{"source":"iana","compressible":true},"application/pskc+xml":{"source":"iana","compressible":true,"extensions":["pskcxml"]},"application/pvd+json":{"source":"iana","compressible":true},"application/qsig":{"source":"iana"},"application/raml+yaml":{"compressible":true,"extensions":["raml"]},"application/raptorfec":{"source":"iana"},"application/rdap+json":{"source":"iana","compressible":true},"application/rdf+xml":{"source":"iana","compressible":true,"extensions":["rdf","owl"]},"application/reginfo+xml":{"source":"iana","compressible":true,"extensions":["rif"]},"application/relax-ng-compact-syntax":{"source":"iana","extensions":["rnc"]},"application/remote-printing":{"source":"iana"},"application/reputon+json":{"source":"iana","compressible":true},"application/resource-lists+xml":{"source":"iana","compressible":true,"extensions":["rl"]},"application/resource-lists-diff+xml":{"source":"iana","compressible":true,"extensions":["rld"]},"application/rfc+xml":{"source":"iana","compressible":true},"application/riscos":{"source":"iana"},"application/rlmi+xml":{"source":"iana","compressible":true},"application/rls-services+xml":{"source":"iana","compressible":true,"extensions":["rs"]},"application/route-apd+xml":{"source":"iana","compressible":true,"extensions":["rapd"]},"application/route-s-tsid+xml":{"source":"iana","compressible":true,"extensions":["sls"]},"application/route-usd+xml":{"source":"iana","compressible":true,"extensions":["rusd"]},"application/rpki-ghostbusters":{"source":"iana","extensions":["gbr"]},"application/rpki-manifest":{"source":"iana","extensions":["mft"]},"application/rpki-publication":{"source":"iana"},"application/rpki-roa":{"source":"iana","extensions":["roa"]},"application/rpki-updown":{"source":"iana"},"application/rsd+xml":{"source":"apache","compressible":true,"extensions":["rsd"]},"application/rss+xml":{"source":"apache","compressible":true,"extensions":["rss"]},"application/rtf":{"source":"iana","compressible":true,"extensions":["rtf"]},"application/rtploopback":{"source":"iana"},"application/rtx":{"source":"iana"},"application/samlassertion+xml":{"source":"iana","compressible":true},"application/samlmetadata+xml":{"source":"iana","compressible":true},"application/sarif+json":{"source":"iana","compressible":true},"application/sarif-external-properties+json":{"source":"iana","compressible":true},"application/sbe":{"source":"iana"},"application/sbml+xml":{"source":"iana","compressible":true,"extensions":["sbml"]},"application/scaip+xml":{"source":"iana","compressible":true},"application/scim+json":{"source":"iana","compressible":true},"application/scvp-cv-request":{"source":"iana","extensions":["scq"]},"application/scvp-cv-response":{"source":"iana","extensions":["scs"]},"application/scvp-vp-request":{"source":"iana","extensions":["spq"]},"application/scvp-vp-response":{"source":"iana","extensions":["spp"]},"application/sdp":{"source":"iana","extensions":["sdp"]},"application/secevent+jwt":{"source":"iana"},"application/senml+cbor":{"source":"iana"},"application/senml+json":{"source":"iana","compressible":true},"application/senml+xml":{"source":"iana","compressible":true,"extensions":["senmlx"]},"application/senml-etch+cbor":{"source":"iana"},"application/senml-etch+json":{"source":"iana","compressible":true},"application/senml-exi":{"source":"iana"},"application/sensml+cbor":{"source":"iana"},"application/sensml+json":{"source":"iana","compressible":true},"application/sensml+xml":{"source":"iana","compressible":true,"extensions":["sensmlx"]},"application/sensml-exi":{"source":"iana"},"application/sep+xml":{"source":"iana","compressible":true},"application/sep-exi":{"source":"iana"},"application/session-info":{"source":"iana"},"application/set-payment":{"source":"iana"},"application/set-payment-initiation":{"source":"iana","extensions":["setpay"]},"application/set-registration":{"source":"iana"},"application/set-registration-initiation":{"source":"iana","extensions":["setreg"]},"application/sgml":{"source":"iana"},"application/sgml-open-catalog":{"source":"iana"},"application/shf+xml":{"source":"iana","compressible":true,"extensions":["shf"]},"application/sieve":{"source":"iana","extensions":["siv","sieve"]},"application/simple-filter+xml":{"source":"iana","compressible":true},"application/simple-message-summary":{"source":"iana"},"application/simplesymbolcontainer":{"source":"iana"},"application/sipc":{"source":"iana"},"application/slate":{"source":"iana"},"application/smil":{"source":"iana"},"application/smil+xml":{"source":"iana","compressible":true,"extensions":["smi","smil"]},"application/smpte336m":{"source":"iana"},"application/soap+fastinfoset":{"source":"iana"},"application/soap+xml":{"source":"iana","compressible":true},"application/sparql-query":{"source":"iana","extensions":["rq"]},"application/sparql-results+xml":{"source":"iana","compressible":true,"extensions":["srx"]},"application/spdx+json":{"source":"iana","compressible":true},"application/spirits-event+xml":{"source":"iana","compressible":true},"application/sql":{"source":"iana"},"application/srgs":{"source":"iana","extensions":["gram"]},"application/srgs+xml":{"source":"iana","compressible":true,"extensions":["grxml"]},"application/sru+xml":{"source":"iana","compressible":true,"extensions":["sru"]},"application/ssdl+xml":{"source":"apache","compressible":true,"extensions":["ssdl"]},"application/ssml+xml":{"source":"iana","compressible":true,"extensions":["ssml"]},"application/stix+json":{"source":"iana","compressible":true},"application/swid+xml":{"source":"iana","compressible":true,"extensions":["swidtag"]},"application/tamp-apex-update":{"source":"iana"},"application/tamp-apex-update-confirm":{"source":"iana"},"application/tamp-community-update":{"source":"iana"},"application/tamp-community-update-confirm":{"source":"iana"},"application/tamp-error":{"source":"iana"},"application/tamp-sequence-adjust":{"source":"iana"},"application/tamp-sequence-adjust-confirm":{"source":"iana"},"application/tamp-status-query":{"source":"iana"},"application/tamp-status-response":{"source":"iana"},"application/tamp-update":{"source":"iana"},"application/tamp-update-confirm":{"source":"iana"},"application/tar":{"compressible":true},"application/taxii+json":{"source":"iana","compressible":true},"application/td+json":{"source":"iana","compressible":true},"application/tei+xml":{"source":"iana","compressible":true,"extensions":["tei","teicorpus"]},"application/tetra_isi":{"source":"iana"},"application/thraud+xml":{"source":"iana","compressible":true,"extensions":["tfi"]},"application/timestamp-query":{"source":"iana"},"application/timestamp-reply":{"source":"iana"},"application/timestamped-data":{"source":"iana","extensions":["tsd"]},"application/tlsrpt+gzip":{"source":"iana"},"application/tlsrpt+json":{"source":"iana","compressible":true},"application/tnauthlist":{"source":"iana"},"application/token-introspection+jwt":{"source":"iana"},"application/toml":{"compressible":true,"extensions":["toml"]},"application/trickle-ice-sdpfrag":{"source":"iana"},"application/trig":{"source":"iana","extensions":["trig"]},"application/ttml+xml":{"source":"iana","compressible":true,"extensions":["ttml"]},"application/tve-trigger":{"source":"iana"},"application/tzif":{"source":"iana"},"application/tzif-leap":{"source":"iana"},"application/ubjson":{"compressible":false,"extensions":["ubj"]},"application/ulpfec":{"source":"iana"},"application/urc-grpsheet+xml":{"source":"iana","compressible":true},"application/urc-ressheet+xml":{"source":"iana","compressible":true,"extensions":["rsheet"]},"application/urc-targetdesc+xml":{"source":"iana","compressible":true,"extensions":["td"]},"application/urc-uisocketdesc+xml":{"source":"iana","compressible":true},"application/vcard+json":{"source":"iana","compressible":true},"application/vcard+xml":{"source":"iana","compressible":true},"application/vemmi":{"source":"iana"},"application/vividence.scriptfile":{"source":"apache"},"application/vnd.1000minds.decision-model+xml":{"source":"iana","compressible":true,"extensions":["1km"]},"application/vnd.3gpp-prose+xml":{"source":"iana","compressible":true},"application/vnd.3gpp-prose-pc3ch+xml":{"source":"iana","compressible":true},"application/vnd.3gpp-v2x-local-service-information":{"source":"iana"},"application/vnd.3gpp.5gnas":{"source":"iana"},"application/vnd.3gpp.access-transfer-events+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.bsf+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.gmop+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.gtpc":{"source":"iana"},"application/vnd.3gpp.interworking-data":{"source":"iana"},"application/vnd.3gpp.lpp":{"source":"iana"},"application/vnd.3gpp.mc-signalling-ear":{"source":"iana"},"application/vnd.3gpp.mcdata-affiliation-command+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcdata-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcdata-payload":{"source":"iana"},"application/vnd.3gpp.mcdata-service-config+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcdata-signalling":{"source":"iana"},"application/vnd.3gpp.mcdata-ue-config+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcdata-user-profile+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-affiliation-command+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-floor-request+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-location-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-mbms-usage-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-service-config+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-signed+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-ue-config+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-ue-init-config+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcptt-user-profile+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-affiliation-command+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-affiliation-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-location-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-mbms-usage-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-service-config+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-transmission-request+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-ue-config+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mcvideo-user-profile+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.mid-call+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.ngap":{"source":"iana"},"application/vnd.3gpp.pfcp":{"source":"iana"},"application/vnd.3gpp.pic-bw-large":{"source":"iana","extensions":["plb"]},"application/vnd.3gpp.pic-bw-small":{"source":"iana","extensions":["psb"]},"application/vnd.3gpp.pic-bw-var":{"source":"iana","extensions":["pvb"]},"application/vnd.3gpp.s1ap":{"source":"iana"},"application/vnd.3gpp.sms":{"source":"iana"},"application/vnd.3gpp.sms+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.srvcc-ext+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.srvcc-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.state-and-event-info+xml":{"source":"iana","compressible":true},"application/vnd.3gpp.ussd+xml":{"source":"iana","compressible":true},"application/vnd.3gpp2.bcmcsinfo+xml":{"source":"iana","compressible":true},"application/vnd.3gpp2.sms":{"source":"iana"},"application/vnd.3gpp2.tcap":{"source":"iana","extensions":["tcap"]},"application/vnd.3lightssoftware.imagescal":{"source":"iana"},"application/vnd.3m.post-it-notes":{"source":"iana","extensions":["pwn"]},"application/vnd.accpac.simply.aso":{"source":"iana","extensions":["aso"]},"application/vnd.accpac.simply.imp":{"source":"iana","extensions":["imp"]},"application/vnd.acucobol":{"source":"iana","extensions":["acu"]},"application/vnd.acucorp":{"source":"iana","extensions":["atc","acutc"]},"application/vnd.adobe.air-application-installer-package+zip":{"source":"apache","compressible":false,"extensions":["air"]},"application/vnd.adobe.flash.movie":{"source":"iana"},"application/vnd.adobe.formscentral.fcdt":{"source":"iana","extensions":["fcdt"]},"application/vnd.adobe.fxp":{"source":"iana","extensions":["fxp","fxpl"]},"application/vnd.adobe.partial-upload":{"source":"iana"},"application/vnd.adobe.xdp+xml":{"source":"iana","compressible":true,"extensions":["xdp"]},"application/vnd.adobe.xfdf":{"source":"iana","extensions":["xfdf"]},"application/vnd.aether.imp":{"source":"iana"},"application/vnd.afpc.afplinedata":{"source":"iana"},"application/vnd.afpc.afplinedata-pagedef":{"source":"iana"},"application/vnd.afpc.cmoca-cmresource":{"source":"iana"},"application/vnd.afpc.foca-charset":{"source":"iana"},"application/vnd.afpc.foca-codedfont":{"source":"iana"},"application/vnd.afpc.foca-codepage":{"source":"iana"},"application/vnd.afpc.modca":{"source":"iana"},"application/vnd.afpc.modca-cmtable":{"source":"iana"},"application/vnd.afpc.modca-formdef":{"source":"iana"},"application/vnd.afpc.modca-mediummap":{"source":"iana"},"application/vnd.afpc.modca-objectcontainer":{"source":"iana"},"application/vnd.afpc.modca-overlay":{"source":"iana"},"application/vnd.afpc.modca-pagesegment":{"source":"iana"},"application/vnd.age":{"source":"iana","extensions":["age"]},"application/vnd.ah-barcode":{"source":"iana"},"application/vnd.ahead.space":{"source":"iana","extensions":["ahead"]},"application/vnd.airzip.filesecure.azf":{"source":"iana","extensions":["azf"]},"application/vnd.airzip.filesecure.azs":{"source":"iana","extensions":["azs"]},"application/vnd.amadeus+json":{"source":"iana","compressible":true},"application/vnd.amazon.ebook":{"source":"apache","extensions":["azw"]},"application/vnd.amazon.mobi8-ebook":{"source":"iana"},"application/vnd.americandynamics.acc":{"source":"iana","extensions":["acc"]},"application/vnd.amiga.ami":{"source":"iana","extensions":["ami"]},"application/vnd.amundsen.maze+xml":{"source":"iana","compressible":true},"application/vnd.android.ota":{"source":"iana"},"application/vnd.android.package-archive":{"source":"apache","compressible":false,"extensions":["apk"]},"application/vnd.anki":{"source":"iana"},"application/vnd.anser-web-certificate-issue-initiation":{"source":"iana","extensions":["cii"]},"application/vnd.anser-web-funds-transfer-initiation":{"source":"apache","extensions":["fti"]},"application/vnd.antix.game-component":{"source":"iana","extensions":["atx"]},"application/vnd.apache.arrow.file":{"source":"iana"},"application/vnd.apache.arrow.stream":{"source":"iana"},"application/vnd.apache.thrift.binary":{"source":"iana"},"application/vnd.apache.thrift.compact":{"source":"iana"},"application/vnd.apache.thrift.json":{"source":"iana"},"application/vnd.api+json":{"source":"iana","compressible":true},"application/vnd.aplextor.warrp+json":{"source":"iana","compressible":true},"application/vnd.apothekende.reservation+json":{"source":"iana","compressible":true},"application/vnd.apple.installer+xml":{"source":"iana","compressible":true,"extensions":["mpkg"]},"application/vnd.apple.keynote":{"source":"iana","extensions":["key"]},"application/vnd.apple.mpegurl":{"source":"iana","extensions":["m3u8"]},"application/vnd.apple.numbers":{"source":"iana","extensions":["numbers"]},"application/vnd.apple.pages":{"source":"iana","extensions":["pages"]},"application/vnd.apple.pkpass":{"compressible":false,"extensions":["pkpass"]},"application/vnd.arastra.swi":{"source":"iana"},"application/vnd.aristanetworks.swi":{"source":"iana","extensions":["swi"]},"application/vnd.artisan+json":{"source":"iana","compressible":true},"application/vnd.artsquare":{"source":"iana"},"application/vnd.astraea-software.iota":{"source":"iana","extensions":["iota"]},"application/vnd.audiograph":{"source":"iana","extensions":["aep"]},"application/vnd.autopackage":{"source":"iana"},"application/vnd.avalon+json":{"source":"iana","compressible":true},"application/vnd.avistar+xml":{"source":"iana","compressible":true},"application/vnd.balsamiq.bmml+xml":{"source":"iana","compressible":true,"extensions":["bmml"]},"application/vnd.balsamiq.bmpr":{"source":"iana"},"application/vnd.banana-accounting":{"source":"iana"},"application/vnd.bbf.usp.error":{"source":"iana"},"application/vnd.bbf.usp.msg":{"source":"iana"},"application/vnd.bbf.usp.msg+json":{"source":"iana","compressible":true},"application/vnd.bekitzur-stech+json":{"source":"iana","compressible":true},"application/vnd.bint.med-content":{"source":"iana"},"application/vnd.biopax.rdf+xml":{"source":"iana","compressible":true},"application/vnd.blink-idb-value-wrapper":{"source":"iana"},"application/vnd.blueice.multipass":{"source":"iana","extensions":["mpm"]},"application/vnd.bluetooth.ep.oob":{"source":"iana"},"application/vnd.bluetooth.le.oob":{"source":"iana"},"application/vnd.bmi":{"source":"iana","extensions":["bmi"]},"application/vnd.bpf":{"source":"iana"},"application/vnd.bpf3":{"source":"iana"},"application/vnd.businessobjects":{"source":"iana","extensions":["rep"]},"application/vnd.byu.uapi+json":{"source":"iana","compressible":true},"application/vnd.cab-jscript":{"source":"iana"},"application/vnd.canon-cpdl":{"source":"iana"},"application/vnd.canon-lips":{"source":"iana"},"application/vnd.capasystems-pg+json":{"source":"iana","compressible":true},"application/vnd.cendio.thinlinc.clientconf":{"source":"iana"},"application/vnd.century-systems.tcp_stream":{"source":"iana"},"application/vnd.chemdraw+xml":{"source":"iana","compressible":true,"extensions":["cdxml"]},"application/vnd.chess-pgn":{"source":"iana"},"application/vnd.chipnuts.karaoke-mmd":{"source":"iana","extensions":["mmd"]},"application/vnd.ciedi":{"source":"iana"},"application/vnd.cinderella":{"source":"iana","extensions":["cdy"]},"application/vnd.cirpack.isdn-ext":{"source":"iana"},"application/vnd.citationstyles.style+xml":{"source":"iana","compressible":true,"extensions":["csl"]},"application/vnd.claymore":{"source":"iana","extensions":["cla"]},"application/vnd.cloanto.rp9":{"source":"iana","extensions":["rp9"]},"application/vnd.clonk.c4group":{"source":"iana","extensions":["c4g","c4d","c4f","c4p","c4u"]},"application/vnd.cluetrust.cartomobile-config":{"source":"iana","extensions":["c11amc"]},"application/vnd.cluetrust.cartomobile-config-pkg":{"source":"iana","extensions":["c11amz"]},"application/vnd.coffeescript":{"source":"iana"},"application/vnd.collabio.xodocuments.document":{"source":"iana"},"application/vnd.collabio.xodocuments.document-template":{"source":"iana"},"application/vnd.collabio.xodocuments.presentation":{"source":"iana"},"application/vnd.collabio.xodocuments.presentation-template":{"source":"iana"},"application/vnd.collabio.xodocuments.spreadsheet":{"source":"iana"},"application/vnd.collabio.xodocuments.spreadsheet-template":{"source":"iana"},"application/vnd.collection+json":{"source":"iana","compressible":true},"application/vnd.collection.doc+json":{"source":"iana","compressible":true},"application/vnd.collection.next+json":{"source":"iana","compressible":true},"application/vnd.comicbook+zip":{"source":"iana","compressible":false},"application/vnd.comicbook-rar":{"source":"iana"},"application/vnd.commerce-battelle":{"source":"iana"},"application/vnd.commonspace":{"source":"iana","extensions":["csp"]},"application/vnd.contact.cmsg":{"source":"iana","extensions":["cdbcmsg"]},"application/vnd.coreos.ignition+json":{"source":"iana","compressible":true},"application/vnd.cosmocaller":{"source":"iana","extensions":["cmc"]},"application/vnd.crick.clicker":{"source":"iana","extensions":["clkx"]},"application/vnd.crick.clicker.keyboard":{"source":"iana","extensions":["clkk"]},"application/vnd.crick.clicker.palette":{"source":"iana","extensions":["clkp"]},"application/vnd.crick.clicker.template":{"source":"iana","extensions":["clkt"]},"application/vnd.crick.clicker.wordbank":{"source":"iana","extensions":["clkw"]},"application/vnd.criticaltools.wbs+xml":{"source":"iana","compressible":true,"extensions":["wbs"]},"application/vnd.cryptii.pipe+json":{"source":"iana","compressible":true},"application/vnd.crypto-shade-file":{"source":"iana"},"application/vnd.cryptomator.encrypted":{"source":"iana"},"application/vnd.cryptomator.vault":{"source":"iana"},"application/vnd.ctc-posml":{"source":"iana","extensions":["pml"]},"application/vnd.ctct.ws+xml":{"source":"iana","compressible":true},"application/vnd.cups-pdf":{"source":"iana"},"application/vnd.cups-postscript":{"source":"iana"},"application/vnd.cups-ppd":{"source":"iana","extensions":["ppd"]},"application/vnd.cups-raster":{"source":"iana"},"application/vnd.cups-raw":{"source":"iana"},"application/vnd.curl":{"source":"iana"},"application/vnd.curl.car":{"source":"apache","extensions":["car"]},"application/vnd.curl.pcurl":{"source":"apache","extensions":["pcurl"]},"application/vnd.cyan.dean.root+xml":{"source":"iana","compressible":true},"application/vnd.cybank":{"source":"iana"},"application/vnd.cyclonedx+json":{"source":"iana","compressible":true},"application/vnd.cyclonedx+xml":{"source":"iana","compressible":true},"application/vnd.d2l.coursepackage1p0+zip":{"source":"iana","compressible":false},"application/vnd.d3m-dataset":{"source":"iana"},"application/vnd.d3m-problem":{"source":"iana"},"application/vnd.dart":{"source":"iana","compressible":true,"extensions":["dart"]},"application/vnd.data-vision.rdz":{"source":"iana","extensions":["rdz"]},"application/vnd.datapackage+json":{"source":"iana","compressible":true},"application/vnd.dataresource+json":{"source":"iana","compressible":true},"application/vnd.dbf":{"source":"iana","extensions":["dbf"]},"application/vnd.debian.binary-package":{"source":"iana"},"application/vnd.dece.data":{"source":"iana","extensions":["uvf","uvvf","uvd","uvvd"]},"application/vnd.dece.ttml+xml":{"source":"iana","compressible":true,"extensions":["uvt","uvvt"]},"application/vnd.dece.unspecified":{"source":"iana","extensions":["uvx","uvvx"]},"application/vnd.dece.zip":{"source":"iana","extensions":["uvz","uvvz"]},"application/vnd.denovo.fcselayout-link":{"source":"iana","extensions":["fe_launch"]},"application/vnd.desmume.movie":{"source":"iana"},"application/vnd.dir-bi.plate-dl-nosuffix":{"source":"iana"},"application/vnd.dm.delegation+xml":{"source":"iana","compressible":true},"application/vnd.dna":{"source":"iana","extensions":["dna"]},"application/vnd.document+json":{"source":"iana","compressible":true},"application/vnd.dolby.mlp":{"source":"apache","extensions":["mlp"]},"application/vnd.dolby.mobile.1":{"source":"iana"},"application/vnd.dolby.mobile.2":{"source":"iana"},"application/vnd.doremir.scorecloud-binary-document":{"source":"iana"},"application/vnd.dpgraph":{"source":"iana","extensions":["dpg"]},"application/vnd.dreamfactory":{"source":"iana","extensions":["dfac"]},"application/vnd.drive+json":{"source":"iana","compressible":true},"application/vnd.ds-keypoint":{"source":"apache","extensions":["kpxx"]},"application/vnd.dtg.local":{"source":"iana"},"application/vnd.dtg.local.flash":{"source":"iana"},"application/vnd.dtg.local.html":{"source":"iana"},"application/vnd.dvb.ait":{"source":"iana","extensions":["ait"]},"application/vnd.dvb.dvbisl+xml":{"source":"iana","compressible":true},"application/vnd.dvb.dvbj":{"source":"iana"},"application/vnd.dvb.esgcontainer":{"source":"iana"},"application/vnd.dvb.ipdcdftnotifaccess":{"source":"iana"},"application/vnd.dvb.ipdcesgaccess":{"source":"iana"},"application/vnd.dvb.ipdcesgaccess2":{"source":"iana"},"application/vnd.dvb.ipdcesgpdd":{"source":"iana"},"application/vnd.dvb.ipdcroaming":{"source":"iana"},"application/vnd.dvb.iptv.alfec-base":{"source":"iana"},"application/vnd.dvb.iptv.alfec-enhancement":{"source":"iana"},"application/vnd.dvb.notif-aggregate-root+xml":{"source":"iana","compressible":true},"application/vnd.dvb.notif-container+xml":{"source":"iana","compressible":true},"application/vnd.dvb.notif-generic+xml":{"source":"iana","compressible":true},"application/vnd.dvb.notif-ia-msglist+xml":{"source":"iana","compressible":true},"application/vnd.dvb.notif-ia-registration-request+xml":{"source":"iana","compressible":true},"application/vnd.dvb.notif-ia-registration-response+xml":{"source":"iana","compressible":true},"application/vnd.dvb.notif-init+xml":{"source":"iana","compressible":true},"application/vnd.dvb.pfr":{"source":"iana"},"application/vnd.dvb.service":{"source":"iana","extensions":["svc"]},"application/vnd.dxr":{"source":"iana"},"application/vnd.dynageo":{"source":"iana","extensions":["geo"]},"application/vnd.dzr":{"source":"iana"},"application/vnd.easykaraoke.cdgdownload":{"source":"iana"},"application/vnd.ecdis-update":{"source":"iana"},"application/vnd.ecip.rlp":{"source":"iana"},"application/vnd.eclipse.ditto+json":{"source":"iana","compressible":true},"application/vnd.ecowin.chart":{"source":"iana","extensions":["mag"]},"application/vnd.ecowin.filerequest":{"source":"iana"},"application/vnd.ecowin.fileupdate":{"source":"iana"},"application/vnd.ecowin.series":{"source":"iana"},"application/vnd.ecowin.seriesrequest":{"source":"iana"},"application/vnd.ecowin.seriesupdate":{"source":"iana"},"application/vnd.efi.img":{"source":"iana"},"application/vnd.efi.iso":{"source":"iana"},"application/vnd.emclient.accessrequest+xml":{"source":"iana","compressible":true},"application/vnd.enliven":{"source":"iana","extensions":["nml"]},"application/vnd.enphase.envoy":{"source":"iana"},"application/vnd.eprints.data+xml":{"source":"iana","compressible":true},"application/vnd.epson.esf":{"source":"iana","extensions":["esf"]},"application/vnd.epson.msf":{"source":"iana","extensions":["msf"]},"application/vnd.epson.quickanime":{"source":"iana","extensions":["qam"]},"application/vnd.epson.salt":{"source":"iana","extensions":["slt"]},"application/vnd.epson.ssf":{"source":"iana","extensions":["ssf"]},"application/vnd.ericsson.quickcall":{"source":"iana"},"application/vnd.espass-espass+zip":{"source":"iana","compressible":false},"application/vnd.eszigno3+xml":{"source":"iana","compressible":true,"extensions":["es3","et3"]},"application/vnd.etsi.aoc+xml":{"source":"iana","compressible":true},"application/vnd.etsi.asic-e+zip":{"source":"iana","compressible":false},"application/vnd.etsi.asic-s+zip":{"source":"iana","compressible":false},"application/vnd.etsi.cug+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvcommand+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvdiscovery+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvprofile+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvsad-bc+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvsad-cod+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvsad-npvr+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvservice+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvsync+xml":{"source":"iana","compressible":true},"application/vnd.etsi.iptvueprofile+xml":{"source":"iana","compressible":true},"application/vnd.etsi.mcid+xml":{"source":"iana","compressible":true},"application/vnd.etsi.mheg5":{"source":"iana"},"application/vnd.etsi.overload-control-policy-dataset+xml":{"source":"iana","compressible":true},"application/vnd.etsi.pstn+xml":{"source":"iana","compressible":true},"application/vnd.etsi.sci+xml":{"source":"iana","compressible":true},"application/vnd.etsi.simservs+xml":{"source":"iana","compressible":true},"application/vnd.etsi.timestamp-token":{"source":"iana"},"application/vnd.etsi.tsl+xml":{"source":"iana","compressible":true},"application/vnd.etsi.tsl.der":{"source":"iana"},"application/vnd.eu.kasparian.car+json":{"source":"iana","compressible":true},"application/vnd.eudora.data":{"source":"iana"},"application/vnd.evolv.ecig.profile":{"source":"iana"},"application/vnd.evolv.ecig.settings":{"source":"iana"},"application/vnd.evolv.ecig.theme":{"source":"iana"},"application/vnd.exstream-empower+zip":{"source":"iana","compressible":false},"application/vnd.exstream-package":{"source":"iana"},"application/vnd.ezpix-album":{"source":"iana","extensions":["ez2"]},"application/vnd.ezpix-package":{"source":"iana","extensions":["ez3"]},"application/vnd.f-secure.mobile":{"source":"iana"},"application/vnd.familysearch.gedcom+zip":{"source":"iana","compressible":false},"application/vnd.fastcopy-disk-image":{"source":"iana"},"application/vnd.fdf":{"source":"iana","extensions":["fdf"]},"application/vnd.fdsn.mseed":{"source":"iana","extensions":["mseed"]},"application/vnd.fdsn.seed":{"source":"iana","extensions":["seed","dataless"]},"application/vnd.ffsns":{"source":"iana"},"application/vnd.ficlab.flb+zip":{"source":"iana","compressible":false},"application/vnd.filmit.zfc":{"source":"iana"},"application/vnd.fints":{"source":"iana"},"application/vnd.firemonkeys.cloudcell":{"source":"iana"},"application/vnd.flographit":{"source":"iana","extensions":["gph"]},"application/vnd.fluxtime.clip":{"source":"iana","extensions":["ftc"]},"application/vnd.font-fontforge-sfd":{"source":"iana"},"application/vnd.framemaker":{"source":"iana","extensions":["fm","frame","maker","book"]},"application/vnd.frogans.fnc":{"source":"iana","extensions":["fnc"]},"application/vnd.frogans.ltf":{"source":"iana","extensions":["ltf"]},"application/vnd.fsc.weblaunch":{"source":"iana","extensions":["fsc"]},"application/vnd.fujifilm.fb.docuworks":{"source":"iana"},"application/vnd.fujifilm.fb.docuworks.binder":{"source":"iana"},"application/vnd.fujifilm.fb.docuworks.container":{"source":"iana"},"application/vnd.fujifilm.fb.jfi+xml":{"source":"iana","compressible":true},"application/vnd.fujitsu.oasys":{"source":"iana","extensions":["oas"]},"application/vnd.fujitsu.oasys2":{"source":"iana","extensions":["oa2"]},"application/vnd.fujitsu.oasys3":{"source":"iana","extensions":["oa3"]},"application/vnd.fujitsu.oasysgp":{"source":"iana","extensions":["fg5"]},"application/vnd.fujitsu.oasysprs":{"source":"iana","extensions":["bh2"]},"application/vnd.fujixerox.art-ex":{"source":"iana"},"application/vnd.fujixerox.art4":{"source":"iana"},"application/vnd.fujixerox.ddd":{"source":"iana","extensions":["ddd"]},"application/vnd.fujixerox.docuworks":{"source":"iana","extensions":["xdw"]},"application/vnd.fujixerox.docuworks.binder":{"source":"iana","extensions":["xbd"]},"application/vnd.fujixerox.docuworks.container":{"source":"iana"},"application/vnd.fujixerox.hbpl":{"source":"iana"},"application/vnd.fut-misnet":{"source":"iana"},"application/vnd.futoin+cbor":{"source":"iana"},"application/vnd.futoin+json":{"source":"iana","compressible":true},"application/vnd.fuzzysheet":{"source":"iana","extensions":["fzs"]},"application/vnd.genomatix.tuxedo":{"source":"iana","extensions":["txd"]},"application/vnd.gentics.grd+json":{"source":"iana","compressible":true},"application/vnd.geo+json":{"source":"iana","compressible":true},"application/vnd.geocube+xml":{"source":"iana","compressible":true},"application/vnd.geogebra.file":{"source":"iana","extensions":["ggb"]},"application/vnd.geogebra.slides":{"source":"iana"},"application/vnd.geogebra.tool":{"source":"iana","extensions":["ggt"]},"application/vnd.geometry-explorer":{"source":"iana","extensions":["gex","gre"]},"application/vnd.geonext":{"source":"iana","extensions":["gxt"]},"application/vnd.geoplan":{"source":"iana","extensions":["g2w"]},"application/vnd.geospace":{"source":"iana","extensions":["g3w"]},"application/vnd.gerber":{"source":"iana"},"application/vnd.globalplatform.card-content-mgt":{"source":"iana"},"application/vnd.globalplatform.card-content-mgt-response":{"source":"iana"},"application/vnd.gmx":{"source":"iana","extensions":["gmx"]},"application/vnd.google-apps.document":{"compressible":false,"extensions":["gdoc"]},"application/vnd.google-apps.presentation":{"compressible":false,"extensions":["gslides"]},"application/vnd.google-apps.spreadsheet":{"compressible":false,"extensions":["gsheet"]},"application/vnd.google-earth.kml+xml":{"source":"iana","compressible":true,"extensions":["kml"]},"application/vnd.google-earth.kmz":{"source":"iana","compressible":false,"extensions":["kmz"]},"application/vnd.gov.sk.e-form+xml":{"source":"iana","compressible":true},"application/vnd.gov.sk.e-form+zip":{"source":"iana","compressible":false},"application/vnd.gov.sk.xmldatacontainer+xml":{"source":"iana","compressible":true},"application/vnd.grafeq":{"source":"iana","extensions":["gqf","gqs"]},"application/vnd.gridmp":{"source":"iana"},"application/vnd.groove-account":{"source":"iana","extensions":["gac"]},"application/vnd.groove-help":{"source":"iana","extensions":["ghf"]},"application/vnd.groove-identity-message":{"source":"iana","extensions":["gim"]},"application/vnd.groove-injector":{"source":"iana","extensions":["grv"]},"application/vnd.groove-tool-message":{"source":"iana","extensions":["gtm"]},"application/vnd.groove-tool-template":{"source":"iana","extensions":["tpl"]},"application/vnd.groove-vcard":{"source":"iana","extensions":["vcg"]},"application/vnd.hal+json":{"source":"iana","compressible":true},"application/vnd.hal+xml":{"source":"iana","compressible":true,"extensions":["hal"]},"application/vnd.handheld-entertainment+xml":{"source":"iana","compressible":true,"extensions":["zmm"]},"application/vnd.hbci":{"source":"iana","extensions":["hbci"]},"application/vnd.hc+json":{"source":"iana","compressible":true},"application/vnd.hcl-bireports":{"source":"iana"},"application/vnd.hdt":{"source":"iana"},"application/vnd.heroku+json":{"source":"iana","compressible":true},"application/vnd.hhe.lesson-player":{"source":"iana","extensions":["les"]},"application/vnd.hl7cda+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/vnd.hl7v2+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/vnd.hp-hpgl":{"source":"iana","extensions":["hpgl"]},"application/vnd.hp-hpid":{"source":"iana","extensions":["hpid"]},"application/vnd.hp-hps":{"source":"iana","extensions":["hps"]},"application/vnd.hp-jlyt":{"source":"iana","extensions":["jlt"]},"application/vnd.hp-pcl":{"source":"iana","extensions":["pcl"]},"application/vnd.hp-pclxl":{"source":"iana","extensions":["pclxl"]},"application/vnd.httphone":{"source":"iana"},"application/vnd.hydrostatix.sof-data":{"source":"iana","extensions":["sfd-hdstx"]},"application/vnd.hyper+json":{"source":"iana","compressible":true},"application/vnd.hyper-item+json":{"source":"iana","compressible":true},"application/vnd.hyperdrive+json":{"source":"iana","compressible":true},"application/vnd.hzn-3d-crossword":{"source":"iana"},"application/vnd.ibm.afplinedata":{"source":"iana"},"application/vnd.ibm.electronic-media":{"source":"iana"},"application/vnd.ibm.minipay":{"source":"iana","extensions":["mpy"]},"application/vnd.ibm.modcap":{"source":"iana","extensions":["afp","listafp","list3820"]},"application/vnd.ibm.rights-management":{"source":"iana","extensions":["irm"]},"application/vnd.ibm.secure-container":{"source":"iana","extensions":["sc"]},"application/vnd.iccprofile":{"source":"iana","extensions":["icc","icm"]},"application/vnd.ieee.1905":{"source":"iana"},"application/vnd.igloader":{"source":"iana","extensions":["igl"]},"application/vnd.imagemeter.folder+zip":{"source":"iana","compressible":false},"application/vnd.imagemeter.image+zip":{"source":"iana","compressible":false},"application/vnd.immervision-ivp":{"source":"iana","extensions":["ivp"]},"application/vnd.immervision-ivu":{"source":"iana","extensions":["ivu"]},"application/vnd.ims.imsccv1p1":{"source":"iana"},"application/vnd.ims.imsccv1p2":{"source":"iana"},"application/vnd.ims.imsccv1p3":{"source":"iana"},"application/vnd.ims.lis.v2.result+json":{"source":"iana","compressible":true},"application/vnd.ims.lti.v2.toolconsumerprofile+json":{"source":"iana","compressible":true},"application/vnd.ims.lti.v2.toolproxy+json":{"source":"iana","compressible":true},"application/vnd.ims.lti.v2.toolproxy.id+json":{"source":"iana","compressible":true},"application/vnd.ims.lti.v2.toolsettings+json":{"source":"iana","compressible":true},"application/vnd.ims.lti.v2.toolsettings.simple+json":{"source":"iana","compressible":true},"application/vnd.informedcontrol.rms+xml":{"source":"iana","compressible":true},"application/vnd.informix-visionary":{"source":"iana"},"application/vnd.infotech.project":{"source":"iana"},"application/vnd.infotech.project+xml":{"source":"iana","compressible":true},"application/vnd.innopath.wamp.notification":{"source":"iana"},"application/vnd.insors.igm":{"source":"iana","extensions":["igm"]},"application/vnd.intercon.formnet":{"source":"iana","extensions":["xpw","xpx"]},"application/vnd.intergeo":{"source":"iana","extensions":["i2g"]},"application/vnd.intertrust.digibox":{"source":"iana"},"application/vnd.intertrust.nncp":{"source":"iana"},"application/vnd.intu.qbo":{"source":"iana","extensions":["qbo"]},"application/vnd.intu.qfx":{"source":"iana","extensions":["qfx"]},"application/vnd.iptc.g2.catalogitem+xml":{"source":"iana","compressible":true},"application/vnd.iptc.g2.conceptitem+xml":{"source":"iana","compressible":true},"application/vnd.iptc.g2.knowledgeitem+xml":{"source":"iana","compressible":true},"application/vnd.iptc.g2.newsitem+xml":{"source":"iana","compressible":true},"application/vnd.iptc.g2.newsmessage+xml":{"source":"iana","compressible":true},"application/vnd.iptc.g2.packageitem+xml":{"source":"iana","compressible":true},"application/vnd.iptc.g2.planningitem+xml":{"source":"iana","compressible":true},"application/vnd.ipunplugged.rcprofile":{"source":"iana","extensions":["rcprofile"]},"application/vnd.irepository.package+xml":{"source":"iana","compressible":true,"extensions":["irp"]},"application/vnd.is-xpr":{"source":"iana","extensions":["xpr"]},"application/vnd.isac.fcs":{"source":"iana","extensions":["fcs"]},"application/vnd.iso11783-10+zip":{"source":"iana","compressible":false},"application/vnd.jam":{"source":"iana","extensions":["jam"]},"application/vnd.japannet-directory-service":{"source":"iana"},"application/vnd.japannet-jpnstore-wakeup":{"source":"iana"},"application/vnd.japannet-payment-wakeup":{"source":"iana"},"application/vnd.japannet-registration":{"source":"iana"},"application/vnd.japannet-registration-wakeup":{"source":"iana"},"application/vnd.japannet-setstore-wakeup":{"source":"iana"},"application/vnd.japannet-verification":{"source":"iana"},"application/vnd.japannet-verification-wakeup":{"source":"iana"},"application/vnd.jcp.javame.midlet-rms":{"source":"iana","extensions":["rms"]},"application/vnd.jisp":{"source":"iana","extensions":["jisp"]},"application/vnd.joost.joda-archive":{"source":"iana","extensions":["joda"]},"application/vnd.jsk.isdn-ngn":{"source":"iana"},"application/vnd.kahootz":{"source":"iana","extensions":["ktz","ktr"]},"application/vnd.kde.karbon":{"source":"iana","extensions":["karbon"]},"application/vnd.kde.kchart":{"source":"iana","extensions":["chrt"]},"application/vnd.kde.kformula":{"source":"iana","extensions":["kfo"]},"application/vnd.kde.kivio":{"source":"iana","extensions":["flw"]},"application/vnd.kde.kontour":{"source":"iana","extensions":["kon"]},"application/vnd.kde.kpresenter":{"source":"iana","extensions":["kpr","kpt"]},"application/vnd.kde.kspread":{"source":"iana","extensions":["ksp"]},"application/vnd.kde.kword":{"source":"iana","extensions":["kwd","kwt"]},"application/vnd.kenameaapp":{"source":"iana","extensions":["htke"]},"application/vnd.kidspiration":{"source":"iana","extensions":["kia"]},"application/vnd.kinar":{"source":"iana","extensions":["kne","knp"]},"application/vnd.koan":{"source":"iana","extensions":["skp","skd","skt","skm"]},"application/vnd.kodak-descriptor":{"source":"iana","extensions":["sse"]},"application/vnd.las":{"source":"iana"},"application/vnd.las.las+json":{"source":"iana","compressible":true},"application/vnd.las.las+xml":{"source":"iana","compressible":true,"extensions":["lasxml"]},"application/vnd.laszip":{"source":"iana"},"application/vnd.leap+json":{"source":"iana","compressible":true},"application/vnd.liberty-request+xml":{"source":"iana","compressible":true},"application/vnd.llamagraphics.life-balance.desktop":{"source":"iana","extensions":["lbd"]},"application/vnd.llamagraphics.life-balance.exchange+xml":{"source":"iana","compressible":true,"extensions":["lbe"]},"application/vnd.logipipe.circuit+zip":{"source":"iana","compressible":false},"application/vnd.loom":{"source":"iana"},"application/vnd.lotus-1-2-3":{"source":"iana","extensions":["123"]},"application/vnd.lotus-approach":{"source":"iana","extensions":["apr"]},"application/vnd.lotus-freelance":{"source":"iana","extensions":["pre"]},"application/vnd.lotus-notes":{"source":"iana","extensions":["nsf"]},"application/vnd.lotus-organizer":{"source":"iana","extensions":["org"]},"application/vnd.lotus-screencam":{"source":"iana","extensions":["scm"]},"application/vnd.lotus-wordpro":{"source":"iana","extensions":["lwp"]},"application/vnd.macports.portpkg":{"source":"iana","extensions":["portpkg"]},"application/vnd.mapbox-vector-tile":{"source":"iana","extensions":["mvt"]},"application/vnd.marlin.drm.actiontoken+xml":{"source":"iana","compressible":true},"application/vnd.marlin.drm.conftoken+xml":{"source":"iana","compressible":true},"application/vnd.marlin.drm.license+xml":{"source":"iana","compressible":true},"application/vnd.marlin.drm.mdcf":{"source":"iana"},"application/vnd.mason+json":{"source":"iana","compressible":true},"application/vnd.maxar.archive.3tz+zip":{"source":"iana","compressible":false},"application/vnd.maxmind.maxmind-db":{"source":"iana"},"application/vnd.mcd":{"source":"iana","extensions":["mcd"]},"application/vnd.medcalcdata":{"source":"iana","extensions":["mc1"]},"application/vnd.mediastation.cdkey":{"source":"iana","extensions":["cdkey"]},"application/vnd.meridian-slingshot":{"source":"iana"},"application/vnd.mfer":{"source":"iana","extensions":["mwf"]},"application/vnd.mfmp":{"source":"iana","extensions":["mfm"]},"application/vnd.micro+json":{"source":"iana","compressible":true},"application/vnd.micrografx.flo":{"source":"iana","extensions":["flo"]},"application/vnd.micrografx.igx":{"source":"iana","extensions":["igx"]},"application/vnd.microsoft.portable-executable":{"source":"iana"},"application/vnd.microsoft.windows.thumbnail-cache":{"source":"iana"},"application/vnd.miele+json":{"source":"iana","compressible":true},"application/vnd.mif":{"source":"iana","extensions":["mif"]},"application/vnd.minisoft-hp3000-save":{"source":"iana"},"application/vnd.mitsubishi.misty-guard.trustweb":{"source":"iana"},"application/vnd.mobius.daf":{"source":"iana","extensions":["daf"]},"application/vnd.mobius.dis":{"source":"iana","extensions":["dis"]},"application/vnd.mobius.mbk":{"source":"iana","extensions":["mbk"]},"application/vnd.mobius.mqy":{"source":"iana","extensions":["mqy"]},"application/vnd.mobius.msl":{"source":"iana","extensions":["msl"]},"application/vnd.mobius.plc":{"source":"iana","extensions":["plc"]},"application/vnd.mobius.txf":{"source":"iana","extensions":["txf"]},"application/vnd.mophun.application":{"source":"iana","extensions":["mpn"]},"application/vnd.mophun.certificate":{"source":"iana","extensions":["mpc"]},"application/vnd.motorola.flexsuite":{"source":"iana"},"application/vnd.motorola.flexsuite.adsi":{"source":"iana"},"application/vnd.motorola.flexsuite.fis":{"source":"iana"},"application/vnd.motorola.flexsuite.gotap":{"source":"iana"},"application/vnd.motorola.flexsuite.kmr":{"source":"iana"},"application/vnd.motorola.flexsuite.ttc":{"source":"iana"},"application/vnd.motorola.flexsuite.wem":{"source":"iana"},"application/vnd.motorola.iprm":{"source":"iana"},"application/vnd.mozilla.xul+xml":{"source":"iana","compressible":true,"extensions":["xul"]},"application/vnd.ms-3mfdocument":{"source":"iana"},"application/vnd.ms-artgalry":{"source":"iana","extensions":["cil"]},"application/vnd.ms-asf":{"source":"iana"},"application/vnd.ms-cab-compressed":{"source":"iana","extensions":["cab"]},"application/vnd.ms-color.iccprofile":{"source":"apache"},"application/vnd.ms-excel":{"source":"iana","compressible":false,"extensions":["xls","xlm","xla","xlc","xlt","xlw"]},"application/vnd.ms-excel.addin.macroenabled.12":{"source":"iana","extensions":["xlam"]},"application/vnd.ms-excel.sheet.binary.macroenabled.12":{"source":"iana","extensions":["xlsb"]},"application/vnd.ms-excel.sheet.macroenabled.12":{"source":"iana","extensions":["xlsm"]},"application/vnd.ms-excel.template.macroenabled.12":{"source":"iana","extensions":["xltm"]},"application/vnd.ms-fontobject":{"source":"iana","compressible":true,"extensions":["eot"]},"application/vnd.ms-htmlhelp":{"source":"iana","extensions":["chm"]},"application/vnd.ms-ims":{"source":"iana","extensions":["ims"]},"application/vnd.ms-lrm":{"source":"iana","extensions":["lrm"]},"application/vnd.ms-office.activex+xml":{"source":"iana","compressible":true},"application/vnd.ms-officetheme":{"source":"iana","extensions":["thmx"]},"application/vnd.ms-opentype":{"source":"apache","compressible":true},"application/vnd.ms-outlook":{"compressible":false,"extensions":["msg"]},"application/vnd.ms-package.obfuscated-opentype":{"source":"apache"},"application/vnd.ms-pki.seccat":{"source":"apache","extensions":["cat"]},"application/vnd.ms-pki.stl":{"source":"apache","extensions":["stl"]},"application/vnd.ms-playready.initiator+xml":{"source":"iana","compressible":true},"application/vnd.ms-powerpoint":{"source":"iana","compressible":false,"extensions":["ppt","pps","pot"]},"application/vnd.ms-powerpoint.addin.macroenabled.12":{"source":"iana","extensions":["ppam"]},"application/vnd.ms-powerpoint.presentation.macroenabled.12":{"source":"iana","extensions":["pptm"]},"application/vnd.ms-powerpoint.slide.macroenabled.12":{"source":"iana","extensions":["sldm"]},"application/vnd.ms-powerpoint.slideshow.macroenabled.12":{"source":"iana","extensions":["ppsm"]},"application/vnd.ms-powerpoint.template.macroenabled.12":{"source":"iana","extensions":["potm"]},"application/vnd.ms-printdevicecapabilities+xml":{"source":"iana","compressible":true},"application/vnd.ms-printing.printticket+xml":{"source":"apache","compressible":true},"application/vnd.ms-printschematicket+xml":{"source":"iana","compressible":true},"application/vnd.ms-project":{"source":"iana","extensions":["mpp","mpt"]},"application/vnd.ms-tnef":{"source":"iana"},"application/vnd.ms-windows.devicepairing":{"source":"iana"},"application/vnd.ms-windows.nwprinting.oob":{"source":"iana"},"application/vnd.ms-windows.printerpairing":{"source":"iana"},"application/vnd.ms-windows.wsd.oob":{"source":"iana"},"application/vnd.ms-wmdrm.lic-chlg-req":{"source":"iana"},"application/vnd.ms-wmdrm.lic-resp":{"source":"iana"},"application/vnd.ms-wmdrm.meter-chlg-req":{"source":"iana"},"application/vnd.ms-wmdrm.meter-resp":{"source":"iana"},"application/vnd.ms-word.document.macroenabled.12":{"source":"iana","extensions":["docm"]},"application/vnd.ms-word.template.macroenabled.12":{"source":"iana","extensions":["dotm"]},"application/vnd.ms-works":{"source":"iana","extensions":["wps","wks","wcm","wdb"]},"application/vnd.ms-wpl":{"source":"iana","extensions":["wpl"]},"application/vnd.ms-xpsdocument":{"source":"iana","compressible":false,"extensions":["xps"]},"application/vnd.msa-disk-image":{"source":"iana"},"application/vnd.mseq":{"source":"iana","extensions":["mseq"]},"application/vnd.msign":{"source":"iana"},"application/vnd.multiad.creator":{"source":"iana"},"application/vnd.multiad.creator.cif":{"source":"iana"},"application/vnd.music-niff":{"source":"iana"},"application/vnd.musician":{"source":"iana","extensions":["mus"]},"application/vnd.muvee.style":{"source":"iana","extensions":["msty"]},"application/vnd.mynfc":{"source":"iana","extensions":["taglet"]},"application/vnd.nacamar.ybrid+json":{"source":"iana","compressible":true},"application/vnd.ncd.control":{"source":"iana"},"application/vnd.ncd.reference":{"source":"iana"},"application/vnd.nearst.inv+json":{"source":"iana","compressible":true},"application/vnd.nebumind.line":{"source":"iana"},"application/vnd.nervana":{"source":"iana"},"application/vnd.netfpx":{"source":"iana"},"application/vnd.neurolanguage.nlu":{"source":"iana","extensions":["nlu"]},"application/vnd.nimn":{"source":"iana"},"application/vnd.nintendo.nitro.rom":{"source":"iana"},"application/vnd.nintendo.snes.rom":{"source":"iana"},"application/vnd.nitf":{"source":"iana","extensions":["ntf","nitf"]},"application/vnd.noblenet-directory":{"source":"iana","extensions":["nnd"]},"application/vnd.noblenet-sealer":{"source":"iana","extensions":["nns"]},"application/vnd.noblenet-web":{"source":"iana","extensions":["nnw"]},"application/vnd.nokia.catalogs":{"source":"iana"},"application/vnd.nokia.conml+wbxml":{"source":"iana"},"application/vnd.nokia.conml+xml":{"source":"iana","compressible":true},"application/vnd.nokia.iptv.config+xml":{"source":"iana","compressible":true},"application/vnd.nokia.isds-radio-presets":{"source":"iana"},"application/vnd.nokia.landmark+wbxml":{"source":"iana"},"application/vnd.nokia.landmark+xml":{"source":"iana","compressible":true},"application/vnd.nokia.landmarkcollection+xml":{"source":"iana","compressible":true},"application/vnd.nokia.n-gage.ac+xml":{"source":"iana","compressible":true,"extensions":["ac"]},"application/vnd.nokia.n-gage.data":{"source":"iana","extensions":["ngdat"]},"application/vnd.nokia.n-gage.symbian.install":{"source":"iana","extensions":["n-gage"]},"application/vnd.nokia.ncd":{"source":"iana"},"application/vnd.nokia.pcd+wbxml":{"source":"iana"},"application/vnd.nokia.pcd+xml":{"source":"iana","compressible":true},"application/vnd.nokia.radio-preset":{"source":"iana","extensions":["rpst"]},"application/vnd.nokia.radio-presets":{"source":"iana","extensions":["rpss"]},"application/vnd.novadigm.edm":{"source":"iana","extensions":["edm"]},"application/vnd.novadigm.edx":{"source":"iana","extensions":["edx"]},"application/vnd.novadigm.ext":{"source":"iana","extensions":["ext"]},"application/vnd.ntt-local.content-share":{"source":"iana"},"application/vnd.ntt-local.file-transfer":{"source":"iana"},"application/vnd.ntt-local.ogw_remote-access":{"source":"iana"},"application/vnd.ntt-local.sip-ta_remote":{"source":"iana"},"application/vnd.ntt-local.sip-ta_tcp_stream":{"source":"iana"},"application/vnd.oasis.opendocument.chart":{"source":"iana","extensions":["odc"]},"application/vnd.oasis.opendocument.chart-template":{"source":"iana","extensions":["otc"]},"application/vnd.oasis.opendocument.database":{"source":"iana","extensions":["odb"]},"application/vnd.oasis.opendocument.formula":{"source":"iana","extensions":["odf"]},"application/vnd.oasis.opendocument.formula-template":{"source":"iana","extensions":["odft"]},"application/vnd.oasis.opendocument.graphics":{"source":"iana","compressible":false,"extensions":["odg"]},"application/vnd.oasis.opendocument.graphics-template":{"source":"iana","extensions":["otg"]},"application/vnd.oasis.opendocument.image":{"source":"iana","extensions":["odi"]},"application/vnd.oasis.opendocument.image-template":{"source":"iana","extensions":["oti"]},"application/vnd.oasis.opendocument.presentation":{"source":"iana","compressible":false,"extensions":["odp"]},"application/vnd.oasis.opendocument.presentation-template":{"source":"iana","extensions":["otp"]},"application/vnd.oasis.opendocument.spreadsheet":{"source":"iana","compressible":false,"extensions":["ods"]},"application/vnd.oasis.opendocument.spreadsheet-template":{"source":"iana","extensions":["ots"]},"application/vnd.oasis.opendocument.text":{"source":"iana","compressible":false,"extensions":["odt"]},"application/vnd.oasis.opendocument.text-master":{"source":"iana","extensions":["odm"]},"application/vnd.oasis.opendocument.text-template":{"source":"iana","extensions":["ott"]},"application/vnd.oasis.opendocument.text-web":{"source":"iana","extensions":["oth"]},"application/vnd.obn":{"source":"iana"},"application/vnd.ocf+cbor":{"source":"iana"},"application/vnd.oci.image.manifest.v1+json":{"source":"iana","compressible":true},"application/vnd.oftn.l10n+json":{"source":"iana","compressible":true},"application/vnd.oipf.contentaccessdownload+xml":{"source":"iana","compressible":true},"application/vnd.oipf.contentaccessstreaming+xml":{"source":"iana","compressible":true},"application/vnd.oipf.cspg-hexbinary":{"source":"iana"},"application/vnd.oipf.dae.svg+xml":{"source":"iana","compressible":true},"application/vnd.oipf.dae.xhtml+xml":{"source":"iana","compressible":true},"application/vnd.oipf.mippvcontrolmessage+xml":{"source":"iana","compressible":true},"application/vnd.oipf.pae.gem":{"source":"iana"},"application/vnd.oipf.spdiscovery+xml":{"source":"iana","compressible":true},"application/vnd.oipf.spdlist+xml":{"source":"iana","compressible":true},"application/vnd.oipf.ueprofile+xml":{"source":"iana","compressible":true},"application/vnd.oipf.userprofile+xml":{"source":"iana","compressible":true},"application/vnd.olpc-sugar":{"source":"iana","extensions":["xo"]},"application/vnd.oma-scws-config":{"source":"iana"},"application/vnd.oma-scws-http-request":{"source":"iana"},"application/vnd.oma-scws-http-response":{"source":"iana"},"application/vnd.oma.bcast.associated-procedure-parameter+xml":{"source":"iana","compressible":true},"application/vnd.oma.bcast.drm-trigger+xml":{"source":"iana","compressible":true},"application/vnd.oma.bcast.imd+xml":{"source":"iana","compressible":true},"application/vnd.oma.bcast.ltkm":{"source":"iana"},"application/vnd.oma.bcast.notification+xml":{"source":"iana","compressible":true},"application/vnd.oma.bcast.provisioningtrigger":{"source":"iana"},"application/vnd.oma.bcast.sgboot":{"source":"iana"},"application/vnd.oma.bcast.sgdd+xml":{"source":"iana","compressible":true},"application/vnd.oma.bcast.sgdu":{"source":"iana"},"application/vnd.oma.bcast.simple-symbol-container":{"source":"iana"},"application/vnd.oma.bcast.smartcard-trigger+xml":{"source":"iana","compressible":true},"application/vnd.oma.bcast.sprov+xml":{"source":"iana","compressible":true},"application/vnd.oma.bcast.stkm":{"source":"iana"},"application/vnd.oma.cab-address-book+xml":{"source":"iana","compressible":true},"application/vnd.oma.cab-feature-handler+xml":{"source":"iana","compressible":true},"application/vnd.oma.cab-pcc+xml":{"source":"iana","compressible":true},"application/vnd.oma.cab-subs-invite+xml":{"source":"iana","compressible":true},"application/vnd.oma.cab-user-prefs+xml":{"source":"iana","compressible":true},"application/vnd.oma.dcd":{"source":"iana"},"application/vnd.oma.dcdc":{"source":"iana"},"application/vnd.oma.dd2+xml":{"source":"iana","compressible":true,"extensions":["dd2"]},"application/vnd.oma.drm.risd+xml":{"source":"iana","compressible":true},"application/vnd.oma.group-usage-list+xml":{"source":"iana","compressible":true},"application/vnd.oma.lwm2m+cbor":{"source":"iana"},"application/vnd.oma.lwm2m+json":{"source":"iana","compressible":true},"application/vnd.oma.lwm2m+tlv":{"source":"iana"},"application/vnd.oma.pal+xml":{"source":"iana","compressible":true},"application/vnd.oma.poc.detailed-progress-report+xml":{"source":"iana","compressible":true},"application/vnd.oma.poc.final-report+xml":{"source":"iana","compressible":true},"application/vnd.oma.poc.groups+xml":{"source":"iana","compressible":true},"application/vnd.oma.poc.invocation-descriptor+xml":{"source":"iana","compressible":true},"application/vnd.oma.poc.optimized-progress-report+xml":{"source":"iana","compressible":true},"application/vnd.oma.push":{"source":"iana"},"application/vnd.oma.scidm.messages+xml":{"source":"iana","compressible":true},"application/vnd.oma.xcap-directory+xml":{"source":"iana","compressible":true},"application/vnd.omads-email+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/vnd.omads-file+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/vnd.omads-folder+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/vnd.omaloc-supl-init":{"source":"iana"},"application/vnd.onepager":{"source":"iana"},"application/vnd.onepagertamp":{"source":"iana"},"application/vnd.onepagertamx":{"source":"iana"},"application/vnd.onepagertat":{"source":"iana"},"application/vnd.onepagertatp":{"source":"iana"},"application/vnd.onepagertatx":{"source":"iana"},"application/vnd.openblox.game+xml":{"source":"iana","compressible":true,"extensions":["obgx"]},"application/vnd.openblox.game-binary":{"source":"iana"},"application/vnd.openeye.oeb":{"source":"iana"},"application/vnd.openofficeorg.extension":{"source":"apache","extensions":["oxt"]},"application/vnd.openstreetmap.data+xml":{"source":"iana","compressible":true,"extensions":["osm"]},"application/vnd.opentimestamps.ots":{"source":"iana"},"application/vnd.openxmlformats-officedocument.custom-properties+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.customxmlproperties+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.drawing+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.drawingml.chart+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.drawingml.chartshapes+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.drawingml.diagramcolors+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.drawingml.diagramdata+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.drawingml.diagramlayout+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.drawingml.diagramstyle+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.extended-properties+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.commentauthors+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.comments+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.handoutmaster+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.notesmaster+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.notesslide+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.presentation":{"source":"iana","compressible":false,"extensions":["pptx"]},"application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.presprops+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.slide":{"source":"iana","extensions":["sldx"]},"application/vnd.openxmlformats-officedocument.presentationml.slide+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.slidelayout+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.slidemaster+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.slideshow":{"source":"iana","extensions":["ppsx"]},"application/vnd.openxmlformats-officedocument.presentationml.slideshow.main+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.slideupdateinfo+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.tablestyles+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.tags+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.template":{"source":"iana","extensions":["potx"]},"application/vnd.openxmlformats-officedocument.presentationml.template.main+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.presentationml.viewprops+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.calcchain+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.chartsheet+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.comments+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.connections+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.dialogsheet+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.externallink+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.pivotcachedefinition+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.pivotcacherecords+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.pivottable+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.querytable+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.revisionheaders+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.revisionlog+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.sharedstrings+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":{"source":"iana","compressible":false,"extensions":["xlsx"]},"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.sheetmetadata+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.table+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.tablesinglecells+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.template":{"source":"iana","extensions":["xltx"]},"application/vnd.openxmlformats-officedocument.spreadsheetml.template.main+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.usernames+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.volatiledependencies+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.theme+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.themeoverride+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.vmldrawing":{"source":"iana"},"application/vnd.openxmlformats-officedocument.wordprocessingml.comments+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.document":{"source":"iana","compressible":false,"extensions":["docx"]},"application/vnd.openxmlformats-officedocument.wordprocessingml.document.glossary+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.endnotes+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.fonttable+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.footnotes+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.template":{"source":"iana","extensions":["dotx"]},"application/vnd.openxmlformats-officedocument.wordprocessingml.template.main+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-officedocument.wordprocessingml.websettings+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-package.core-properties+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-package.digital-signature-xmlsignature+xml":{"source":"iana","compressible":true},"application/vnd.openxmlformats-package.relationships+xml":{"source":"iana","compressible":true},"application/vnd.oracle.resource+json":{"source":"iana","compressible":true},"application/vnd.orange.indata":{"source":"iana"},"application/vnd.osa.netdeploy":{"source":"iana"},"application/vnd.osgeo.mapguide.package":{"source":"iana","extensions":["mgp"]},"application/vnd.osgi.bundle":{"source":"iana"},"application/vnd.osgi.dp":{"source":"iana","extensions":["dp"]},"application/vnd.osgi.subsystem":{"source":"iana","extensions":["esa"]},"application/vnd.otps.ct-kip+xml":{"source":"iana","compressible":true},"application/vnd.oxli.countgraph":{"source":"iana"},"application/vnd.pagerduty+json":{"source":"iana","compressible":true},"application/vnd.palm":{"source":"iana","extensions":["pdb","pqa","oprc"]},"application/vnd.panoply":{"source":"iana"},"application/vnd.paos.xml":{"source":"iana"},"application/vnd.patentdive":{"source":"iana"},"application/vnd.patientecommsdoc":{"source":"iana"},"application/vnd.pawaafile":{"source":"iana","extensions":["paw"]},"application/vnd.pcos":{"source":"iana"},"application/vnd.pg.format":{"source":"iana","extensions":["str"]},"application/vnd.pg.osasli":{"source":"iana","extensions":["ei6"]},"application/vnd.piaccess.application-licence":{"source":"iana"},"application/vnd.picsel":{"source":"iana","extensions":["efif"]},"application/vnd.pmi.widget":{"source":"iana","extensions":["wg"]},"application/vnd.poc.group-advertisement+xml":{"source":"iana","compressible":true},"application/vnd.pocketlearn":{"source":"iana","extensions":["plf"]},"application/vnd.powerbuilder6":{"source":"iana","extensions":["pbd"]},"application/vnd.powerbuilder6-s":{"source":"iana"},"application/vnd.powerbuilder7":{"source":"iana"},"application/vnd.powerbuilder7-s":{"source":"iana"},"application/vnd.powerbuilder75":{"source":"iana"},"application/vnd.powerbuilder75-s":{"source":"iana"},"application/vnd.preminet":{"source":"iana"},"application/vnd.previewsystems.box":{"source":"iana","extensions":["box"]},"application/vnd.proteus.magazine":{"source":"iana","extensions":["mgz"]},"application/vnd.psfs":{"source":"iana"},"application/vnd.publishare-delta-tree":{"source":"iana","extensions":["qps"]},"application/vnd.pvi.ptid1":{"source":"iana","extensions":["ptid"]},"application/vnd.pwg-multiplexed":{"source":"iana"},"application/vnd.pwg-xhtml-print+xml":{"source":"iana","compressible":true},"application/vnd.qualcomm.brew-app-res":{"source":"iana"},"application/vnd.quarantainenet":{"source":"iana"},"application/vnd.quark.quarkxpress":{"source":"iana","extensions":["qxd","qxt","qwd","qwt","qxl","qxb"]},"application/vnd.quobject-quoxdocument":{"source":"iana"},"application/vnd.radisys.moml+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-audit+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-audit-conf+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-audit-conn+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-audit-dialog+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-audit-stream+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-conf+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-dialog+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-dialog-base+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-dialog-fax-detect+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-dialog-fax-sendrecv+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-dialog-group+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-dialog-speech+xml":{"source":"iana","compressible":true},"application/vnd.radisys.msml-dialog-transform+xml":{"source":"iana","compressible":true},"application/vnd.rainstor.data":{"source":"iana"},"application/vnd.rapid":{"source":"iana"},"application/vnd.rar":{"source":"iana","extensions":["rar"]},"application/vnd.realvnc.bed":{"source":"iana","extensions":["bed"]},"application/vnd.recordare.musicxml":{"source":"iana","extensions":["mxl"]},"application/vnd.recordare.musicxml+xml":{"source":"iana","compressible":true,"extensions":["musicxml"]},"application/vnd.renlearn.rlprint":{"source":"iana"},"application/vnd.resilient.logic":{"source":"iana"},"application/vnd.restful+json":{"source":"iana","compressible":true},"application/vnd.rig.cryptonote":{"source":"iana","extensions":["cryptonote"]},"application/vnd.rim.cod":{"source":"apache","extensions":["cod"]},"application/vnd.rn-realmedia":{"source":"apache","extensions":["rm"]},"application/vnd.rn-realmedia-vbr":{"source":"apache","extensions":["rmvb"]},"application/vnd.route66.link66+xml":{"source":"iana","compressible":true,"extensions":["link66"]},"application/vnd.rs-274x":{"source":"iana"},"application/vnd.ruckus.download":{"source":"iana"},"application/vnd.s3sms":{"source":"iana"},"application/vnd.sailingtracker.track":{"source":"iana","extensions":["st"]},"application/vnd.sar":{"source":"iana"},"application/vnd.sbm.cid":{"source":"iana"},"application/vnd.sbm.mid2":{"source":"iana"},"application/vnd.scribus":{"source":"iana"},"application/vnd.sealed.3df":{"source":"iana"},"application/vnd.sealed.csf":{"source":"iana"},"application/vnd.sealed.doc":{"source":"iana"},"application/vnd.sealed.eml":{"source":"iana"},"application/vnd.sealed.mht":{"source":"iana"},"application/vnd.sealed.net":{"source":"iana"},"application/vnd.sealed.ppt":{"source":"iana"},"application/vnd.sealed.tiff":{"source":"iana"},"application/vnd.sealed.xls":{"source":"iana"},"application/vnd.sealedmedia.softseal.html":{"source":"iana"},"application/vnd.sealedmedia.softseal.pdf":{"source":"iana"},"application/vnd.seemail":{"source":"iana","extensions":["see"]},"application/vnd.seis+json":{"source":"iana","compressible":true},"application/vnd.sema":{"source":"iana","extensions":["sema"]},"application/vnd.semd":{"source":"iana","extensions":["semd"]},"application/vnd.semf":{"source":"iana","extensions":["semf"]},"application/vnd.shade-save-file":{"source":"iana"},"application/vnd.shana.informed.formdata":{"source":"iana","extensions":["ifm"]},"application/vnd.shana.informed.formtemplate":{"source":"iana","extensions":["itp"]},"application/vnd.shana.informed.interchange":{"source":"iana","extensions":["iif"]},"application/vnd.shana.informed.package":{"source":"iana","extensions":["ipk"]},"application/vnd.shootproof+json":{"source":"iana","compressible":true},"application/vnd.shopkick+json":{"source":"iana","compressible":true},"application/vnd.shp":{"source":"iana"},"application/vnd.shx":{"source":"iana"},"application/vnd.sigrok.session":{"source":"iana"},"application/vnd.simtech-mindmapper":{"source":"iana","extensions":["twd","twds"]},"application/vnd.siren+json":{"source":"iana","compressible":true},"application/vnd.smaf":{"source":"iana","extensions":["mmf"]},"application/vnd.smart.notebook":{"source":"iana"},"application/vnd.smart.teacher":{"source":"iana","extensions":["teacher"]},"application/vnd.snesdev-page-table":{"source":"iana"},"application/vnd.software602.filler.form+xml":{"source":"iana","compressible":true,"extensions":["fo"]},"application/vnd.software602.filler.form-xml-zip":{"source":"iana"},"application/vnd.solent.sdkm+xml":{"source":"iana","compressible":true,"extensions":["sdkm","sdkd"]},"application/vnd.spotfire.dxp":{"source":"iana","extensions":["dxp"]},"application/vnd.spotfire.sfs":{"source":"iana","extensions":["sfs"]},"application/vnd.sqlite3":{"source":"iana"},"application/vnd.sss-cod":{"source":"iana"},"application/vnd.sss-dtf":{"source":"iana"},"application/vnd.sss-ntf":{"source":"iana"},"application/vnd.stardivision.calc":{"source":"apache","extensions":["sdc"]},"application/vnd.stardivision.draw":{"source":"apache","extensions":["sda"]},"application/vnd.stardivision.impress":{"source":"apache","extensions":["sdd"]},"application/vnd.stardivision.math":{"source":"apache","extensions":["smf"]},"application/vnd.stardivision.writer":{"source":"apache","extensions":["sdw","vor"]},"application/vnd.stardivision.writer-global":{"source":"apache","extensions":["sgl"]},"application/vnd.stepmania.package":{"source":"iana","extensions":["smzip"]},"application/vnd.stepmania.stepchart":{"source":"iana","extensions":["sm"]},"application/vnd.street-stream":{"source":"iana"},"application/vnd.sun.wadl+xml":{"source":"iana","compressible":true,"extensions":["wadl"]},"application/vnd.sun.xml.calc":{"source":"apache","extensions":["sxc"]},"application/vnd.sun.xml.calc.template":{"source":"apache","extensions":["stc"]},"application/vnd.sun.xml.draw":{"source":"apache","extensions":["sxd"]},"application/vnd.sun.xml.draw.template":{"source":"apache","extensions":["std"]},"application/vnd.sun.xml.impress":{"source":"apache","extensions":["sxi"]},"application/vnd.sun.xml.impress.template":{"source":"apache","extensions":["sti"]},"application/vnd.sun.xml.math":{"source":"apache","extensions":["sxm"]},"application/vnd.sun.xml.writer":{"source":"apache","extensions":["sxw"]},"application/vnd.sun.xml.writer.global":{"source":"apache","extensions":["sxg"]},"application/vnd.sun.xml.writer.template":{"source":"apache","extensions":["stw"]},"application/vnd.sus-calendar":{"source":"iana","extensions":["sus","susp"]},"application/vnd.svd":{"source":"iana","extensions":["svd"]},"application/vnd.swiftview-ics":{"source":"iana"},"application/vnd.sycle+xml":{"source":"iana","compressible":true},"application/vnd.syft+json":{"source":"iana","compressible":true},"application/vnd.symbian.install":{"source":"apache","extensions":["sis","sisx"]},"application/vnd.syncml+xml":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["xsm"]},"application/vnd.syncml.dm+wbxml":{"source":"iana","charset":"UTF-8","extensions":["bdm"]},"application/vnd.syncml.dm+xml":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["xdm"]},"application/vnd.syncml.dm.notification":{"source":"iana"},"application/vnd.syncml.dmddf+wbxml":{"source":"iana"},"application/vnd.syncml.dmddf+xml":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["ddf"]},"application/vnd.syncml.dmtnds+wbxml":{"source":"iana"},"application/vnd.syncml.dmtnds+xml":{"source":"iana","charset":"UTF-8","compressible":true},"application/vnd.syncml.ds.notification":{"source":"iana"},"application/vnd.tableschema+json":{"source":"iana","compressible":true},"application/vnd.tao.intent-module-archive":{"source":"iana","extensions":["tao"]},"application/vnd.tcpdump.pcap":{"source":"iana","extensions":["pcap","cap","dmp"]},"application/vnd.think-cell.ppttc+json":{"source":"iana","compressible":true},"application/vnd.tmd.mediaflex.api+xml":{"source":"iana","compressible":true},"application/vnd.tml":{"source":"iana"},"application/vnd.tmobile-livetv":{"source":"iana","extensions":["tmo"]},"application/vnd.tri.onesource":{"source":"iana"},"application/vnd.trid.tpt":{"source":"iana","extensions":["tpt"]},"application/vnd.triscape.mxs":{"source":"iana","extensions":["mxs"]},"application/vnd.trueapp":{"source":"iana","extensions":["tra"]},"application/vnd.truedoc":{"source":"iana"},"application/vnd.ubisoft.webplayer":{"source":"iana"},"application/vnd.ufdl":{"source":"iana","extensions":["ufd","ufdl"]},"application/vnd.uiq.theme":{"source":"iana","extensions":["utz"]},"application/vnd.umajin":{"source":"iana","extensions":["umj"]},"application/vnd.unity":{"source":"iana","extensions":["unityweb"]},"application/vnd.uoml+xml":{"source":"iana","compressible":true,"extensions":["uoml"]},"application/vnd.uplanet.alert":{"source":"iana"},"application/vnd.uplanet.alert-wbxml":{"source":"iana"},"application/vnd.uplanet.bearer-choice":{"source":"iana"},"application/vnd.uplanet.bearer-choice-wbxml":{"source":"iana"},"application/vnd.uplanet.cacheop":{"source":"iana"},"application/vnd.uplanet.cacheop-wbxml":{"source":"iana"},"application/vnd.uplanet.channel":{"source":"iana"},"application/vnd.uplanet.channel-wbxml":{"source":"iana"},"application/vnd.uplanet.list":{"source":"iana"},"application/vnd.uplanet.list-wbxml":{"source":"iana"},"application/vnd.uplanet.listcmd":{"source":"iana"},"application/vnd.uplanet.listcmd-wbxml":{"source":"iana"},"application/vnd.uplanet.signal":{"source":"iana"},"application/vnd.uri-map":{"source":"iana"},"application/vnd.valve.source.material":{"source":"iana"},"application/vnd.vcx":{"source":"iana","extensions":["vcx"]},"application/vnd.vd-study":{"source":"iana"},"application/vnd.vectorworks":{"source":"iana"},"application/vnd.vel+json":{"source":"iana","compressible":true},"application/vnd.verimatrix.vcas":{"source":"iana"},"application/vnd.veritone.aion+json":{"source":"iana","compressible":true},"application/vnd.veryant.thin":{"source":"iana"},"application/vnd.ves.encrypted":{"source":"iana"},"application/vnd.vidsoft.vidconference":{"source":"iana"},"application/vnd.visio":{"source":"iana","extensions":["vsd","vst","vss","vsw"]},"application/vnd.visionary":{"source":"iana","extensions":["vis"]},"application/vnd.vividence.scriptfile":{"source":"iana"},"application/vnd.vsf":{"source":"iana","extensions":["vsf"]},"application/vnd.wap.sic":{"source":"iana"},"application/vnd.wap.slc":{"source":"iana"},"application/vnd.wap.wbxml":{"source":"iana","charset":"UTF-8","extensions":["wbxml"]},"application/vnd.wap.wmlc":{"source":"iana","extensions":["wmlc"]},"application/vnd.wap.wmlscriptc":{"source":"iana","extensions":["wmlsc"]},"application/vnd.webturbo":{"source":"iana","extensions":["wtb"]},"application/vnd.wfa.dpp":{"source":"iana"},"application/vnd.wfa.p2p":{"source":"iana"},"application/vnd.wfa.wsc":{"source":"iana"},"application/vnd.windows.devicepairing":{"source":"iana"},"application/vnd.wmc":{"source":"iana"},"application/vnd.wmf.bootstrap":{"source":"iana"},"application/vnd.wolfram.mathematica":{"source":"iana"},"application/vnd.wolfram.mathematica.package":{"source":"iana"},"application/vnd.wolfram.player":{"source":"iana","extensions":["nbp"]},"application/vnd.wordperfect":{"source":"iana","extensions":["wpd"]},"application/vnd.wqd":{"source":"iana","extensions":["wqd"]},"application/vnd.wrq-hp3000-labelled":{"source":"iana"},"application/vnd.wt.stf":{"source":"iana","extensions":["stf"]},"application/vnd.wv.csp+wbxml":{"source":"iana"},"application/vnd.wv.csp+xml":{"source":"iana","compressible":true},"application/vnd.wv.ssp+xml":{"source":"iana","compressible":true},"application/vnd.xacml+json":{"source":"iana","compressible":true},"application/vnd.xara":{"source":"iana","extensions":["xar"]},"application/vnd.xfdl":{"source":"iana","extensions":["xfdl"]},"application/vnd.xfdl.webform":{"source":"iana"},"application/vnd.xmi+xml":{"source":"iana","compressible":true},"application/vnd.xmpie.cpkg":{"source":"iana"},"application/vnd.xmpie.dpkg":{"source":"iana"},"application/vnd.xmpie.plan":{"source":"iana"},"application/vnd.xmpie.ppkg":{"source":"iana"},"application/vnd.xmpie.xlim":{"source":"iana"},"application/vnd.yamaha.hv-dic":{"source":"iana","extensions":["hvd"]},"application/vnd.yamaha.hv-script":{"source":"iana","extensions":["hvs"]},"application/vnd.yamaha.hv-voice":{"source":"iana","extensions":["hvp"]},"application/vnd.yamaha.openscoreformat":{"source":"iana","extensions":["osf"]},"application/vnd.yamaha.openscoreformat.osfpvg+xml":{"source":"iana","compressible":true,"extensions":["osfpvg"]},"application/vnd.yamaha.remote-setup":{"source":"iana"},"application/vnd.yamaha.smaf-audio":{"source":"iana","extensions":["saf"]},"application/vnd.yamaha.smaf-phrase":{"source":"iana","extensions":["spf"]},"application/vnd.yamaha.through-ngn":{"source":"iana"},"application/vnd.yamaha.tunnel-udpencap":{"source":"iana"},"application/vnd.yaoweme":{"source":"iana"},"application/vnd.yellowriver-custom-menu":{"source":"iana","extensions":["cmp"]},"application/vnd.youtube.yt":{"source":"iana"},"application/vnd.zul":{"source":"iana","extensions":["zir","zirz"]},"application/vnd.zzazz.deck+xml":{"source":"iana","compressible":true,"extensions":["zaz"]},"application/voicexml+xml":{"source":"iana","compressible":true,"extensions":["vxml"]},"application/voucher-cms+json":{"source":"iana","compressible":true},"application/vq-rtcpxr":{"source":"iana"},"application/wasm":{"source":"iana","compressible":true,"extensions":["wasm"]},"application/watcherinfo+xml":{"source":"iana","compressible":true,"extensions":["wif"]},"application/webpush-options+json":{"source":"iana","compressible":true},"application/whoispp-query":{"source":"iana"},"application/whoispp-response":{"source":"iana"},"application/widget":{"source":"iana","extensions":["wgt"]},"application/winhlp":{"source":"apache","extensions":["hlp"]},"application/wita":{"source":"iana"},"application/wordperfect5.1":{"source":"iana"},"application/wsdl+xml":{"source":"iana","compressible":true,"extensions":["wsdl"]},"application/wspolicy+xml":{"source":"iana","compressible":true,"extensions":["wspolicy"]},"application/x-7z-compressed":{"source":"apache","compressible":false,"extensions":["7z"]},"application/x-abiword":{"source":"apache","extensions":["abw"]},"application/x-ace-compressed":{"source":"apache","extensions":["ace"]},"application/x-amf":{"source":"apache"},"application/x-apple-diskimage":{"source":"apache","extensions":["dmg"]},"application/x-arj":{"compressible":false,"extensions":["arj"]},"application/x-authorware-bin":{"source":"apache","extensions":["aab","x32","u32","vox"]},"application/x-authorware-map":{"source":"apache","extensions":["aam"]},"application/x-authorware-seg":{"source":"apache","extensions":["aas"]},"application/x-bcpio":{"source":"apache","extensions":["bcpio"]},"application/x-bdoc":{"compressible":false,"extensions":["bdoc"]},"application/x-bittorrent":{"source":"apache","extensions":["torrent"]},"application/x-blorb":{"source":"apache","extensions":["blb","blorb"]},"application/x-bzip":{"source":"apache","compressible":false,"extensions":["bz"]},"application/x-bzip2":{"source":"apache","compressible":false,"extensions":["bz2","boz"]},"application/x-cbr":{"source":"apache","extensions":["cbr","cba","cbt","cbz","cb7"]},"application/x-cdlink":{"source":"apache","extensions":["vcd"]},"application/x-cfs-compressed":{"source":"apache","extensions":["cfs"]},"application/x-chat":{"source":"apache","extensions":["chat"]},"application/x-chess-pgn":{"source":"apache","extensions":["pgn"]},"application/x-chrome-extension":{"extensions":["crx"]},"application/x-cocoa":{"source":"nginx","extensions":["cco"]},"application/x-compress":{"source":"apache"},"application/x-conference":{"source":"apache","extensions":["nsc"]},"application/x-cpio":{"source":"apache","extensions":["cpio"]},"application/x-csh":{"source":"apache","extensions":["csh"]},"application/x-deb":{"compressible":false},"application/x-debian-package":{"source":"apache","extensions":["deb","udeb"]},"application/x-dgc-compressed":{"source":"apache","extensions":["dgc"]},"application/x-director":{"source":"apache","extensions":["dir","dcr","dxr","cst","cct","cxt","w3d","fgd","swa"]},"application/x-doom":{"source":"apache","extensions":["wad"]},"application/x-dtbncx+xml":{"source":"apache","compressible":true,"extensions":["ncx"]},"application/x-dtbook+xml":{"source":"apache","compressible":true,"extensions":["dtb"]},"application/x-dtbresource+xml":{"source":"apache","compressible":true,"extensions":["res"]},"application/x-dvi":{"source":"apache","compressible":false,"extensions":["dvi"]},"application/x-envoy":{"source":"apache","extensions":["evy"]},"application/x-eva":{"source":"apache","extensions":["eva"]},"application/x-font-bdf":{"source":"apache","extensions":["bdf"]},"application/x-font-dos":{"source":"apache"},"application/x-font-framemaker":{"source":"apache"},"application/x-font-ghostscript":{"source":"apache","extensions":["gsf"]},"application/x-font-libgrx":{"source":"apache"},"application/x-font-linux-psf":{"source":"apache","extensions":["psf"]},"application/x-font-pcf":{"source":"apache","extensions":["pcf"]},"application/x-font-snf":{"source":"apache","extensions":["snf"]},"application/x-font-speedo":{"source":"apache"},"application/x-font-sunos-news":{"source":"apache"},"application/x-font-type1":{"source":"apache","extensions":["pfa","pfb","pfm","afm"]},"application/x-font-vfont":{"source":"apache"},"application/x-freearc":{"source":"apache","extensions":["arc"]},"application/x-futuresplash":{"source":"apache","extensions":["spl"]},"application/x-gca-compressed":{"source":"apache","extensions":["gca"]},"application/x-glulx":{"source":"apache","extensions":["ulx"]},"application/x-gnumeric":{"source":"apache","extensions":["gnumeric"]},"application/x-gramps-xml":{"source":"apache","extensions":["gramps"]},"application/x-gtar":{"source":"apache","extensions":["gtar"]},"application/x-gzip":{"source":"apache"},"application/x-hdf":{"source":"apache","extensions":["hdf"]},"application/x-httpd-php":{"compressible":true,"extensions":["php"]},"application/x-install-instructions":{"source":"apache","extensions":["install"]},"application/x-iso9660-image":{"source":"apache","extensions":["iso"]},"application/x-iwork-keynote-sffkey":{"extensions":["key"]},"application/x-iwork-numbers-sffnumbers":{"extensions":["numbers"]},"application/x-iwork-pages-sffpages":{"extensions":["pages"]},"application/x-java-archive-diff":{"source":"nginx","extensions":["jardiff"]},"application/x-java-jnlp-file":{"source":"apache","compressible":false,"extensions":["jnlp"]},"application/x-javascript":{"compressible":true},"application/x-keepass2":{"extensions":["kdbx"]},"application/x-latex":{"source":"apache","compressible":false,"extensions":["latex"]},"application/x-lua-bytecode":{"extensions":["luac"]},"application/x-lzh-compressed":{"source":"apache","extensions":["lzh","lha"]},"application/x-makeself":{"source":"nginx","extensions":["run"]},"application/x-mie":{"source":"apache","extensions":["mie"]},"application/x-mobipocket-ebook":{"source":"apache","extensions":["prc","mobi"]},"application/x-mpegurl":{"compressible":false},"application/x-ms-application":{"source":"apache","extensions":["application"]},"application/x-ms-shortcut":{"source":"apache","extensions":["lnk"]},"application/x-ms-wmd":{"source":"apache","extensions":["wmd"]},"application/x-ms-wmz":{"source":"apache","extensions":["wmz"]},"application/x-ms-xbap":{"source":"apache","extensions":["xbap"]},"application/x-msaccess":{"source":"apache","extensions":["mdb"]},"application/x-msbinder":{"source":"apache","extensions":["obd"]},"application/x-mscardfile":{"source":"apache","extensions":["crd"]},"application/x-msclip":{"source":"apache","extensions":["clp"]},"application/x-msdos-program":{"extensions":["exe"]},"application/x-msdownload":{"source":"apache","extensions":["exe","dll","com","bat","msi"]},"application/x-msmediaview":{"source":"apache","extensions":["mvb","m13","m14"]},"application/x-msmetafile":{"source":"apache","extensions":["wmf","wmz","emf","emz"]},"application/x-msmoney":{"source":"apache","extensions":["mny"]},"application/x-mspublisher":{"source":"apache","extensions":["pub"]},"application/x-msschedule":{"source":"apache","extensions":["scd"]},"application/x-msterminal":{"source":"apache","extensions":["trm"]},"application/x-mswrite":{"source":"apache","extensions":["wri"]},"application/x-netcdf":{"source":"apache","extensions":["nc","cdf"]},"application/x-ns-proxy-autoconfig":{"compressible":true,"extensions":["pac"]},"application/x-nzb":{"source":"apache","extensions":["nzb"]},"application/x-perl":{"source":"nginx","extensions":["pl","pm"]},"application/x-pilot":{"source":"nginx","extensions":["prc","pdb"]},"application/x-pkcs12":{"source":"apache","compressible":false,"extensions":["p12","pfx"]},"application/x-pkcs7-certificates":{"source":"apache","extensions":["p7b","spc"]},"application/x-pkcs7-certreqresp":{"source":"apache","extensions":["p7r"]},"application/x-pki-message":{"source":"iana"},"application/x-rar-compressed":{"source":"apache","compressible":false,"extensions":["rar"]},"application/x-redhat-package-manager":{"source":"nginx","extensions":["rpm"]},"application/x-research-info-systems":{"source":"apache","extensions":["ris"]},"application/x-sea":{"source":"nginx","extensions":["sea"]},"application/x-sh":{"source":"apache","compressible":true,"extensions":["sh"]},"application/x-shar":{"source":"apache","extensions":["shar"]},"application/x-shockwave-flash":{"source":"apache","compressible":false,"extensions":["swf"]},"application/x-silverlight-app":{"source":"apache","extensions":["xap"]},"application/x-sql":{"source":"apache","extensions":["sql"]},"application/x-stuffit":{"source":"apache","compressible":false,"extensions":["sit"]},"application/x-stuffitx":{"source":"apache","extensions":["sitx"]},"application/x-subrip":{"source":"apache","extensions":["srt"]},"application/x-sv4cpio":{"source":"apache","extensions":["sv4cpio"]},"application/x-sv4crc":{"source":"apache","extensions":["sv4crc"]},"application/x-t3vm-image":{"source":"apache","extensions":["t3"]},"application/x-tads":{"source":"apache","extensions":["gam"]},"application/x-tar":{"source":"apache","compressible":true,"extensions":["tar"]},"application/x-tcl":{"source":"apache","extensions":["tcl","tk"]},"application/x-tex":{"source":"apache","extensions":["tex"]},"application/x-tex-tfm":{"source":"apache","extensions":["tfm"]},"application/x-texinfo":{"source":"apache","extensions":["texinfo","texi"]},"application/x-tgif":{"source":"apache","extensions":["obj"]},"application/x-ustar":{"source":"apache","extensions":["ustar"]},"application/x-virtualbox-hdd":{"compressible":true,"extensions":["hdd"]},"application/x-virtualbox-ova":{"compressible":true,"extensions":["ova"]},"application/x-virtualbox-ovf":{"compressible":true,"extensions":["ovf"]},"application/x-virtualbox-vbox":{"compressible":true,"extensions":["vbox"]},"application/x-virtualbox-vbox-extpack":{"compressible":false,"extensions":["vbox-extpack"]},"application/x-virtualbox-vdi":{"compressible":true,"extensions":["vdi"]},"application/x-virtualbox-vhd":{"compressible":true,"extensions":["vhd"]},"application/x-virtualbox-vmdk":{"compressible":true,"extensions":["vmdk"]},"application/x-wais-source":{"source":"apache","extensions":["src"]},"application/x-web-app-manifest+json":{"compressible":true,"extensions":["webapp"]},"application/x-www-form-urlencoded":{"source":"iana","compressible":true},"application/x-x509-ca-cert":{"source":"iana","extensions":["der","crt","pem"]},"application/x-x509-ca-ra-cert":{"source":"iana"},"application/x-x509-next-ca-cert":{"source":"iana"},"application/x-xfig":{"source":"apache","extensions":["fig"]},"application/x-xliff+xml":{"source":"apache","compressible":true,"extensions":["xlf"]},"application/x-xpinstall":{"source":"apache","compressible":false,"extensions":["xpi"]},"application/x-xz":{"source":"apache","extensions":["xz"]},"application/x-zmachine":{"source":"apache","extensions":["z1","z2","z3","z4","z5","z6","z7","z8"]},"application/x400-bp":{"source":"iana"},"application/xacml+xml":{"source":"iana","compressible":true},"application/xaml+xml":{"source":"apache","compressible":true,"extensions":["xaml"]},"application/xcap-att+xml":{"source":"iana","compressible":true,"extensions":["xav"]},"application/xcap-caps+xml":{"source":"iana","compressible":true,"extensions":["xca"]},"application/xcap-diff+xml":{"source":"iana","compressible":true,"extensions":["xdf"]},"application/xcap-el+xml":{"source":"iana","compressible":true,"extensions":["xel"]},"application/xcap-error+xml":{"source":"iana","compressible":true},"application/xcap-ns+xml":{"source":"iana","compressible":true,"extensions":["xns"]},"application/xcon-conference-info+xml":{"source":"iana","compressible":true},"application/xcon-conference-info-diff+xml":{"source":"iana","compressible":true},"application/xenc+xml":{"source":"iana","compressible":true,"extensions":["xenc"]},"application/xhtml+xml":{"source":"iana","compressible":true,"extensions":["xhtml","xht"]},"application/xhtml-voice+xml":{"source":"apache","compressible":true},"application/xliff+xml":{"source":"iana","compressible":true,"extensions":["xlf"]},"application/xml":{"source":"iana","compressible":true,"extensions":["xml","xsl","xsd","rng"]},"application/xml-dtd":{"source":"iana","compressible":true,"extensions":["dtd"]},"application/xml-external-parsed-entity":{"source":"iana"},"application/xml-patch+xml":{"source":"iana","compressible":true},"application/xmpp+xml":{"source":"iana","compressible":true},"application/xop+xml":{"source":"iana","compressible":true,"extensions":["xop"]},"application/xproc+xml":{"source":"apache","compressible":true,"extensions":["xpl"]},"application/xslt+xml":{"source":"iana","compressible":true,"extensions":["xsl","xslt"]},"application/xspf+xml":{"source":"apache","compressible":true,"extensions":["xspf"]},"application/xv+xml":{"source":"iana","compressible":true,"extensions":["mxml","xhvml","xvml","xvm"]},"application/yang":{"source":"iana","extensions":["yang"]},"application/yang-data+json":{"source":"iana","compressible":true},"application/yang-data+xml":{"source":"iana","compressible":true},"application/yang-patch+json":{"source":"iana","compressible":true},"application/yang-patch+xml":{"source":"iana","compressible":true},"application/yin+xml":{"source":"iana","compressible":true,"extensions":["yin"]},"application/zip":{"source":"iana","compressible":false,"extensions":["zip"]},"application/zlib":{"source":"iana"},"application/zstd":{"source":"iana"},"audio/1d-interleaved-parityfec":{"source":"iana"},"audio/32kadpcm":{"source":"iana"},"audio/3gpp":{"source":"iana","compressible":false,"extensions":["3gpp"]},"audio/3gpp2":{"source":"iana"},"audio/aac":{"source":"iana"},"audio/ac3":{"source":"iana"},"audio/adpcm":{"source":"apache","extensions":["adp"]},"audio/amr":{"source":"iana","extensions":["amr"]},"audio/amr-wb":{"source":"iana"},"audio/amr-wb+":{"source":"iana"},"audio/aptx":{"source":"iana"},"audio/asc":{"source":"iana"},"audio/atrac-advanced-lossless":{"source":"iana"},"audio/atrac-x":{"source":"iana"},"audio/atrac3":{"source":"iana"},"audio/basic":{"source":"iana","compressible":false,"extensions":["au","snd"]},"audio/bv16":{"source":"iana"},"audio/bv32":{"source":"iana"},"audio/clearmode":{"source":"iana"},"audio/cn":{"source":"iana"},"audio/dat12":{"source":"iana"},"audio/dls":{"source":"iana"},"audio/dsr-es201108":{"source":"iana"},"audio/dsr-es202050":{"source":"iana"},"audio/dsr-es202211":{"source":"iana"},"audio/dsr-es202212":{"source":"iana"},"audio/dv":{"source":"iana"},"audio/dvi4":{"source":"iana"},"audio/eac3":{"source":"iana"},"audio/encaprtp":{"source":"iana"},"audio/evrc":{"source":"iana"},"audio/evrc-qcp":{"source":"iana"},"audio/evrc0":{"source":"iana"},"audio/evrc1":{"source":"iana"},"audio/evrcb":{"source":"iana"},"audio/evrcb0":{"source":"iana"},"audio/evrcb1":{"source":"iana"},"audio/evrcnw":{"source":"iana"},"audio/evrcnw0":{"source":"iana"},"audio/evrcnw1":{"source":"iana"},"audio/evrcwb":{"source":"iana"},"audio/evrcwb0":{"source":"iana"},"audio/evrcwb1":{"source":"iana"},"audio/evs":{"source":"iana"},"audio/flexfec":{"source":"iana"},"audio/fwdred":{"source":"iana"},"audio/g711-0":{"source":"iana"},"audio/g719":{"source":"iana"},"audio/g722":{"source":"iana"},"audio/g7221":{"source":"iana"},"audio/g723":{"source":"iana"},"audio/g726-16":{"source":"iana"},"audio/g726-24":{"source":"iana"},"audio/g726-32":{"source":"iana"},"audio/g726-40":{"source":"iana"},"audio/g728":{"source":"iana"},"audio/g729":{"source":"iana"},"audio/g7291":{"source":"iana"},"audio/g729d":{"source":"iana"},"audio/g729e":{"source":"iana"},"audio/gsm":{"source":"iana"},"audio/gsm-efr":{"source":"iana"},"audio/gsm-hr-08":{"source":"iana"},"audio/ilbc":{"source":"iana"},"audio/ip-mr_v2.5":{"source":"iana"},"audio/isac":{"source":"apache"},"audio/l16":{"source":"iana"},"audio/l20":{"source":"iana"},"audio/l24":{"source":"iana","compressible":false},"audio/l8":{"source":"iana"},"audio/lpc":{"source":"iana"},"audio/melp":{"source":"iana"},"audio/melp1200":{"source":"iana"},"audio/melp2400":{"source":"iana"},"audio/melp600":{"source":"iana"},"audio/mhas":{"source":"iana"},"audio/midi":{"source":"apache","extensions":["mid","midi","kar","rmi"]},"audio/mobile-xmf":{"source":"iana","extensions":["mxmf"]},"audio/mp3":{"compressible":false,"extensions":["mp3"]},"audio/mp4":{"source":"iana","compressible":false,"extensions":["m4a","mp4a"]},"audio/mp4a-latm":{"source":"iana"},"audio/mpa":{"source":"iana"},"audio/mpa-robust":{"source":"iana"},"audio/mpeg":{"source":"iana","compressible":false,"extensions":["mpga","mp2","mp2a","mp3","m2a","m3a"]},"audio/mpeg4-generic":{"source":"iana"},"audio/musepack":{"source":"apache"},"audio/ogg":{"source":"iana","compressible":false,"extensions":["oga","ogg","spx","opus"]},"audio/opus":{"source":"iana"},"audio/parityfec":{"source":"iana"},"audio/pcma":{"source":"iana"},"audio/pcma-wb":{"source":"iana"},"audio/pcmu":{"source":"iana"},"audio/pcmu-wb":{"source":"iana"},"audio/prs.sid":{"source":"iana"},"audio/qcelp":{"source":"iana"},"audio/raptorfec":{"source":"iana"},"audio/red":{"source":"iana"},"audio/rtp-enc-aescm128":{"source":"iana"},"audio/rtp-midi":{"source":"iana"},"audio/rtploopback":{"source":"iana"},"audio/rtx":{"source":"iana"},"audio/s3m":{"source":"apache","extensions":["s3m"]},"audio/scip":{"source":"iana"},"audio/silk":{"source":"apache","extensions":["sil"]},"audio/smv":{"source":"iana"},"audio/smv-qcp":{"source":"iana"},"audio/smv0":{"source":"iana"},"audio/sofa":{"source":"iana"},"audio/sp-midi":{"source":"iana"},"audio/speex":{"source":"iana"},"audio/t140c":{"source":"iana"},"audio/t38":{"source":"iana"},"audio/telephone-event":{"source":"iana"},"audio/tetra_acelp":{"source":"iana"},"audio/tetra_acelp_bb":{"source":"iana"},"audio/tone":{"source":"iana"},"audio/tsvcis":{"source":"iana"},"audio/uemclip":{"source":"iana"},"audio/ulpfec":{"source":"iana"},"audio/usac":{"source":"iana"},"audio/vdvi":{"source":"iana"},"audio/vmr-wb":{"source":"iana"},"audio/vnd.3gpp.iufp":{"source":"iana"},"audio/vnd.4sb":{"source":"iana"},"audio/vnd.audiokoz":{"source":"iana"},"audio/vnd.celp":{"source":"iana"},"audio/vnd.cisco.nse":{"source":"iana"},"audio/vnd.cmles.radio-events":{"source":"iana"},"audio/vnd.cns.anp1":{"source":"iana"},"audio/vnd.cns.inf1":{"source":"iana"},"audio/vnd.dece.audio":{"source":"iana","extensions":["uva","uvva"]},"audio/vnd.digital-winds":{"source":"iana","extensions":["eol"]},"audio/vnd.dlna.adts":{"source":"iana"},"audio/vnd.dolby.heaac.1":{"source":"iana"},"audio/vnd.dolby.heaac.2":{"source":"iana"},"audio/vnd.dolby.mlp":{"source":"iana"},"audio/vnd.dolby.mps":{"source":"iana"},"audio/vnd.dolby.pl2":{"source":"iana"},"audio/vnd.dolby.pl2x":{"source":"iana"},"audio/vnd.dolby.pl2z":{"source":"iana"},"audio/vnd.dolby.pulse.1":{"source":"iana"},"audio/vnd.dra":{"source":"iana","extensions":["dra"]},"audio/vnd.dts":{"source":"iana","extensions":["dts"]},"audio/vnd.dts.hd":{"source":"iana","extensions":["dtshd"]},"audio/vnd.dts.uhd":{"source":"iana"},"audio/vnd.dvb.file":{"source":"iana"},"audio/vnd.everad.plj":{"source":"iana"},"audio/vnd.hns.audio":{"source":"iana"},"audio/vnd.lucent.voice":{"source":"iana","extensions":["lvp"]},"audio/vnd.ms-playready.media.pya":{"source":"iana","extensions":["pya"]},"audio/vnd.nokia.mobile-xmf":{"source":"iana"},"audio/vnd.nortel.vbk":{"source":"iana"},"audio/vnd.nuera.ecelp4800":{"source":"iana","extensions":["ecelp4800"]},"audio/vnd.nuera.ecelp7470":{"source":"iana","extensions":["ecelp7470"]},"audio/vnd.nuera.ecelp9600":{"source":"iana","extensions":["ecelp9600"]},"audio/vnd.octel.sbc":{"source":"iana"},"audio/vnd.presonus.multitrack":{"source":"iana"},"audio/vnd.qcelp":{"source":"iana"},"audio/vnd.rhetorex.32kadpcm":{"source":"iana"},"audio/vnd.rip":{"source":"iana","extensions":["rip"]},"audio/vnd.rn-realaudio":{"compressible":false},"audio/vnd.sealedmedia.softseal.mpeg":{"source":"iana"},"audio/vnd.vmx.cvsd":{"source":"iana"},"audio/vnd.wave":{"compressible":false},"audio/vorbis":{"source":"iana","compressible":false},"audio/vorbis-config":{"source":"iana"},"audio/wav":{"compressible":false,"extensions":["wav"]},"audio/wave":{"compressible":false,"extensions":["wav"]},"audio/webm":{"source":"apache","compressible":false,"extensions":["weba"]},"audio/x-aac":{"source":"apache","compressible":false,"extensions":["aac"]},"audio/x-aiff":{"source":"apache","extensions":["aif","aiff","aifc"]},"audio/x-caf":{"source":"apache","compressible":false,"extensions":["caf"]},"audio/x-flac":{"source":"apache","extensions":["flac"]},"audio/x-m4a":{"source":"nginx","extensions":["m4a"]},"audio/x-matroska":{"source":"apache","extensions":["mka"]},"audio/x-mpegurl":{"source":"apache","extensions":["m3u"]},"audio/x-ms-wax":{"source":"apache","extensions":["wax"]},"audio/x-ms-wma":{"source":"apache","extensions":["wma"]},"audio/x-pn-realaudio":{"source":"apache","extensions":["ram","ra"]},"audio/x-pn-realaudio-plugin":{"source":"apache","extensions":["rmp"]},"audio/x-realaudio":{"source":"nginx","extensions":["ra"]},"audio/x-tta":{"source":"apache"},"audio/x-wav":{"source":"apache","extensions":["wav"]},"audio/xm":{"source":"apache","extensions":["xm"]},"chemical/x-cdx":{"source":"apache","extensions":["cdx"]},"chemical/x-cif":{"source":"apache","extensions":["cif"]},"chemical/x-cmdf":{"source":"apache","extensions":["cmdf"]},"chemical/x-cml":{"source":"apache","extensions":["cml"]},"chemical/x-csml":{"source":"apache","extensions":["csml"]},"chemical/x-pdb":{"source":"apache"},"chemical/x-xyz":{"source":"apache","extensions":["xyz"]},"font/collection":{"source":"iana","extensions":["ttc"]},"font/otf":{"source":"iana","compressible":true,"extensions":["otf"]},"font/sfnt":{"source":"iana"},"font/ttf":{"source":"iana","compressible":true,"extensions":["ttf"]},"font/woff":{"source":"iana","extensions":["woff"]},"font/woff2":{"source":"iana","extensions":["woff2"]},"image/aces":{"source":"iana","extensions":["exr"]},"image/apng":{"compressible":false,"extensions":["apng"]},"image/avci":{"source":"iana","extensions":["avci"]},"image/avcs":{"source":"iana","extensions":["avcs"]},"image/avif":{"source":"iana","compressible":false,"extensions":["avif"]},"image/bmp":{"source":"iana","compressible":true,"extensions":["bmp"]},"image/cgm":{"source":"iana","extensions":["cgm"]},"image/dicom-rle":{"source":"iana","extensions":["drle"]},"image/emf":{"source":"iana","extensions":["emf"]},"image/fits":{"source":"iana","extensions":["fits"]},"image/g3fax":{"source":"iana","extensions":["g3"]},"image/gif":{"source":"iana","compressible":false,"extensions":["gif"]},"image/heic":{"source":"iana","extensions":["heic"]},"image/heic-sequence":{"source":"iana","extensions":["heics"]},"image/heif":{"source":"iana","extensions":["heif"]},"image/heif-sequence":{"source":"iana","extensions":["heifs"]},"image/hej2k":{"source":"iana","extensions":["hej2"]},"image/hsj2":{"source":"iana","extensions":["hsj2"]},"image/ief":{"source":"iana","extensions":["ief"]},"image/jls":{"source":"iana","extensions":["jls"]},"image/jp2":{"source":"iana","compressible":false,"extensions":["jp2","jpg2"]},"image/jpeg":{"source":"iana","compressible":false,"extensions":["jpeg","jpg","jpe"]},"image/jph":{"source":"iana","extensions":["jph"]},"image/jphc":{"source":"iana","extensions":["jhc"]},"image/jpm":{"source":"iana","compressible":false,"extensions":["jpm"]},"image/jpx":{"source":"iana","compressible":false,"extensions":["jpx","jpf"]},"image/jxr":{"source":"iana","extensions":["jxr"]},"image/jxra":{"source":"iana","extensions":["jxra"]},"image/jxrs":{"source":"iana","extensions":["jxrs"]},"image/jxs":{"source":"iana","extensions":["jxs"]},"image/jxsc":{"source":"iana","extensions":["jxsc"]},"image/jxsi":{"source":"iana","extensions":["jxsi"]},"image/jxss":{"source":"iana","extensions":["jxss"]},"image/ktx":{"source":"iana","extensions":["ktx"]},"image/ktx2":{"source":"iana","extensions":["ktx2"]},"image/naplps":{"source":"iana"},"image/pjpeg":{"compressible":false},"image/png":{"source":"iana","compressible":false,"extensions":["png"]},"image/prs.btif":{"source":"iana","extensions":["btif"]},"image/prs.pti":{"source":"iana","extensions":["pti"]},"image/pwg-raster":{"source":"iana"},"image/sgi":{"source":"apache","extensions":["sgi"]},"image/svg+xml":{"source":"iana","compressible":true,"extensions":["svg","svgz"]},"image/t38":{"source":"iana","extensions":["t38"]},"image/tiff":{"source":"iana","compressible":false,"extensions":["tif","tiff"]},"image/tiff-fx":{"source":"iana","extensions":["tfx"]},"image/vnd.adobe.photoshop":{"source":"iana","compressible":true,"extensions":["psd"]},"image/vnd.airzip.accelerator.azv":{"source":"iana","extensions":["azv"]},"image/vnd.cns.inf2":{"source":"iana"},"image/vnd.dece.graphic":{"source":"iana","extensions":["uvi","uvvi","uvg","uvvg"]},"image/vnd.djvu":{"source":"iana","extensions":["djvu","djv"]},"image/vnd.dvb.subtitle":{"source":"iana","extensions":["sub"]},"image/vnd.dwg":{"source":"iana","extensions":["dwg"]},"image/vnd.dxf":{"source":"iana","extensions":["dxf"]},"image/vnd.fastbidsheet":{"source":"iana","extensions":["fbs"]},"image/vnd.fpx":{"source":"iana","extensions":["fpx"]},"image/vnd.fst":{"source":"iana","extensions":["fst"]},"image/vnd.fujixerox.edmics-mmr":{"source":"iana","extensions":["mmr"]},"image/vnd.fujixerox.edmics-rlc":{"source":"iana","extensions":["rlc"]},"image/vnd.globalgraphics.pgb":{"source":"iana"},"image/vnd.microsoft.icon":{"source":"iana","compressible":true,"extensions":["ico"]},"image/vnd.mix":{"source":"iana"},"image/vnd.mozilla.apng":{"source":"iana"},"image/vnd.ms-dds":{"compressible":true,"extensions":["dds"]},"image/vnd.ms-modi":{"source":"iana","extensions":["mdi"]},"image/vnd.ms-photo":{"source":"apache","extensions":["wdp"]},"image/vnd.net-fpx":{"source":"iana","extensions":["npx"]},"image/vnd.pco.b16":{"source":"iana","extensions":["b16"]},"image/vnd.radiance":{"source":"iana"},"image/vnd.sealed.png":{"source":"iana"},"image/vnd.sealedmedia.softseal.gif":{"source":"iana"},"image/vnd.sealedmedia.softseal.jpg":{"source":"iana"},"image/vnd.svf":{"source":"iana"},"image/vnd.tencent.tap":{"source":"iana","extensions":["tap"]},"image/vnd.valve.source.texture":{"source":"iana","extensions":["vtf"]},"image/vnd.wap.wbmp":{"source":"iana","extensions":["wbmp"]},"image/vnd.xiff":{"source":"iana","extensions":["xif"]},"image/vnd.zbrush.pcx":{"source":"iana","extensions":["pcx"]},"image/webp":{"source":"apache","extensions":["webp"]},"image/wmf":{"source":"iana","extensions":["wmf"]},"image/x-3ds":{"source":"apache","extensions":["3ds"]},"image/x-cmu-raster":{"source":"apache","extensions":["ras"]},"image/x-cmx":{"source":"apache","extensions":["cmx"]},"image/x-freehand":{"source":"apache","extensions":["fh","fhc","fh4","fh5","fh7"]},"image/x-icon":{"source":"apache","compressible":true,"extensions":["ico"]},"image/x-jng":{"source":"nginx","extensions":["jng"]},"image/x-mrsid-image":{"source":"apache","extensions":["sid"]},"image/x-ms-bmp":{"source":"nginx","compressible":true,"extensions":["bmp"]},"image/x-pcx":{"source":"apache","extensions":["pcx"]},"image/x-pict":{"source":"apache","extensions":["pic","pct"]},"image/x-portable-anymap":{"source":"apache","extensions":["pnm"]},"image/x-portable-bitmap":{"source":"apache","extensions":["pbm"]},"image/x-portable-graymap":{"source":"apache","extensions":["pgm"]},"image/x-portable-pixmap":{"source":"apache","extensions":["ppm"]},"image/x-rgb":{"source":"apache","extensions":["rgb"]},"image/x-tga":{"source":"apache","extensions":["tga"]},"image/x-xbitmap":{"source":"apache","extensions":["xbm"]},"image/x-xcf":{"compressible":false},"image/x-xpixmap":{"source":"apache","extensions":["xpm"]},"image/x-xwindowdump":{"source":"apache","extensions":["xwd"]},"message/cpim":{"source":"iana"},"message/delivery-status":{"source":"iana"},"message/disposition-notification":{"source":"iana","extensions":["disposition-notification"]},"message/external-body":{"source":"iana"},"message/feedback-report":{"source":"iana"},"message/global":{"source":"iana","extensions":["u8msg"]},"message/global-delivery-status":{"source":"iana","extensions":["u8dsn"]},"message/global-disposition-notification":{"source":"iana","extensions":["u8mdn"]},"message/global-headers":{"source":"iana","extensions":["u8hdr"]},"message/http":{"source":"iana","compressible":false},"message/imdn+xml":{"source":"iana","compressible":true},"message/news":{"source":"iana"},"message/partial":{"source":"iana","compressible":false},"message/rfc822":{"source":"iana","compressible":true,"extensions":["eml","mime"]},"message/s-http":{"source":"iana"},"message/sip":{"source":"iana"},"message/sipfrag":{"source":"iana"},"message/tracking-status":{"source":"iana"},"message/vnd.si.simp":{"source":"iana"},"message/vnd.wfa.wsc":{"source":"iana","extensions":["wsc"]},"model/3mf":{"source":"iana","extensions":["3mf"]},"model/e57":{"source":"iana"},"model/gltf+json":{"source":"iana","compressible":true,"extensions":["gltf"]},"model/gltf-binary":{"source":"iana","compressible":true,"extensions":["glb"]},"model/iges":{"source":"iana","compressible":false,"extensions":["igs","iges"]},"model/mesh":{"source":"iana","compressible":false,"extensions":["msh","mesh","silo"]},"model/mtl":{"source":"iana","extensions":["mtl"]},"model/obj":{"source":"iana","extensions":["obj"]},"model/step":{"source":"iana"},"model/step+xml":{"source":"iana","compressible":true,"extensions":["stpx"]},"model/step+zip":{"source":"iana","compressible":false,"extensions":["stpz"]},"model/step-xml+zip":{"source":"iana","compressible":false,"extensions":["stpxz"]},"model/stl":{"source":"iana","extensions":["stl"]},"model/vnd.collada+xml":{"source":"iana","compressible":true,"extensions":["dae"]},"model/vnd.dwf":{"source":"iana","extensions":["dwf"]},"model/vnd.flatland.3dml":{"source":"iana"},"model/vnd.gdl":{"source":"iana","extensions":["gdl"]},"model/vnd.gs-gdl":{"source":"apache"},"model/vnd.gs.gdl":{"source":"iana"},"model/vnd.gtw":{"source":"iana","extensions":["gtw"]},"model/vnd.moml+xml":{"source":"iana","compressible":true},"model/vnd.mts":{"source":"iana","extensions":["mts"]},"model/vnd.opengex":{"source":"iana","extensions":["ogex"]},"model/vnd.parasolid.transmit.binary":{"source":"iana","extensions":["x_b"]},"model/vnd.parasolid.transmit.text":{"source":"iana","extensions":["x_t"]},"model/vnd.pytha.pyox":{"source":"iana"},"model/vnd.rosette.annotated-data-model":{"source":"iana"},"model/vnd.sap.vds":{"source":"iana","extensions":["vds"]},"model/vnd.usdz+zip":{"source":"iana","compressible":false,"extensions":["usdz"]},"model/vnd.valve.source.compiled-map":{"source":"iana","extensions":["bsp"]},"model/vnd.vtu":{"source":"iana","extensions":["vtu"]},"model/vrml":{"source":"iana","compressible":false,"extensions":["wrl","vrml"]},"model/x3d+binary":{"source":"apache","compressible":false,"extensions":["x3db","x3dbz"]},"model/x3d+fastinfoset":{"source":"iana","extensions":["x3db"]},"model/x3d+vrml":{"source":"apache","compressible":false,"extensions":["x3dv","x3dvz"]},"model/x3d+xml":{"source":"iana","compressible":true,"extensions":["x3d","x3dz"]},"model/x3d-vrml":{"source":"iana","extensions":["x3dv"]},"multipart/alternative":{"source":"iana","compressible":false},"multipart/appledouble":{"source":"iana"},"multipart/byteranges":{"source":"iana"},"multipart/digest":{"source":"iana"},"multipart/encrypted":{"source":"iana","compressible":false},"multipart/form-data":{"source":"iana","compressible":false},"multipart/header-set":{"source":"iana"},"multipart/mixed":{"source":"iana"},"multipart/multilingual":{"source":"iana"},"multipart/parallel":{"source":"iana"},"multipart/related":{"source":"iana","compressible":false},"multipart/report":{"source":"iana"},"multipart/signed":{"source":"iana","compressible":false},"multipart/vnd.bint.med-plus":{"source":"iana"},"multipart/voice-message":{"source":"iana"},"multipart/x-mixed-replace":{"source":"iana"},"text/1d-interleaved-parityfec":{"source":"iana"},"text/cache-manifest":{"source":"iana","compressible":true,"extensions":["appcache","manifest"]},"text/calendar":{"source":"iana","extensions":["ics","ifb"]},"text/calender":{"compressible":true},"text/cmd":{"compressible":true},"text/coffeescript":{"extensions":["coffee","litcoffee"]},"text/cql":{"source":"iana"},"text/cql-expression":{"source":"iana"},"text/cql-identifier":{"source":"iana"},"text/css":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["css"]},"text/csv":{"source":"iana","compressible":true,"extensions":["csv"]},"text/csv-schema":{"source":"iana"},"text/directory":{"source":"iana"},"text/dns":{"source":"iana"},"text/ecmascript":{"source":"iana"},"text/encaprtp":{"source":"iana"},"text/enriched":{"source":"iana"},"text/fhirpath":{"source":"iana"},"text/flexfec":{"source":"iana"},"text/fwdred":{"source":"iana"},"text/gff3":{"source":"iana"},"text/grammar-ref-list":{"source":"iana"},"text/html":{"source":"iana","compressible":true,"extensions":["html","htm","shtml"]},"text/jade":{"extensions":["jade"]},"text/javascript":{"source":"iana","compressible":true},"text/jcr-cnd":{"source":"iana"},"text/jsx":{"compressible":true,"extensions":["jsx"]},"text/less":{"compressible":true,"extensions":["less"]},"text/markdown":{"source":"iana","compressible":true,"extensions":["markdown","md"]},"text/mathml":{"source":"nginx","extensions":["mml"]},"text/mdx":{"compressible":true,"extensions":["mdx"]},"text/mizar":{"source":"iana"},"text/n3":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["n3"]},"text/parameters":{"source":"iana","charset":"UTF-8"},"text/parityfec":{"source":"iana"},"text/plain":{"source":"iana","compressible":true,"extensions":["txt","text","conf","def","list","log","in","ini"]},"text/provenance-notation":{"source":"iana","charset":"UTF-8"},"text/prs.fallenstein.rst":{"source":"iana"},"text/prs.lines.tag":{"source":"iana","extensions":["dsc"]},"text/prs.prop.logic":{"source":"iana"},"text/raptorfec":{"source":"iana"},"text/red":{"source":"iana"},"text/rfc822-headers":{"source":"iana"},"text/richtext":{"source":"iana","compressible":true,"extensions":["rtx"]},"text/rtf":{"source":"iana","compressible":true,"extensions":["rtf"]},"text/rtp-enc-aescm128":{"source":"iana"},"text/rtploopback":{"source":"iana"},"text/rtx":{"source":"iana"},"text/sgml":{"source":"iana","extensions":["sgml","sgm"]},"text/shaclc":{"source":"iana"},"text/shex":{"source":"iana","extensions":["shex"]},"text/slim":{"extensions":["slim","slm"]},"text/spdx":{"source":"iana","extensions":["spdx"]},"text/strings":{"source":"iana"},"text/stylus":{"extensions":["stylus","styl"]},"text/t140":{"source":"iana"},"text/tab-separated-values":{"source":"iana","compressible":true,"extensions":["tsv"]},"text/troff":{"source":"iana","extensions":["t","tr","roff","man","me","ms"]},"text/turtle":{"source":"iana","charset":"UTF-8","extensions":["ttl"]},"text/ulpfec":{"source":"iana"},"text/uri-list":{"source":"iana","compressible":true,"extensions":["uri","uris","urls"]},"text/vcard":{"source":"iana","compressible":true,"extensions":["vcard"]},"text/vnd.a":{"source":"iana"},"text/vnd.abc":{"source":"iana"},"text/vnd.ascii-art":{"source":"iana"},"text/vnd.curl":{"source":"iana","extensions":["curl"]},"text/vnd.curl.dcurl":{"source":"apache","extensions":["dcurl"]},"text/vnd.curl.mcurl":{"source":"apache","extensions":["mcurl"]},"text/vnd.curl.scurl":{"source":"apache","extensions":["scurl"]},"text/vnd.debian.copyright":{"source":"iana","charset":"UTF-8"},"text/vnd.dmclientscript":{"source":"iana"},"text/vnd.dvb.subtitle":{"source":"iana","extensions":["sub"]},"text/vnd.esmertec.theme-descriptor":{"source":"iana","charset":"UTF-8"},"text/vnd.familysearch.gedcom":{"source":"iana","extensions":["ged"]},"text/vnd.ficlab.flt":{"source":"iana"},"text/vnd.fly":{"source":"iana","extensions":["fly"]},"text/vnd.fmi.flexstor":{"source":"iana","extensions":["flx"]},"text/vnd.gml":{"source":"iana"},"text/vnd.graphviz":{"source":"iana","extensions":["gv"]},"text/vnd.hans":{"source":"iana"},"text/vnd.hgl":{"source":"iana"},"text/vnd.in3d.3dml":{"source":"iana","extensions":["3dml"]},"text/vnd.in3d.spot":{"source":"iana","extensions":["spot"]},"text/vnd.iptc.newsml":{"source":"iana"},"text/vnd.iptc.nitf":{"source":"iana"},"text/vnd.latex-z":{"source":"iana"},"text/vnd.motorola.reflex":{"source":"iana"},"text/vnd.ms-mediapackage":{"source":"iana"},"text/vnd.net2phone.commcenter.command":{"source":"iana"},"text/vnd.radisys.msml-basic-layout":{"source":"iana"},"text/vnd.senx.warpscript":{"source":"iana"},"text/vnd.si.uricatalogue":{"source":"iana"},"text/vnd.sosi":{"source":"iana"},"text/vnd.sun.j2me.app-descriptor":{"source":"iana","charset":"UTF-8","extensions":["jad"]},"text/vnd.trolltech.linguist":{"source":"iana","charset":"UTF-8"},"text/vnd.wap.si":{"source":"iana"},"text/vnd.wap.sl":{"source":"iana"},"text/vnd.wap.wml":{"source":"iana","extensions":["wml"]},"text/vnd.wap.wmlscript":{"source":"iana","extensions":["wmls"]},"text/vtt":{"source":"iana","charset":"UTF-8","compressible":true,"extensions":["vtt"]},"text/x-asm":{"source":"apache","extensions":["s","asm"]},"text/x-c":{"source":"apache","extensions":["c","cc","cxx","cpp","h","hh","dic"]},"text/x-component":{"source":"nginx","extensions":["htc"]},"text/x-fortran":{"source":"apache","extensions":["f","for","f77","f90"]},"text/x-gwt-rpc":{"compressible":true},"text/x-handlebars-template":{"extensions":["hbs"]},"text/x-java-source":{"source":"apache","extensions":["java"]},"text/x-jquery-tmpl":{"compressible":true},"text/x-lua":{"extensions":["lua"]},"text/x-markdown":{"compressible":true,"extensions":["mkd"]},"text/x-nfo":{"source":"apache","extensions":["nfo"]},"text/x-opml":{"source":"apache","extensions":["opml"]},"text/x-org":{"compressible":true,"extensions":["org"]},"text/x-pascal":{"source":"apache","extensions":["p","pas"]},"text/x-processing":{"compressible":true,"extensions":["pde"]},"text/x-sass":{"extensions":["sass"]},"text/x-scss":{"extensions":["scss"]},"text/x-setext":{"source":"apache","extensions":["etx"]},"text/x-sfv":{"source":"apache","extensions":["sfv"]},"text/x-suse-ymp":{"compressible":true,"extensions":["ymp"]},"text/x-uuencode":{"source":"apache","extensions":["uu"]},"text/x-vcalendar":{"source":"apache","extensions":["vcs"]},"text/x-vcard":{"source":"apache","extensions":["vcf"]},"text/xml":{"source":"iana","compressible":true,"extensions":["xml"]},"text/xml-external-parsed-entity":{"source":"iana"},"text/yaml":{"compressible":true,"extensions":["yaml","yml"]},"video/1d-interleaved-parityfec":{"source":"iana"},"video/3gpp":{"source":"iana","extensions":["3gp","3gpp"]},"video/3gpp-tt":{"source":"iana"},"video/3gpp2":{"source":"iana","extensions":["3g2"]},"video/av1":{"source":"iana"},"video/bmpeg":{"source":"iana"},"video/bt656":{"source":"iana"},"video/celb":{"source":"iana"},"video/dv":{"source":"iana"},"video/encaprtp":{"source":"iana"},"video/ffv1":{"source":"iana"},"video/flexfec":{"source":"iana"},"video/h261":{"source":"iana","extensions":["h261"]},"video/h263":{"source":"iana","extensions":["h263"]},"video/h263-1998":{"source":"iana"},"video/h263-2000":{"source":"iana"},"video/h264":{"source":"iana","extensions":["h264"]},"video/h264-rcdo":{"source":"iana"},"video/h264-svc":{"source":"iana"},"video/h265":{"source":"iana"},"video/iso.segment":{"source":"iana","extensions":["m4s"]},"video/jpeg":{"source":"iana","extensions":["jpgv"]},"video/jpeg2000":{"source":"iana"},"video/jpm":{"source":"apache","extensions":["jpm","jpgm"]},"video/jxsv":{"source":"iana"},"video/mj2":{"source":"iana","extensions":["mj2","mjp2"]},"video/mp1s":{"source":"iana"},"video/mp2p":{"source":"iana"},"video/mp2t":{"source":"iana","extensions":["ts"]},"video/mp4":{"source":"iana","compressible":false,"extensions":["mp4","mp4v","mpg4"]},"video/mp4v-es":{"source":"iana"},"video/mpeg":{"source":"iana","compressible":false,"extensions":["mpeg","mpg","mpe","m1v","m2v"]},"video/mpeg4-generic":{"source":"iana"},"video/mpv":{"source":"iana"},"video/nv":{"source":"iana"},"video/ogg":{"source":"iana","compressible":false,"extensions":["ogv"]},"video/parityfec":{"source":"iana"},"video/pointer":{"source":"iana"},"video/quicktime":{"source":"iana","compressible":false,"extensions":["qt","mov"]},"video/raptorfec":{"source":"iana"},"video/raw":{"source":"iana"},"video/rtp-enc-aescm128":{"source":"iana"},"video/rtploopback":{"source":"iana"},"video/rtx":{"source":"iana"},"video/scip":{"source":"iana"},"video/smpte291":{"source":"iana"},"video/smpte292m":{"source":"iana"},"video/ulpfec":{"source":"iana"},"video/vc1":{"source":"iana"},"video/vc2":{"source":"iana"},"video/vnd.cctv":{"source":"iana"},"video/vnd.dece.hd":{"source":"iana","extensions":["uvh","uvvh"]},"video/vnd.dece.mobile":{"source":"iana","extensions":["uvm","uvvm"]},"video/vnd.dece.mp4":{"source":"iana"},"video/vnd.dece.pd":{"source":"iana","extensions":["uvp","uvvp"]},"video/vnd.dece.sd":{"source":"iana","extensions":["uvs","uvvs"]},"video/vnd.dece.video":{"source":"iana","extensions":["uvv","uvvv"]},"video/vnd.directv.mpeg":{"source":"iana"},"video/vnd.directv.mpeg-tts":{"source":"iana"},"video/vnd.dlna.mpeg-tts":{"source":"iana"},"video/vnd.dvb.file":{"source":"iana","extensions":["dvb"]},"video/vnd.fvt":{"source":"iana","extensions":["fvt"]},"video/vnd.hns.video":{"source":"iana"},"video/vnd.iptvforum.1dparityfec-1010":{"source":"iana"},"video/vnd.iptvforum.1dparityfec-2005":{"source":"iana"},"video/vnd.iptvforum.2dparityfec-1010":{"source":"iana"},"video/vnd.iptvforum.2dparityfec-2005":{"source":"iana"},"video/vnd.iptvforum.ttsavc":{"source":"iana"},"video/vnd.iptvforum.ttsmpeg2":{"source":"iana"},"video/vnd.motorola.video":{"source":"iana"},"video/vnd.motorola.videop":{"source":"iana"},"video/vnd.mpegurl":{"source":"iana","extensions":["mxu","m4u"]},"video/vnd.ms-playready.media.pyv":{"source":"iana","extensions":["pyv"]},"video/vnd.nokia.interleaved-multimedia":{"source":"iana"},"video/vnd.nokia.mp4vr":{"source":"iana"},"video/vnd.nokia.videovoip":{"source":"iana"},"video/vnd.objectvideo":{"source":"iana"},"video/vnd.radgamettools.bink":{"source":"iana"},"video/vnd.radgamettools.smacker":{"source":"iana"},"video/vnd.sealed.mpeg1":{"source":"iana"},"video/vnd.sealed.mpeg4":{"source":"iana"},"video/vnd.sealed.swf":{"source":"iana"},"video/vnd.sealedmedia.softseal.mov":{"source":"iana"},"video/vnd.uvvu.mp4":{"source":"iana","extensions":["uvu","uvvu"]},"video/vnd.vivo":{"source":"iana","extensions":["viv"]},"video/vnd.youtube.yt":{"source":"iana"},"video/vp8":{"source":"iana"},"video/vp9":{"source":"iana"},"video/webm":{"source":"apache","compressible":false,"extensions":["webm"]},"video/x-f4v":{"source":"apache","extensions":["f4v"]},"video/x-fli":{"source":"apache","extensions":["fli"]},"video/x-flv":{"source":"apache","compressible":false,"extensions":["flv"]},"video/x-m4v":{"source":"apache","extensions":["m4v"]},"video/x-matroska":{"source":"apache","compressible":false,"extensions":["mkv","mk3d","mks"]},"video/x-mng":{"source":"apache","extensions":["mng"]},"video/x-ms-asf":{"source":"apache","extensions":["asf","asx"]},"video/x-ms-vob":{"source":"apache","extensions":["vob"]},"video/x-ms-wm":{"source":"apache","extensions":["wm"]},"video/x-ms-wmv":{"source":"apache","compressible":false,"extensions":["wmv"]},"video/x-ms-wmx":{"source":"apache","extensions":["wmx"]},"video/x-ms-wvx":{"source":"apache","extensions":["wvx"]},"video/x-msvideo":{"source":"apache","extensions":["avi"]},"video/x-sgi-movie":{"source":"apache","extensions":["movie"]},"video/x-smv":{"source":"apache","extensions":["smv"]},"x-conference/x-cooltalk":{"source":"apache","extensions":["ice"]},"x-shader/x-fragment":{"compressible":true},"x-shader/x-vertex":{"compressible":true}}');
+
+/***/ },
+
+/***/ 7201
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -40592,10 +52435,17 @@ exports.Scalar = Scalar;
 exports.isScalarValue = isScalarValue;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7320:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 7320
+(__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
@@ -40772,10 +52622,141 @@ Emitter.prototype.hasListeners = function(event){
 };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7470:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 7388
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Transport = void 0;
+const events_1 = __webpack_require__(4434);
+const parser_v4 = __webpack_require__(2680);
+const parser_v3 = __webpack_require__(6759);
+const debug_1 = __webpack_require__(8725);
+const debug = (0, debug_1.default)("engine:transport");
+function noop() { }
+class Transport extends events_1.EventEmitter {
+    get readyState() {
+        return this._readyState;
+    }
+    set readyState(state) {
+        debug("readyState updated from %s to %s (%s)", this._readyState, state, this.name);
+        this._readyState = state;
+    }
+    /**
+     * Transport constructor.
+     *
+     * @param {EngineRequest} req
+     */
+    constructor(req) {
+        super();
+        /**
+         * Whether the transport is currently ready to send packets.
+         */
+        this.writable = false;
+        /**
+         * The current state of the transport.
+         * @protected
+         */
+        this._readyState = "open";
+        /**
+         * Whether the transport is discarded and can be safely closed (used during upgrade).
+         * @protected
+         */
+        this.discarded = false;
+        this.protocol = req._query.EIO === "4" ? 4 : 3; // 3rd revision by default
+        this.parser = this.protocol === 4 ? parser_v4 : parser_v3;
+        this.supportsBinary = !(req._query && req._query.b64);
+    }
+    /**
+     * Flags the transport as discarded.
+     *
+     * @package
+     */
+    discard() {
+        this.discarded = true;
+    }
+    /**
+     * Called with an incoming HTTP request.
+     *
+     * @param req
+     * @package
+     */
+    onRequest(req) { }
+    /**
+     * Closes the transport.
+     *
+     * @package
+     */
+    close(fn) {
+        if ("closed" === this.readyState || "closing" === this.readyState)
+            return;
+        this.readyState = "closing";
+        this.doClose(fn || noop);
+    }
+    /**
+     * Called with a transport error.
+     *
+     * @param {String} msg - message error
+     * @param {Object} desc - error description
+     * @protected
+     */
+    onError(msg, desc) {
+        if (this.listeners("error").length) {
+            const err = new Error(msg);
+            // @ts-ignore
+            err.type = "TransportError";
+            // @ts-ignore
+            err.description = desc;
+            this.emit("error", err);
+        }
+        else {
+            debug("ignored transport error %s (%s)", msg, desc);
+        }
+    }
+    /**
+     * Called with parsed out a packets from the data stream.
+     *
+     * @param {Object} packet
+     * @protected
+     */
+    onPacket(packet) {
+        this.emit("packet", packet);
+    }
+    /**
+     * Called with the encoded packet data.
+     *
+     * @param {String} data
+     * @protected
+     */
+    onData(data) {
+        this.onPacket(this.parser.decodePacket(data));
+    }
+    /**
+     * Called upon transport close.
+     *
+     * @protected
+     */
+    onClose() {
+        this.readyState = "closed";
+        this.emit("close");
+    }
+}
+exports.Transport = Transport;
+
+
+/***/ },
+
+/***/ 7470
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -40798,10 +52779,17 @@ const seq = {
 exports.seq = seq;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7709:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 7709
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 /**
@@ -41079,10 +53067,17 @@ function setup(env) {
 module.exports = setup;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7732:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 7732
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const maxDistance = 3;
 
@@ -41187,10 +53182,17 @@ function suggestSimilar(word, candidates) {
 exports.suggestSimilar = suggestSimilar;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7758:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 7758
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -41213,6 +53215,7 @@ const ERROR_PACKET = { type: "error", data: "parser error" };
 exports.ERROR_PACKET = ERROR_PACKET;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 7773:
@@ -43044,6 +55047,30 @@ exports["default"] = {
 
 /***/ 8295:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 7857
+(__unused_webpack_module, exports) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RESERVED_EVENTS = void 0;
+exports.RESERVED_EVENTS = new Set([
+    "connect",
+    "connect_error",
+    "disconnect",
+    "disconnecting",
+    "newListener",
+    "removeListener",
+]);
+
+
+/***/ },
+
+/***/ 8295
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -43092,6 +55119,7 @@ function composeDoc(options, directives, { offset, start, value, end }, onError)
 exports.composeDoc = composeDoc;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 8348:
@@ -43807,6 +55835,12 @@ module.exports = Receiver;
 
 /***/ 8417:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 8417
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * negotiator
@@ -43994,6 +56028,7 @@ function isQuality(spec) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 8474:
@@ -44148,6 +56183,469 @@ Object.defineProperty(exports, "MessageType", ({ enumerable: true, get: function
 
 /***/ 8725:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 8474
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("node:events");
+
+/***/ },
+
+/***/ 8594
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.RemoteSocket = exports.BroadcastOperator = void 0;
+const socket_types_1 = __webpack_require__(7857);
+const socket_io_parser_1 = __webpack_require__(9834);
+class BroadcastOperator {
+    constructor(adapter, rooms = new Set(), exceptRooms = new Set(), flags = {}) {
+        this.adapter = adapter;
+        this.rooms = rooms;
+        this.exceptRooms = exceptRooms;
+        this.flags = flags;
+    }
+    /**
+     * Targets a room when emitting.
+     *
+     * @example
+     * // the “foo” event will be broadcast to all connected clients in the “room-101” room
+     * io.to("room-101").emit("foo", "bar");
+     *
+     * // with an array of rooms (a client will be notified at most once)
+     * io.to(["room-101", "room-102"]).emit("foo", "bar");
+     *
+     * // with multiple chained calls
+     * io.to("room-101").to("room-102").emit("foo", "bar");
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    to(room) {
+        const rooms = new Set(this.rooms);
+        if (Array.isArray(room)) {
+            room.forEach((r) => rooms.add(r));
+        }
+        else {
+            rooms.add(room);
+        }
+        return new BroadcastOperator(this.adapter, rooms, this.exceptRooms, this.flags);
+    }
+    /**
+     * Targets a room when emitting. Similar to `to()`, but might feel clearer in some cases:
+     *
+     * @example
+     * // disconnect all clients in the "room-101" room
+     * io.in("room-101").disconnectSockets();
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    in(room) {
+        return this.to(room);
+    }
+    /**
+     * Excludes a room when emitting.
+     *
+     * @example
+     * // the "foo" event will be broadcast to all connected clients, except the ones that are in the "room-101" room
+     * io.except("room-101").emit("foo", "bar");
+     *
+     * // with an array of rooms
+     * io.except(["room-101", "room-102"]).emit("foo", "bar");
+     *
+     * // with multiple chained calls
+     * io.except("room-101").except("room-102").emit("foo", "bar");
+     *
+     * @param room - a room, or an array of rooms
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    except(room) {
+        const exceptRooms = new Set(this.exceptRooms);
+        if (Array.isArray(room)) {
+            room.forEach((r) => exceptRooms.add(r));
+        }
+        else {
+            exceptRooms.add(room);
+        }
+        return new BroadcastOperator(this.adapter, this.rooms, exceptRooms, this.flags);
+    }
+    /**
+     * Sets the compress flag.
+     *
+     * @example
+     * io.compress(false).emit("hello");
+     *
+     * @param compress - if `true`, compresses the sending data
+     * @return a new BroadcastOperator instance
+     */
+    compress(compress) {
+        const flags = Object.assign({}, this.flags, { compress });
+        return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the event data may be lost if the client is not ready to
+     * receive messages (because of network slowness or other issues, or because they’re connected through long polling
+     * and is in the middle of a request-response cycle).
+     *
+     * @example
+     * io.volatile.emit("hello"); // the clients may or may not receive it
+     *
+     * @return a new BroadcastOperator instance
+     */
+    get volatile() {
+        const flags = Object.assign({}, this.flags, { volatile: true });
+        return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
+    }
+    /**
+     * Sets a modifier for a subsequent event emission that the event data will only be broadcast to the current node.
+     *
+     * @example
+     * // the “foo” event will be broadcast to all connected clients on this node
+     * io.local.emit("foo", "bar");
+     *
+     * @return a new {@link BroadcastOperator} instance for chaining
+     */
+    get local() {
+        const flags = Object.assign({}, this.flags, { local: true });
+        return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
+    }
+    /**
+     * Adds a timeout in milliseconds for the next operation
+     *
+     * @example
+     * io.timeout(1000).emit("some-event", (err, responses) => {
+     *   if (err) {
+     *     // some clients did not acknowledge the event in the given delay
+     *   } else {
+     *     console.log(responses); // one response per client
+     *   }
+     * });
+     *
+     * @param timeout
+     */
+    timeout(timeout) {
+        const flags = Object.assign({}, this.flags, { timeout });
+        return new BroadcastOperator(this.adapter, this.rooms, this.exceptRooms, flags);
+    }
+    /**
+     * Emits to all clients.
+     *
+     * @example
+     * // the “foo” event will be broadcast to all connected clients
+     * io.emit("foo", "bar");
+     *
+     * // the “foo” event will be broadcast to all connected clients in the “room-101” room
+     * io.to("room-101").emit("foo", "bar");
+     *
+     * // with an acknowledgement expected from all connected clients
+     * io.timeout(1000).emit("some-event", (err, responses) => {
+     *   if (err) {
+     *     // some clients did not acknowledge the event in the given delay
+     *   } else {
+     *     console.log(responses); // one response per client
+     *   }
+     * });
+     *
+     * @return Always true
+     */
+    emit(ev, ...args) {
+        if (socket_types_1.RESERVED_EVENTS.has(ev)) {
+            throw new Error(`"${String(ev)}" is a reserved event name`);
+        }
+        // set up packet object
+        const data = [ev, ...args];
+        const packet = {
+            type: socket_io_parser_1.PacketType.EVENT,
+            data: data,
+        };
+        const withAck = typeof data[data.length - 1] === "function";
+        if (!withAck) {
+            this.adapter.broadcast(packet, {
+                rooms: this.rooms,
+                except: this.exceptRooms,
+                flags: this.flags,
+            });
+            return true;
+        }
+        const ack = data.pop();
+        let timedOut = false;
+        let responses = [];
+        const timer = setTimeout(() => {
+            timedOut = true;
+            ack.apply(this, [
+                new Error("operation has timed out"),
+                this.flags.expectSingleResponse ? null : responses,
+            ]);
+        }, this.flags.timeout);
+        let expectedServerCount = -1;
+        let actualServerCount = 0;
+        let expectedClientCount = 0;
+        const checkCompleteness = () => {
+            if (!timedOut &&
+                expectedServerCount === actualServerCount &&
+                responses.length === expectedClientCount) {
+                clearTimeout(timer);
+                ack.apply(this, [
+                    null,
+                    this.flags.expectSingleResponse ? responses[0] : responses,
+                ]);
+            }
+        };
+        this.adapter.broadcastWithAck(packet, {
+            rooms: this.rooms,
+            except: this.exceptRooms,
+            flags: this.flags,
+        }, (clientCount) => {
+            // each Socket.IO server in the cluster sends the number of clients that were notified
+            expectedClientCount += clientCount;
+            actualServerCount++;
+            checkCompleteness();
+        }, (clientResponse) => {
+            // each client sends an acknowledgement
+            responses.push(clientResponse);
+            checkCompleteness();
+        });
+        this.adapter.serverCount().then((serverCount) => {
+            expectedServerCount = serverCount;
+            checkCompleteness();
+        });
+        return true;
+    }
+    /**
+     * Emits an event and waits for an acknowledgement from all clients.
+     *
+     * @example
+     * try {
+     *   const responses = await io.timeout(1000).emitWithAck("some-event");
+     *   console.log(responses); // one response per client
+     * } catch (e) {
+     *   // some clients did not acknowledge the event in the given delay
+     * }
+     *
+     * @return a Promise that will be fulfilled when all clients have acknowledged the event
+     */
+    emitWithAck(ev, ...args) {
+        return new Promise((resolve, reject) => {
+            args.push((err, responses) => {
+                if (err) {
+                    err.responses = responses;
+                    return reject(err);
+                }
+                else {
+                    return resolve(responses);
+                }
+            });
+            this.emit(ev, ...args);
+        });
+    }
+    /**
+     * Gets a list of clients.
+     *
+     * @deprecated this method will be removed in the next major release, please use {@link Server#serverSideEmit} or
+     * {@link fetchSockets} instead.
+     */
+    allSockets() {
+        if (!this.adapter) {
+            throw new Error("No adapter for this namespace, are you trying to get the list of clients of a dynamic namespace?");
+        }
+        return this.adapter.sockets(this.rooms);
+    }
+    /**
+     * Returns the matching socket instances. This method works across a cluster of several Socket.IO servers.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     * // return all Socket instances
+     * const sockets = await io.fetchSockets();
+     *
+     * // return all Socket instances in the "room1" room
+     * const sockets = await io.in("room1").fetchSockets();
+     *
+     * for (const socket of sockets) {
+     *   console.log(socket.id);
+     *   console.log(socket.handshake);
+     *   console.log(socket.rooms);
+     *   console.log(socket.data);
+     *
+     *   socket.emit("hello");
+     *   socket.join("room1");
+     *   socket.leave("room2");
+     *   socket.disconnect();
+     * }
+     */
+    fetchSockets() {
+        return this.adapter
+            .fetchSockets({
+            rooms: this.rooms,
+            except: this.exceptRooms,
+            flags: this.flags,
+        })
+            .then((sockets) => {
+            return sockets.map((socket) => {
+                if (socket.server) {
+                    return socket; // local instance
+                }
+                else {
+                    return new RemoteSocket(this.adapter, socket);
+                }
+            });
+        });
+    }
+    /**
+     * Makes the matching socket instances join the specified rooms.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     *
+     * // make all socket instances join the "room1" room
+     * io.socketsJoin("room1");
+     *
+     * // make all socket instances in the "room1" room join the "room2" and "room3" rooms
+     * io.in("room1").socketsJoin(["room2", "room3"]);
+     *
+     * @param room - a room, or an array of rooms
+     */
+    socketsJoin(room) {
+        this.adapter.addSockets({
+            rooms: this.rooms,
+            except: this.exceptRooms,
+            flags: this.flags,
+        }, Array.isArray(room) ? room : [room]);
+    }
+    /**
+     * Makes the matching socket instances leave the specified rooms.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     * // make all socket instances leave the "room1" room
+     * io.socketsLeave("room1");
+     *
+     * // make all socket instances in the "room1" room leave the "room2" and "room3" rooms
+     * io.in("room1").socketsLeave(["room2", "room3"]);
+     *
+     * @param room - a room, or an array of rooms
+     */
+    socketsLeave(room) {
+        this.adapter.delSockets({
+            rooms: this.rooms,
+            except: this.exceptRooms,
+            flags: this.flags,
+        }, Array.isArray(room) ? room : [room]);
+    }
+    /**
+     * Makes the matching socket instances disconnect.
+     *
+     * Note: this method also works within a cluster of multiple Socket.IO servers, with a compatible {@link Adapter}.
+     *
+     * @example
+     * // make all socket instances disconnect (the connections might be kept alive for other namespaces)
+     * io.disconnectSockets();
+     *
+     * // make all socket instances in the "room1" room disconnect and close the underlying connections
+     * io.in("room1").disconnectSockets(true);
+     *
+     * @param close - whether to close the underlying connection
+     */
+    disconnectSockets(close = false) {
+        this.adapter.disconnectSockets({
+            rooms: this.rooms,
+            except: this.exceptRooms,
+            flags: this.flags,
+        }, close);
+    }
+}
+exports.BroadcastOperator = BroadcastOperator;
+/**
+ * Expose of subset of the attributes and methods of the Socket class
+ */
+class RemoteSocket {
+    constructor(adapter, details) {
+        this.id = details.id;
+        this.handshake = details.handshake;
+        this.rooms = new Set(details.rooms);
+        this.data = details.data;
+        this.operator = new BroadcastOperator(adapter, new Set([this.id]), new Set(), {
+            expectSingleResponse: true, // so that remoteSocket.emit() with acknowledgement behaves like socket.emit()
+        });
+    }
+    /**
+     * Adds a timeout in milliseconds for the next operation.
+     *
+     * @example
+     * const sockets = await io.fetchSockets();
+     *
+     * for (const socket of sockets) {
+     *   if (someCondition) {
+     *     socket.timeout(1000).emit("some-event", (err) => {
+     *       if (err) {
+     *         // the client did not acknowledge the event in the given delay
+     *       }
+     *     });
+     *   }
+     * }
+     *
+     * // note: if possible, using a room instead of looping over all sockets is preferable
+     * io.timeout(1000).to(someConditionRoom).emit("some-event", (err, responses) => {
+     *   // ...
+     * });
+     *
+     * @param timeout
+     */
+    timeout(timeout) {
+        return this.operator.timeout(timeout);
+    }
+    emit(ev, ...args) {
+        return this.operator.emit(ev, ...args);
+    }
+    /**
+     * Joins a room.
+     *
+     * @param {String|Array} room - room or array of rooms
+     */
+    join(room) {
+        return this.operator.socketsJoin(room);
+    }
+    /**
+     * Leaves a room.
+     *
+     * @param {String} room
+     */
+    leave(room) {
+        return this.operator.socketsLeave(room);
+    }
+    /**
+     * Disconnects this client.
+     *
+     * @param {Boolean} close - if `true`, closes the underlying connection
+     * @return {Socket} self
+     */
+    disconnect(close = false) {
+        this.operator.disconnectSockets(close);
+        return this;
+    }
+}
+exports.RemoteSocket = RemoteSocket;
+
+
+/***/ },
+
+/***/ 8611
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("http");
+
+/***/ },
+
+/***/ 8725
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * Detect Electron renderer / nwjs process, which is node, but we should
@@ -44161,6 +56659,7 @@ if (typeof process === 'undefined' || process.type === 'renderer' || process.bro
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 8732:
@@ -44395,6 +56894,12 @@ polling.upgradesTo = ["websocket", "webtransport"];
 
 /***/ 8915:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 8915
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const { Argument } = __webpack_require__(1292);
 const { Command } = __webpack_require__(146);
@@ -44422,6 +56927,7 @@ exports.Di = InvalidArgumentError;
 exports.a2 = InvalidArgumentError; // Deprecated
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 8936:
@@ -44445,6 +56951,12 @@ module.exports = {
 
 /***/ 8958:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 8958
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * negotiator
@@ -44617,6 +57129,7 @@ function isQuality(spec) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9023:
@@ -44628,6 +57141,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("util");
 
 /***/ 9049:
 /***/ ((module) => {
+=======
+/***/ },
+
+/***/ 9023
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("util");
+
+/***/ },
+
+/***/ 9049
+(module) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /**
  * Helpers.
@@ -44793,10 +57319,17 @@ function plural(ms, msAbs, n, name) {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9119:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 9119
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -44836,6 +57369,7 @@ function containsNewline(key) {
 exports.containsNewline = containsNewline;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9218:
@@ -44917,6 +57451,19 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("net");
 
 /***/ 9292:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 9278
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("net");
+
+/***/ },
+
+/***/ 9292
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -44936,6 +57483,7 @@ const string = {
 exports.string = string;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9318:
@@ -45587,6 +58135,12 @@ module.exports = Sender;
 
 /***/ 9367:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 9367
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -45660,10 +58214,388 @@ const binary = {
 exports.binary = binary;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9455:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 9435
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Polling = void 0;
+const transport_1 = __webpack_require__(7388);
+const zlib_1 = __webpack_require__(3106);
+const accepts = __webpack_require__(9);
+const debug_1 = __webpack_require__(8725);
+const debug = (0, debug_1.default)("engine:polling");
+const compressionMethods = {
+    gzip: zlib_1.createGzip,
+    deflate: zlib_1.createDeflate,
+};
+class Polling extends transport_1.Transport {
+    /**
+     * HTTP polling constructor.
+     */
+    constructor(req) {
+        super(req);
+        this.closeTimeout = 30 * 1000;
+    }
+    /**
+     * Transport name
+     */
+    get name() {
+        return "polling";
+    }
+    /**
+     * Overrides onRequest.
+     *
+     * @param req
+     *
+     * @private
+     */
+    onRequest(req) {
+        const res = req.res;
+        // remove the reference to the ServerResponse object (as the first request of the session is kept in memory by default)
+        req.res = null;
+        if (req.getMethod() === "get") {
+            this.onPollRequest(req, res);
+        }
+        else if (req.getMethod() === "post") {
+            this.onDataRequest(req, res);
+        }
+        else {
+            res.writeStatus("500 Internal Server Error");
+            res.end();
+        }
+    }
+    /**
+     * The client sends a request awaiting for us to send data.
+     *
+     * @private
+     */
+    onPollRequest(req, res) {
+        if (this.req) {
+            debug("request overlap");
+            // assert: this.res, '.req and .res should be (un)set together'
+            this.onError("overlap from client");
+            res.writeStatus("500 Internal Server Error");
+            res.end();
+            return;
+        }
+        debug("setting request");
+        this.req = req;
+        this.res = res;
+        const onClose = () => {
+            this.writable = false;
+            this.onError("poll connection closed prematurely");
+        };
+        const cleanup = () => {
+            this.req = this.res = null;
+        };
+        req.cleanup = cleanup;
+        res.onAborted(onClose);
+        this.writable = true;
+        this.emit("ready");
+        // if we're still writable but had a pending close, trigger an empty send
+        if (this.writable && this.shouldClose) {
+            debug("triggering empty send to append close packet");
+            this.send([{ type: "noop" }]);
+        }
+    }
+    /**
+     * The client sends a request with data.
+     *
+     * @private
+     */
+    onDataRequest(req, res) {
+        if (this.dataReq) {
+            // assert: this.dataRes, '.dataReq and .dataRes should be (un)set together'
+            this.onError("data request overlap from client");
+            res.writeStatus("500 Internal Server Error");
+            res.end();
+            return;
+        }
+        const expectedContentLength = Number(req.headers["content-length"]);
+        if (!expectedContentLength) {
+            this.onError("content-length header required");
+            res.writeStatus("411 Length Required").end();
+            return;
+        }
+        if (expectedContentLength > this.maxHttpBufferSize) {
+            this.onError("payload too large");
+            res.writeStatus("413 Payload Too Large").end();
+            return;
+        }
+        const isBinary = "application/octet-stream" === req.headers["content-type"];
+        if (isBinary && this.protocol === 4) {
+            return this.onError("invalid content");
+        }
+        this.dataReq = req;
+        this.dataRes = res;
+        let buffer;
+        let offset = 0;
+        const headers = {
+            // text/html is required instead of text/plain to avoid an
+            // unwanted download dialog on certain user-agents (GH-43)
+            "Content-Type": "text/html",
+        };
+        this.headers(req, headers);
+        for (let key in headers) {
+            res.writeHeader(key, String(headers[key]));
+        }
+        const onEnd = (buffer) => {
+            this.onData(buffer.toString());
+            this.onDataRequestCleanup();
+            res.cork(() => {
+                res.end("ok");
+            });
+        };
+        res.onAborted(() => {
+            this.onDataRequestCleanup();
+            this.onError("data request connection closed prematurely");
+        });
+        res.onData((arrayBuffer, isLast) => {
+            const totalLength = offset + arrayBuffer.byteLength;
+            if (totalLength > expectedContentLength) {
+                this.onError("content-length mismatch");
+                res.close(); // calls onAborted
+                return;
+            }
+            if (!buffer) {
+                if (isLast) {
+                    onEnd(Buffer.from(arrayBuffer));
+                    return;
+                }
+                buffer = Buffer.allocUnsafe(expectedContentLength);
+            }
+            Buffer.from(arrayBuffer).copy(buffer, offset);
+            if (isLast) {
+                if (totalLength != expectedContentLength) {
+                    this.onError("content-length mismatch");
+                    res.writeStatus("400 Content-Length Mismatch").end();
+                    this.onDataRequestCleanup();
+                    return;
+                }
+                onEnd(buffer);
+                return;
+            }
+            offset = totalLength;
+        });
+    }
+    /**
+     * Cleanup request.
+     *
+     * @private
+     */
+    onDataRequestCleanup() {
+        this.dataReq = this.dataRes = null;
+    }
+    /**
+     * Processes the incoming data payload.
+     *
+     * @param {String} encoded payload
+     * @private
+     */
+    onData(data) {
+        debug('received "%s"', data);
+        const callback = (packet) => {
+            if ("close" === packet.type) {
+                debug("got xhr close packet");
+                this.onClose();
+                return false;
+            }
+            this.onPacket(packet);
+        };
+        if (this.protocol === 3) {
+            this.parser.decodePayload(data, callback);
+        }
+        else {
+            this.parser.decodePayload(data).forEach(callback);
+        }
+    }
+    /**
+     * Overrides onClose.
+     *
+     * @private
+     */
+    onClose() {
+        if (this.writable) {
+            // close pending poll request
+            this.send([{ type: "noop" }]);
+        }
+        super.onClose();
+    }
+    /**
+     * Writes a packet payload.
+     *
+     * @param {Object} packet
+     * @private
+     */
+    send(packets) {
+        this.writable = false;
+        if (this.shouldClose) {
+            debug("appending close packet to payload");
+            packets.push({ type: "close" });
+            this.shouldClose();
+            this.shouldClose = null;
+        }
+        const doWrite = (data) => {
+            const compress = packets.some((packet) => {
+                return packet.options && packet.options.compress;
+            });
+            this.write(data, { compress });
+        };
+        if (this.protocol === 3) {
+            this.parser.encodePayload(packets, this.supportsBinary, doWrite);
+        }
+        else {
+            this.parser.encodePayload(packets, doWrite);
+        }
+    }
+    /**
+     * Writes data as response to poll request.
+     *
+     * @param {String} data
+     * @param {Object} options
+     * @private
+     */
+    write(data, options) {
+        debug('writing "%s"', data);
+        this.doWrite(data, options, () => {
+            this.req.cleanup();
+            this.emit("drain");
+        });
+    }
+    /**
+     * Performs the write.
+     *
+     * @private
+     */
+    doWrite(data, options, callback) {
+        // explicit UTF-8 is required for pages not served under utf
+        const isString = typeof data === "string";
+        const contentType = isString
+            ? "text/plain; charset=UTF-8"
+            : "application/octet-stream";
+        const headers = {
+            "Content-Type": contentType,
+        };
+        const respond = (data) => {
+            this.headers(this.req, headers);
+            this.res.cork(() => {
+                Object.keys(headers).forEach((key) => {
+                    this.res.writeHeader(key, String(headers[key]));
+                });
+                this.res.end(data);
+            });
+            callback();
+        };
+        if (!this.httpCompression || !options.compress) {
+            respond(data);
+            return;
+        }
+        const len = isString ? Buffer.byteLength(data) : data.length;
+        if (len < this.httpCompression.threshold) {
+            respond(data);
+            return;
+        }
+        const encoding = accepts(this.req).encodings(["gzip", "deflate"]);
+        if (!encoding) {
+            respond(data);
+            return;
+        }
+        this.compress(data, encoding, (err, data) => {
+            if (err) {
+                this.res.writeStatus("500 Internal Server Error");
+                this.res.end();
+                callback(err);
+                return;
+            }
+            headers["Content-Encoding"] = encoding;
+            respond(data);
+        });
+    }
+    /**
+     * Compresses data.
+     *
+     * @private
+     */
+    compress(data, encoding, callback) {
+        debug("compressing");
+        const buffers = [];
+        let nread = 0;
+        compressionMethods[encoding](this.httpCompression)
+            .on("error", callback)
+            .on("data", function (chunk) {
+            buffers.push(chunk);
+            nread += chunk.length;
+        })
+            .on("end", function () {
+            callback(null, Buffer.concat(buffers, nread));
+        })
+            .end(data);
+    }
+    /**
+     * Closes the transport.
+     *
+     * @private
+     */
+    doClose(fn) {
+        debug("closing");
+        let closeTimeoutTimer;
+        const onClose = () => {
+            clearTimeout(closeTimeoutTimer);
+            fn();
+            this.onClose();
+        };
+        if (this.writable) {
+            debug("transport writable - closing right away");
+            this.send([{ type: "close" }]);
+            onClose();
+        }
+        else if (this.discarded) {
+            debug("transport discarded - closing right away");
+            onClose();
+        }
+        else {
+            debug("transport not writable - buffering orderly close");
+            this.shouldClose = onClose;
+            closeTimeoutTimer = setTimeout(onClose, this.closeTimeout);
+        }
+    }
+    /**
+     * Returns headers for a response.
+     *
+     * @param req - request
+     * @param {Object} extra headers
+     * @private
+     */
+    headers(req, headers) {
+        headers = headers || {};
+        // prevent XSS warnings on IE
+        // https://github.com/LearnBoost/socket.io/pull/1333
+        const ua = req.headers["user-agent"];
+        if (ua && (~ua.indexOf(";MSIE") || ~ua.indexOf("Trident/"))) {
+            headers["X-XSS-Protection"] = "0";
+        }
+        headers["cache-control"] = "no-store";
+        this.emit("headers", headers, req);
+        return headers;
+    }
+}
+exports.Polling = Polling;
+
+
+/***/ },
+
+/***/ 9455
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -45706,10 +58638,17 @@ function toJS(value, arg, ctx) {
 exports.toJS = toJS;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9478:
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 9478
+(module, __unused_webpack_exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 const os = __webpack_require__(857);
@@ -45848,6 +58787,7 @@ module.exports = {
 };
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9595:
@@ -46253,6 +59193,12 @@ function shouldIncludePacket(sessionRooms, opts) {
 
 /***/ 9631:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 9631
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -46407,10 +59353,17 @@ exports.FOLD_QUOTED = FOLD_QUOTED;
 exports.foldFlowLines = foldFlowLines;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9641:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 9641
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -46477,10 +59430,17 @@ function stringifyItem({ start, key, sep, value }) {
 exports.stringify = stringify;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9736:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 9736
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const { humanReadableArgName } = __webpack_require__(1292);
 
@@ -47193,6 +60153,7 @@ exports.Help = Help;
 exports.stripColor = stripColor;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9747:
@@ -47259,6 +60220,12 @@ for (; i < length; i++)
 
 /***/ 9752:
 /***/ ((__unused_webpack_module, exports) => {
+=======
+/***/ },
+
+/***/ 9752
+(__unused_webpack_module, exports) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -47303,10 +60270,17 @@ class LineCounter {
 exports.LineCounter = LineCounter;
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9834:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+=======
+/***/ },
+
+/***/ 9834
+(__unused_webpack_module, exports, __webpack_require__) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
@@ -47631,6 +60605,7 @@ class BinaryReconstructor {
 }
 
 
+<<<<<<< HEAD
 /***/ }),
 
 /***/ 9896:
@@ -47639,6 +60614,111 @@ class BinaryReconstructor {
 module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 
 /***/ })
+=======
+/***/ },
+
+/***/ 9896
+(module) {
+
+module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
+
+/***/ },
+
+/***/ 9966
+(__unused_webpack_module, exports, __webpack_require__) {
+
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ParentNamespace = void 0;
+const namespace_1 = __webpack_require__(597);
+const socket_io_adapter_1 = __webpack_require__(1790);
+const debug_1 = __importDefault(__webpack_require__(8725));
+const debug = (0, debug_1.default)("socket.io:parent-namespace");
+/**
+ * A parent namespace is a special {@link Namespace} that holds a list of child namespaces which were created either
+ * with a regular expression or with a function.
+ *
+ * @example
+ * const parentNamespace = io.of(/\/dynamic-\d+/);
+ *
+ * parentNamespace.on("connection", (socket) => {
+ *   const childNamespace = socket.nsp;
+ * }
+ *
+ * // will reach all the clients that are in one of the child namespaces, like "/dynamic-101"
+ * parentNamespace.emit("hello", "world");
+ *
+ */
+class ParentNamespace extends namespace_1.Namespace {
+    constructor(server) {
+        super(server, "/_" + ParentNamespace.count++);
+        this.children = new Set();
+    }
+    /**
+     * @private
+     */
+    _initAdapter() {
+        this.adapter = new ParentBroadcastAdapter(this);
+    }
+    emit(ev, ...args) {
+        this.children.forEach((nsp) => {
+            nsp.emit(ev, ...args);
+        });
+        return true;
+    }
+    createChild(name) {
+        debug("creating child namespace %s", name);
+        const namespace = new namespace_1.Namespace(this.server, name);
+        this["_fns"].forEach((fn) => namespace.use(fn));
+        this.listeners("connect").forEach((listener) => namespace.on("connect", listener));
+        this.listeners("connection").forEach((listener) => namespace.on("connection", listener));
+        this.children.add(namespace);
+        if (this.server._opts.cleanupEmptyChildNamespaces) {
+            const remove = namespace._remove;
+            namespace._remove = (socket) => {
+                remove.call(namespace, socket);
+                if (namespace.sockets.size === 0) {
+                    debug("closing child namespace %s", name);
+                    namespace.adapter.close();
+                    this.server._nsps.delete(namespace.name);
+                    this.children.delete(namespace);
+                }
+            };
+        }
+        this.server._nsps.set(name, namespace);
+        // @ts-ignore
+        this.server.sockets.emitReserved("new_namespace", namespace);
+        return namespace;
+    }
+    fetchSockets() {
+        // note: we could make the fetchSockets() method work for dynamic namespaces created with a regex (by sending the
+        // regex to the other Socket.IO servers, and returning the sockets of each matching namespace for example), but
+        // the behavior for namespaces created with a function is less clear
+        // note²: we cannot loop over each children namespace, because with multiple Socket.IO servers, a given namespace
+        // may exist on one node but not exist on another (since it is created upon client connection)
+        throw new Error("fetchSockets() is not supported on parent namespaces");
+    }
+}
+exports.ParentNamespace = ParentNamespace;
+ParentNamespace.count = 0;
+/**
+ * A dummy adapter that only supports broadcasting to child (concrete) namespaces.
+ * @private file
+ */
+class ParentBroadcastAdapter extends socket_io_adapter_1.Adapter {
+    broadcast(packet, opts) {
+        this.nsp.children.forEach((nsp) => {
+            nsp.adapter.broadcast(packet, opts);
+        });
+    }
+}
+
+
+/***/ }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /******/ });
 /************************************************************************/
@@ -47722,6 +60802,290 @@ module.exports = __WEBPACK_EXTERNAL_createRequire_require("fs");
 /************************************************************************/
 var __webpack_exports__ = {};
 
+<<<<<<< HEAD
+=======
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/regexes.js
+var regexes_namespaceObject = {};
+__webpack_require__.r(regexes_namespaceObject);
+__webpack_require__.d(regexes_namespaceObject, {
+  base64: () => (base64),
+  base64url: () => (base64url),
+  bigint: () => (bigint),
+  boolean: () => (regexes_boolean),
+  browserEmail: () => (browserEmail),
+  cidrv4: () => (cidrv4),
+  cidrv6: () => (cidrv6),
+  cuid: () => (cuid),
+  cuid2: () => (cuid2),
+  date: () => (date),
+  datetime: () => (datetime),
+  domain: () => (domain),
+  duration: () => (duration),
+  e164: () => (e164),
+  email: () => (email),
+  emoji: () => (emoji),
+  extendedDuration: () => (extendedDuration),
+  guid: () => (guid),
+  hex: () => (hex),
+  hostname: () => (hostname),
+  html5Email: () => (html5Email),
+  idnEmail: () => (idnEmail),
+  integer: () => (integer),
+  ipv4: () => (ipv4),
+  ipv6: () => (ipv6),
+  ksuid: () => (ksuid),
+  lowercase: () => (lowercase),
+  mac: () => (mac),
+  md5_base64: () => (md5_base64),
+  md5_base64url: () => (md5_base64url),
+  md5_hex: () => (md5_hex),
+  nanoid: () => (nanoid),
+  "null": () => (_null),
+  number: () => (number),
+  rfc5322Email: () => (rfc5322Email),
+  sha1_base64: () => (sha1_base64),
+  sha1_base64url: () => (sha1_base64url),
+  sha1_hex: () => (sha1_hex),
+  sha256_base64: () => (sha256_base64),
+  sha256_base64url: () => (sha256_base64url),
+  sha256_hex: () => (sha256_hex),
+  sha384_base64: () => (sha384_base64),
+  sha384_base64url: () => (sha384_base64url),
+  sha384_hex: () => (sha384_hex),
+  sha512_base64: () => (sha512_base64),
+  sha512_base64url: () => (sha512_base64url),
+  sha512_hex: () => (sha512_hex),
+  string: () => (string),
+  time: () => (time),
+  ulid: () => (ulid),
+  undefined: () => (_undefined),
+  unicodeEmail: () => (unicodeEmail),
+  uppercase: () => (uppercase),
+  uuid: () => (uuid),
+  uuid4: () => (uuid4),
+  uuid6: () => (uuid6),
+  uuid7: () => (uuid7),
+  xid: () => (xid)
+});
+
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/checks.js
+var classic_checks_namespaceObject = {};
+__webpack_require__.r(classic_checks_namespaceObject);
+__webpack_require__.d(classic_checks_namespaceObject, {
+  endsWith: () => (_endsWith),
+  gt: () => (_gt),
+  gte: () => (_gte),
+  includes: () => (_includes),
+  length: () => (_length),
+  lowercase: () => (_lowercase),
+  lt: () => (_lt),
+  lte: () => (_lte),
+  maxLength: () => (_maxLength),
+  maxSize: () => (_maxSize),
+  mime: () => (_mime),
+  minLength: () => (_minLength),
+  minSize: () => (_minSize),
+  multipleOf: () => (_multipleOf),
+  negative: () => (_negative),
+  nonnegative: () => (_nonnegative),
+  nonpositive: () => (_nonpositive),
+  normalize: () => (_normalize),
+  overwrite: () => (_overwrite),
+  positive: () => (_positive),
+  property: () => (_property),
+  regex: () => (_regex),
+  size: () => (_size),
+  slugify: () => (_slugify),
+  startsWith: () => (_startsWith),
+  toLowerCase: () => (_toLowerCase),
+  toUpperCase: () => (_toUpperCase),
+  trim: () => (_trim),
+  uppercase: () => (_uppercase)
+});
+
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/iso.js
+var iso_namespaceObject = {};
+__webpack_require__.r(iso_namespaceObject);
+__webpack_require__.d(iso_namespaceObject, {
+  ZodISODate: () => (ZodISODate),
+  ZodISODateTime: () => (ZodISODateTime),
+  ZodISODuration: () => (ZodISODuration),
+  ZodISOTime: () => (ZodISOTime),
+  date: () => (iso_date),
+  datetime: () => (iso_datetime),
+  duration: () => (iso_duration),
+  time: () => (iso_time)
+});
+
+// NAMESPACE OBJECT: ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/schemas.js
+var classic_schemas_namespaceObject = {};
+__webpack_require__.r(classic_schemas_namespaceObject);
+__webpack_require__.d(classic_schemas_namespaceObject, {
+  ZodAny: () => (ZodAny),
+  ZodArray: () => (ZodArray),
+  ZodBase64: () => (ZodBase64),
+  ZodBase64URL: () => (ZodBase64URL),
+  ZodBigInt: () => (ZodBigInt),
+  ZodBigIntFormat: () => (ZodBigIntFormat),
+  ZodBoolean: () => (ZodBoolean),
+  ZodCIDRv4: () => (ZodCIDRv4),
+  ZodCIDRv6: () => (ZodCIDRv6),
+  ZodCUID: () => (ZodCUID),
+  ZodCUID2: () => (ZodCUID2),
+  ZodCatch: () => (ZodCatch),
+  ZodCodec: () => (ZodCodec),
+  ZodCustom: () => (ZodCustom),
+  ZodCustomStringFormat: () => (ZodCustomStringFormat),
+  ZodDate: () => (ZodDate),
+  ZodDefault: () => (ZodDefault),
+  ZodDiscriminatedUnion: () => (ZodDiscriminatedUnion),
+  ZodE164: () => (ZodE164),
+  ZodEmail: () => (ZodEmail),
+  ZodEmoji: () => (ZodEmoji),
+  ZodEnum: () => (ZodEnum),
+  ZodFile: () => (ZodFile),
+  ZodFunction: () => (ZodFunction),
+  ZodGUID: () => (ZodGUID),
+  ZodIPv4: () => (ZodIPv4),
+  ZodIPv6: () => (ZodIPv6),
+  ZodIntersection: () => (ZodIntersection),
+  ZodJWT: () => (ZodJWT),
+  ZodKSUID: () => (ZodKSUID),
+  ZodLazy: () => (ZodLazy),
+  ZodLiteral: () => (ZodLiteral),
+  ZodMAC: () => (ZodMAC),
+  ZodMap: () => (ZodMap),
+  ZodNaN: () => (ZodNaN),
+  ZodNanoID: () => (ZodNanoID),
+  ZodNever: () => (ZodNever),
+  ZodNonOptional: () => (ZodNonOptional),
+  ZodNull: () => (ZodNull),
+  ZodNullable: () => (ZodNullable),
+  ZodNumber: () => (ZodNumber),
+  ZodNumberFormat: () => (ZodNumberFormat),
+  ZodObject: () => (ZodObject),
+  ZodOptional: () => (ZodOptional),
+  ZodPipe: () => (ZodPipe),
+  ZodPrefault: () => (ZodPrefault),
+  ZodPromise: () => (ZodPromise),
+  ZodReadonly: () => (ZodReadonly),
+  ZodRecord: () => (ZodRecord),
+  ZodSet: () => (ZodSet),
+  ZodString: () => (ZodString),
+  ZodStringFormat: () => (ZodStringFormat),
+  ZodSuccess: () => (ZodSuccess),
+  ZodSymbol: () => (ZodSymbol),
+  ZodTemplateLiteral: () => (ZodTemplateLiteral),
+  ZodTransform: () => (ZodTransform),
+  ZodTuple: () => (ZodTuple),
+  ZodType: () => (ZodType),
+  ZodULID: () => (ZodULID),
+  ZodURL: () => (ZodURL),
+  ZodUUID: () => (ZodUUID),
+  ZodUndefined: () => (ZodUndefined),
+  ZodUnion: () => (ZodUnion),
+  ZodUnknown: () => (ZodUnknown),
+  ZodVoid: () => (ZodVoid),
+  ZodXID: () => (ZodXID),
+  ZodXor: () => (ZodXor),
+  _ZodString: () => (_ZodString),
+  _default: () => (schemas_default),
+  _function: () => (_function),
+  any: () => (any),
+  array: () => (array),
+  base64: () => (schemas_base64),
+  base64url: () => (schemas_base64url),
+  bigint: () => (schemas_bigint),
+  boolean: () => (schemas_boolean),
+  "catch": () => (schemas_catch),
+  check: () => (check),
+  cidrv4: () => (schemas_cidrv4),
+  cidrv6: () => (schemas_cidrv6),
+  codec: () => (codec),
+  cuid: () => (schemas_cuid),
+  cuid2: () => (schemas_cuid2),
+  custom: () => (custom),
+  date: () => (schemas_date),
+  describe: () => (schemas_describe),
+  discriminatedUnion: () => (discriminatedUnion),
+  e164: () => (schemas_e164),
+  email: () => (schemas_email),
+  emoji: () => (schemas_emoji),
+  "enum": () => (schemas_enum),
+  file: () => (file),
+  float32: () => (float32),
+  float64: () => (float64),
+  "function": () => (_function),
+  guid: () => (schemas_guid),
+  hash: () => (hash),
+  hex: () => (schemas_hex),
+  hostname: () => (schemas_hostname),
+  httpUrl: () => (httpUrl),
+  "instanceof": () => (_instanceof),
+  int: () => (schemas_int),
+  int32: () => (int32),
+  int64: () => (int64),
+  intersection: () => (intersection),
+  ipv4: () => (schemas_ipv4),
+  ipv6: () => (schemas_ipv6),
+  json: () => (json),
+  jwt: () => (jwt),
+  keyof: () => (keyof),
+  ksuid: () => (schemas_ksuid),
+  lazy: () => (lazy),
+  literal: () => (literal),
+  looseObject: () => (looseObject),
+  looseRecord: () => (looseRecord),
+  mac: () => (schemas_mac),
+  map: () => (map),
+  meta: () => (schemas_meta),
+  nan: () => (nan),
+  nanoid: () => (schemas_nanoid),
+  nativeEnum: () => (nativeEnum),
+  never: () => (never),
+  nonoptional: () => (nonoptional),
+  "null": () => (schemas_null),
+  nullable: () => (nullable),
+  nullish: () => (schemas_nullish),
+  number: () => (schemas_number),
+  object: () => (object),
+  optional: () => (optional),
+  partialRecord: () => (partialRecord),
+  pipe: () => (pipe),
+  prefault: () => (prefault),
+  preprocess: () => (preprocess),
+  promise: () => (promise),
+  readonly: () => (readonly),
+  record: () => (record),
+  refine: () => (refine),
+  set: () => (set),
+  strictObject: () => (strictObject),
+  string: () => (schemas_string),
+  stringFormat: () => (stringFormat),
+  stringbool: () => (stringbool),
+  success: () => (success),
+  superRefine: () => (superRefine),
+  symbol: () => (symbol),
+  templateLiteral: () => (templateLiteral),
+  transform: () => (transform),
+  tuple: () => (tuple),
+  uint32: () => (uint32),
+  uint64: () => (uint64),
+  ulid: () => (schemas_ulid),
+  undefined: () => (schemas_undefined),
+  union: () => (union),
+  unknown: () => (unknown),
+  url: () => (url),
+  uuid: () => (schemas_uuid),
+  uuidv4: () => (uuidv4),
+  uuidv6: () => (uuidv6),
+  uuidv7: () => (uuidv7),
+  "void": () => (schemas_void),
+  xid: () => (schemas_xid),
+  xor: () => (xor)
+});
+
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 ;// ./src/server/settings_default.yaml?raw
 const settings_defaultraw_namespaceObject = "# yaml-language-server: $schema=https://testingcf.jsdelivr.net/gh/StageDog/tavern_sync/dist/schema/settings.zh.json\n\n# 在此填入 user 名称, 提示词中如果有这个名字则会被替换成 <user> 宏\nuser名称: 青空黎\n\n# 在此填入新的\"世界书\"或\"预设\"配置\n配置:\n  # 配置名称, 可以和酒馆中的不同. 你使用脚本时需要填写配置名称来指出用哪个配置, 因此尽量配置名称尽量简单点方便填写\n  角色卡示例:\n    # 类型可以是\"世界书\"或\"预设\"\n    类型: 世界书\n\n    # 在酒馆中这个\"世界书\"或\"预设\"叫什么\n    酒馆中的名称: 呕吐内心的少女\n\n    # 这个世界书或预设的等效配置文件要提取到本地哪个文件中, 可以是绝对路径或相对于本文件的相对路径\n    # 如果不满足路径格式将会报错\n    # - 绝对路径: 如 Windows 中, 想将世界书提取到 C 盘\"角色卡示例\"文件夹中, 则填入 `C:/角色卡示例`\n    # - 相对路径:\n    #   - 想将世界书配置文件提取到本文件相同的文件夹中, 则填入 `./角色卡示例` 或 `角色卡示例`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的子文件夹\"世界书\"中, 则填入 `./世界书/角色卡示例` 或 `世界书/角色卡示例`\n    #   - 想将世界书配置文件提取到本文件所在文件夹的父文件夹中, 则填入 `../角色卡示例`\n    本地文件路径: src/角色卡示例/世界书/index\n\n    # 当使用打包功能 `node tavern_sync.mjs bundle 配置名称` 直接生成世界书/预设文件时, 要将它存放在哪个文件中\n    # 你也可以直接删去下面一行不填, 则默认会导出到本地文件路径的同目录下\n    导出文件路径: src/角色卡示例/角色卡示例\n";
 ;// ./src/server/util/prettified_parse.ts
@@ -47805,7 +61169,11 @@ function write_file_recursively(base, file, content) {
     }
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/core.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/core.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 /** A special constant with type `never` */
 const NEVER = Object.freeze({
     status: "aborted",
@@ -47883,7 +61251,11 @@ function config(newConfig) {
     return globalConfig;
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/util.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/util.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 // functions
 function assertEqual(val) {
     return val;
@@ -48496,7 +61868,11 @@ class Class {
     constructor(..._args) { }
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/errors.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/errors.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 const initializer = (inst, def) => {
@@ -48680,7 +62056,11 @@ function prettifyError(error) {
     return lines.join("\n");
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/parse.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/parse.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -48697,7 +62077,11 @@ const _parse = (_Err) => (schema, value, _ctx, _params) => {
     }
     return result.value;
 };
+<<<<<<< HEAD
 const parse_parse = /* @__PURE__*/ _parse($ZodRealError);
+=======
+const parse = /* @__PURE__*/ _parse($ZodRealError);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const _parseAsync = (_Err) => async (schema, value, _ctx, params) => {
     const ctx = _ctx ? Object.assign(_ctx, { async: true }) : { async: true };
     let result = schema._zod.run({ value, issues: [] }, ctx);
@@ -48710,7 +62094,11 @@ const _parseAsync = (_Err) => async (schema, value, _ctx, params) => {
     }
     return result.value;
 };
+<<<<<<< HEAD
 const parse_parseAsync = /* @__PURE__*/ _parseAsync($ZodRealError);
+=======
+const parseAsync = /* @__PURE__*/ _parseAsync($ZodRealError);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const _safeParse = (_Err) => (schema, value, _ctx) => {
     const ctx = _ctx ? { ..._ctx, async: false } : { async: false };
     const result = schema._zod.run({ value, issues: [] }, ctx);
@@ -48775,7 +62163,11 @@ const _safeDecodeAsync = (_Err) => async (schema, value, _ctx) => {
 };
 const safeDecodeAsync = /* @__PURE__*/ _safeDecodeAsync($ZodRealError);
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/regexes.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/regexes.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const cuid = /^[cC][^\s-]{8,}$/;
 const cuid2 = /^[0-9a-z]+$/;
@@ -48797,9 +62189,15 @@ const uuid = (version) => {
         return /^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/;
     return new RegExp(`^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-${version}[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$`);
 };
+<<<<<<< HEAD
 const uuid4 = /*@__PURE__*/ (/* unused pure expression or super */ null && (uuid(4)));
 const uuid6 = /*@__PURE__*/ (/* unused pure expression or super */ null && (uuid(6)));
 const uuid7 = /*@__PURE__*/ (/* unused pure expression or super */ null && (uuid(7)));
+=======
+const uuid4 = /*@__PURE__*/ uuid(4);
+const uuid6 = /*@__PURE__*/ uuid(6);
+const uuid7 = /*@__PURE__*/ uuid(7);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 /** Practical email validation */
 const email = /^(?!\.)(?!.*\.\.)([A-Za-z0-9_'+\-\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\-]*\.)+[A-Za-z]{2,}$/;
 /** Equivalent to the HTML5 input[type=email] validation implemented by browsers. Source: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email */
@@ -48808,7 +62206,11 @@ const html5Email = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]
 const rfc5322Email = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 /** A loose regex that allows Unicode characters, enforces length limits, and that's about it. */
 const unicodeEmail = /^[^\s@"]{1,64}@[^\s@]{1,255}$/u;
+<<<<<<< HEAD
 const idnEmail = (/* unused pure expression or super */ null && (unicodeEmail));
+=======
+const idnEmail = unicodeEmail;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const browserEmail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 // from https://thekevinscott.com/emojis-in-javascript/#writing-a-regular-expression
 const _emoji = `^(\\p{Extended_Pictographic}|\\p{Emoji_Component})+$`;
@@ -48818,7 +62220,11 @@ function emoji() {
 const ipv4 = /^(?:(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(?:25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])$/;
 const ipv6 = /^(([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:))$/;
 const mac = (delimiter) => {
+<<<<<<< HEAD
     const escapedDelim = util.escapeRegex(delimiter ?? ":");
+=======
+    const escapedDelim = escapeRegex(delimiter ?? ":");
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     return new RegExp(`^(?:[0-9A-F]{2}${escapedDelim}){5}[0-9A-F]{2}$|^(?:[0-9a-f]{2}${escapedDelim}){5}[0-9a-f]{2}$`);
 };
 const cidrv4 = /^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9][0-9]|[0-9])\/([0-9]|[1-2][0-9]|3[0-2])$/;
@@ -48890,6 +62296,7 @@ function fixedBase64url(length) {
 }
 // MD5 (16 bytes): base64 = 24 chars total (22 + "==")
 const md5_hex = /^[0-9a-fA-F]{32}$/;
+<<<<<<< HEAD
 const md5_base64 = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64(22, "==")));
 const md5_base64url = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64url(22)));
 // SHA1 (20 bytes): base64 = 28 chars total (27 + "=")
@@ -48910,6 +62317,28 @@ const sha512_base64 = /*@__PURE__*/ (/* unused pure expression or super */ null 
 const sha512_base64url = /*@__PURE__*/ (/* unused pure expression or super */ null && (fixedBase64url(86)));
 
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/checks.js
+=======
+const md5_base64 = /*@__PURE__*/ fixedBase64(22, "==");
+const md5_base64url = /*@__PURE__*/ fixedBase64url(22);
+// SHA1 (20 bytes): base64 = 28 chars total (27 + "=")
+const sha1_hex = /^[0-9a-fA-F]{40}$/;
+const sha1_base64 = /*@__PURE__*/ fixedBase64(27, "=");
+const sha1_base64url = /*@__PURE__*/ fixedBase64url(27);
+// SHA256 (32 bytes): base64 = 44 chars total (43 + "=")
+const sha256_hex = /^[0-9a-fA-F]{64}$/;
+const sha256_base64 = /*@__PURE__*/ fixedBase64(43, "=");
+const sha256_base64url = /*@__PURE__*/ fixedBase64url(43);
+// SHA384 (48 bytes): base64 = 64 chars total (no padding)
+const sha384_hex = /^[0-9a-fA-F]{96}$/;
+const sha384_base64 = /*@__PURE__*/ fixedBase64(64, "");
+const sha384_base64url = /*@__PURE__*/ fixedBase64url(64);
+// SHA512 (64 bytes): base64 = 88 chars total (86 + "==")
+const sha512_hex = /^[0-9a-fA-F]{128}$/;
+const sha512_base64 = /*@__PURE__*/ fixedBase64(86, "==");
+const sha512_base64url = /*@__PURE__*/ fixedBase64url(86);
+
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/checks.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 // import { $ZodType } from "./schemas.js";
 
 
@@ -49101,9 +62530,15 @@ const $ZodCheckNumberFormat = /*@__PURE__*/ $constructor("$ZodCheckNumberFormat"
         }
     };
 });
+<<<<<<< HEAD
 const $ZodCheckBigIntFormat = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCheckBigIntFormat", (inst, def) => {
     $ZodCheck.init(inst, def); // no format checks
     const [minimum, maximum] = util.BIGINT_FORMAT_RANGES[def.format];
+=======
+const $ZodCheckBigIntFormat = /*@__PURE__*/ $constructor("$ZodCheckBigIntFormat", (inst, def) => {
+    $ZodCheck.init(inst, def); // no format checks
+    const [minimum, maximum] = BIGINT_FORMAT_RANGES[def.format];
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     inst._zod.onattach.push((inst) => {
         const bag = inst._zod.bag;
         bag.format = def.format;
@@ -49133,13 +62568,22 @@ const $ZodCheckBigIntFormat = /*@__PURE__*/ (/* unused pure expression or super 
             });
         }
     };
+<<<<<<< HEAD
 })));
 const $ZodCheckMaxSize = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCheckMaxSize", (inst, def) => {
+=======
+});
+const $ZodCheckMaxSize = /*@__PURE__*/ $constructor("$ZodCheckMaxSize", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     var _a;
     $ZodCheck.init(inst, def);
     (_a = inst._zod.def).when ?? (_a.when = (payload) => {
         const val = payload.value;
+<<<<<<< HEAD
         return !util.nullish(val) && val.size !== undefined;
+=======
+        return !nullish(val) && val.size !== undefined;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
     inst._zod.onattach.push((inst) => {
         const curr = (inst._zod.bag.maximum ?? Number.POSITIVE_INFINITY);
@@ -49152,7 +62596,11 @@ const $ZodCheckMaxSize = /*@__PURE__*/ (/* unused pure expression or super */ nu
         if (size <= def.maximum)
             return;
         payload.issues.push({
+<<<<<<< HEAD
             origin: util.getSizableOrigin(input),
+=======
+            origin: getSizableOrigin(input),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             code: "too_big",
             maximum: def.maximum,
             inclusive: true,
@@ -49161,13 +62609,22 @@ const $ZodCheckMaxSize = /*@__PURE__*/ (/* unused pure expression or super */ nu
             continue: !def.abort,
         });
     };
+<<<<<<< HEAD
 })));
 const $ZodCheckMinSize = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCheckMinSize", (inst, def) => {
+=======
+});
+const $ZodCheckMinSize = /*@__PURE__*/ $constructor("$ZodCheckMinSize", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     var _a;
     $ZodCheck.init(inst, def);
     (_a = inst._zod.def).when ?? (_a.when = (payload) => {
         const val = payload.value;
+<<<<<<< HEAD
         return !util.nullish(val) && val.size !== undefined;
+=======
+        return !nullish(val) && val.size !== undefined;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
     inst._zod.onattach.push((inst) => {
         const curr = (inst._zod.bag.minimum ?? Number.NEGATIVE_INFINITY);
@@ -49180,7 +62637,11 @@ const $ZodCheckMinSize = /*@__PURE__*/ (/* unused pure expression or super */ nu
         if (size >= def.minimum)
             return;
         payload.issues.push({
+<<<<<<< HEAD
             origin: util.getSizableOrigin(input),
+=======
+            origin: getSizableOrigin(input),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             code: "too_small",
             minimum: def.minimum,
             inclusive: true,
@@ -49189,13 +62650,22 @@ const $ZodCheckMinSize = /*@__PURE__*/ (/* unused pure expression or super */ nu
             continue: !def.abort,
         });
     };
+<<<<<<< HEAD
 })));
 const $ZodCheckSizeEquals = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCheckSizeEquals", (inst, def) => {
+=======
+});
+const $ZodCheckSizeEquals = /*@__PURE__*/ $constructor("$ZodCheckSizeEquals", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     var _a;
     $ZodCheck.init(inst, def);
     (_a = inst._zod.def).when ?? (_a.when = (payload) => {
         const val = payload.value;
+<<<<<<< HEAD
         return !util.nullish(val) && val.size !== undefined;
+=======
+        return !nullish(val) && val.size !== undefined;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
     inst._zod.onattach.push((inst) => {
         const bag = inst._zod.bag;
@@ -49210,7 +62680,11 @@ const $ZodCheckSizeEquals = /*@__PURE__*/ (/* unused pure expression or super */
             return;
         const tooBig = size > def.size;
         payload.issues.push({
+<<<<<<< HEAD
             origin: util.getSizableOrigin(input),
+=======
+            origin: getSizableOrigin(input),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             ...(tooBig ? { code: "too_big", maximum: def.size } : { code: "too_small", minimum: def.size }),
             inclusive: true,
             exact: true,
@@ -49219,7 +62693,11 @@ const $ZodCheckSizeEquals = /*@__PURE__*/ (/* unused pure expression or super */
             continue: !def.abort,
         });
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodCheckMaxLength = /*@__PURE__*/ $constructor("$ZodCheckMaxLength", (inst, def) => {
     var _a;
     $ZodCheck.init(inst, def);
@@ -49438,10 +62916,17 @@ const $ZodCheckEndsWith = /*@__PURE__*/ $constructor("$ZodCheckEndsWith", (inst,
 ///////////////////////////////////
 function handleCheckPropertyResult(result, payload, property) {
     if (result.issues.length) {
+<<<<<<< HEAD
         payload.issues.push(...util.prefixIssues(property, result.issues));
     }
 }
 const $ZodCheckProperty = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCheckProperty", (inst, def) => {
+=======
+        payload.issues.push(...prefixIssues(property, result.issues));
+    }
+}
+const $ZodCheckProperty = /*@__PURE__*/ $constructor("$ZodCheckProperty", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodCheck.init(inst, def);
     inst._zod.check = (payload) => {
         const result = def.schema._zod.run({
@@ -49454,8 +62939,13 @@ const $ZodCheckProperty = /*@__PURE__*/ (/* unused pure expression or super */ n
         handleCheckPropertyResult(result, payload, def.property);
         return;
     };
+<<<<<<< HEAD
 })));
 const $ZodCheckMimeType = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCheckMimeType", (inst, def) => {
+=======
+});
+const $ZodCheckMimeType = /*@__PURE__*/ $constructor("$ZodCheckMimeType", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodCheck.init(inst, def);
     const mimeSet = new Set(def.mime);
     inst._zod.onattach.push((inst) => {
@@ -49472,7 +62962,11 @@ const $ZodCheckMimeType = /*@__PURE__*/ (/* unused pure expression or super */ n
             continue: !def.abort,
         });
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (inst, def) => {
     $ZodCheck.init(inst, def);
     inst._zod.check = (payload) => {
@@ -49480,7 +62974,11 @@ const $ZodCheckOverwrite = /*@__PURE__*/ $constructor("$ZodCheckOverwrite", (ins
     };
 });
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/doc.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/doc.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 class Doc {
     constructor(args = []) {
         this.content = [];
@@ -49517,6 +63015,7 @@ class Doc {
     }
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/versions.js
 const version = {
     major: 4,
@@ -49525,6 +63024,16 @@ const version = {
 };
 
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/schemas.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/versions.js
+const version = {
+    major: 4,
+    minor: 2,
+    patch: 1,
+};
+
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/schemas.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -49836,11 +63345,19 @@ const $ZodIPv6 = /*@__PURE__*/ $constructor("$ZodIPv6", (inst, def) => {
         }
     };
 });
+<<<<<<< HEAD
 const $ZodMAC = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodMAC", (inst, def) => {
     def.pattern ?? (def.pattern = regexes.mac(def.delimiter));
     $ZodStringFormat.init(inst, def);
     inst._zod.bag.format = `mac`;
 })));
+=======
+const $ZodMAC = /*@__PURE__*/ $constructor("$ZodMAC", (inst, def) => {
+    def.pattern ?? (def.pattern = mac(def.delimiter));
+    $ZodStringFormat.init(inst, def);
+    inst._zod.bag.format = `mac`;
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodCIDRv4 = /*@__PURE__*/ $constructor("$ZodCIDRv4", (inst, def) => {
     def.pattern ?? (def.pattern = cidrv4);
     $ZodStringFormat.init(inst, def);
@@ -49971,7 +63488,11 @@ const $ZodJWT = /*@__PURE__*/ $constructor("$ZodJWT", (inst, def) => {
         });
     };
 });
+<<<<<<< HEAD
 const $ZodCustomStringFormat = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCustomStringFormat", (inst, def) => {
+=======
+const $ZodCustomStringFormat = /*@__PURE__*/ $constructor("$ZodCustomStringFormat", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodStringFormat.init(inst, def);
     inst._zod.check = (payload) => {
         if (def.fn(payload.value))
@@ -49984,7 +63505,11 @@ const $ZodCustomStringFormat = /*@__PURE__*/ (/* unused pure expression or super
             continue: !def.abort,
         });
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodNumber = /*@__PURE__*/ $constructor("$ZodNumber", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.pattern = inst._zod.bag.pattern ?? number;
@@ -50060,11 +63585,19 @@ const $ZodBigInt = /*@__PURE__*/ $constructor("$ZodBigInt", (inst, def) => {
         return payload;
     };
 });
+<<<<<<< HEAD
 const $ZodBigIntFormat = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodBigIntFormat", (inst, def) => {
     checks.$ZodCheckBigIntFormat.init(inst, def);
     $ZodBigInt.init(inst, def); // no format checks
 })));
 const $ZodSymbol = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodSymbol", (inst, def) => {
+=======
+const $ZodBigIntFormat = /*@__PURE__*/ $constructor("$ZodBigIntFormat", (inst, def) => {
+    $ZodCheckBigIntFormat.init(inst, def);
+    $ZodBigInt.init(inst, def); // no format checks
+});
+const $ZodSymbol = /*@__PURE__*/ $constructor("$ZodSymbol", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, _ctx) => {
         const input = payload.value;
@@ -50078,10 +63611,17 @@ const $ZodSymbol = /*@__PURE__*/ (/* unused pure expression or super */ null && 
         });
         return payload;
     };
+<<<<<<< HEAD
 })));
 const $ZodUndefined = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodUndefined", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.pattern = regexes.undefined;
+=======
+});
+const $ZodUndefined = /*@__PURE__*/ $constructor("$ZodUndefined", (inst, def) => {
+    $ZodType.init(inst, def);
+    inst._zod.pattern = _undefined;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     inst._zod.values = new Set([undefined]);
     inst._zod.optin = "optional";
     inst._zod.optout = "optional";
@@ -50097,10 +63637,17 @@ const $ZodUndefined = /*@__PURE__*/ (/* unused pure expression or super */ null 
         });
         return payload;
     };
+<<<<<<< HEAD
 })));
 const $ZodNull = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodNull", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.pattern = regexes.null;
+=======
+});
+const $ZodNull = /*@__PURE__*/ $constructor("$ZodNull", (inst, def) => {
+    $ZodType.init(inst, def);
+    inst._zod.pattern = _null;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     inst._zod.values = new Set([null]);
     inst._zod.parse = (payload, _ctx) => {
         const input = payload.value;
@@ -50114,7 +63661,11 @@ const $ZodNull = /*@__PURE__*/ (/* unused pure expression or super */ null && (c
         });
         return payload;
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodAny = /*@__PURE__*/ $constructor("$ZodAny", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload) => payload;
@@ -50501,7 +64052,11 @@ function handleExclusiveUnionResults(results, final, inst, ctx) {
             code: "invalid_union",
             input: final.value,
             inst,
+<<<<<<< HEAD
             errors: results.map((result) => result.issues.map((iss) => util.finalizeIssue(iss, ctx, core.config()))),
+=======
+            errors: results.map((result) => result.issues.map((iss) => finalizeIssue(iss, ctx, config()))),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         });
     }
     else {
@@ -50516,7 +64071,11 @@ function handleExclusiveUnionResults(results, final, inst, ctx) {
     }
     return final;
 }
+<<<<<<< HEAD
 const $ZodXor = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodXor", (inst, def) => {
+=======
+const $ZodXor = /*@__PURE__*/ $constructor("$ZodXor", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodUnion.init(inst, def);
     def.inclusive = false;
     const single = def.options.length === 1;
@@ -50546,6 +64105,7 @@ const $ZodXor = /*@__PURE__*/ (/* unused pure expression or super */ null && (co
             return handleExclusiveUnionResults(results, payload, inst, ctx);
         });
     };
+<<<<<<< HEAD
 })));
 const $ZodDiscriminatedUnion = 
 /*@__PURE__*/
@@ -50554,6 +64114,16 @@ const $ZodDiscriminatedUnion =
     $ZodUnion.init(inst, def);
     const _super = inst._zod.parse;
     util.defineLazy(inst._zod, "propValues", () => {
+=======
+});
+const $ZodDiscriminatedUnion = 
+/*@__PURE__*/
+$constructor("$ZodDiscriminatedUnion", (inst, def) => {
+    def.inclusive = false;
+    $ZodUnion.init(inst, def);
+    const _super = inst._zod.parse;
+    defineLazy(inst._zod, "propValues", () => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         const propValues = {};
         for (const option of def.options) {
             const pv = option._zod.propValues;
@@ -50569,7 +64139,11 @@ const $ZodDiscriminatedUnion =
         }
         return propValues;
     });
+<<<<<<< HEAD
     const disc = util.cached(() => {
+=======
+    const disc = cached(() => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         const opts = def.options;
         const map = new Map();
         for (const o of opts) {
@@ -50587,7 +64161,11 @@ const $ZodDiscriminatedUnion =
     });
     inst._zod.parse = (payload, ctx) => {
         const input = payload.value;
+<<<<<<< HEAD
         if (!util.isObject(input)) {
+=======
+        if (!util_isObject(input)) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             payload.issues.push({
                 code: "invalid_type",
                 expected: "object",
@@ -50615,7 +64193,11 @@ const $ZodDiscriminatedUnion =
         });
         return payload;
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodIntersection = /*@__PURE__*/ $constructor("$ZodIntersection", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, ctx) => {
@@ -50693,7 +64275,11 @@ function handleIntersectionResults(result, left, right) {
     result.value = merged.data;
     return result;
 }
+<<<<<<< HEAD
 const $ZodTuple = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodTuple", (inst, def) => {
+=======
+const $ZodTuple = /*@__PURE__*/ $constructor("$ZodTuple", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     const items = def.items;
     inst._zod.parse = (payload, ctx) => {
@@ -50761,10 +64347,17 @@ const $ZodTuple = /*@__PURE__*/ (/* unused pure expression or super */ null && (
             return Promise.all(proms).then(() => payload);
         return payload;
     };
+<<<<<<< HEAD
 })));
 function handleTupleResult(result, final, index) {
     if (result.issues.length) {
         final.issues.push(...util.prefixIssues(index, result.issues));
+=======
+});
+function handleTupleResult(result, final, index) {
+    if (result.issues.length) {
+        final.issues.push(...prefixIssues(index, result.issues));
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     }
     final.value[index] = result.value;
 }
@@ -50872,7 +64465,11 @@ const $ZodRecord = /*@__PURE__*/ $constructor("$ZodRecord", (inst, def) => {
         return payload;
     };
 });
+<<<<<<< HEAD
 const $ZodMap = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodMap", (inst, def) => {
+=======
+const $ZodMap = /*@__PURE__*/ $constructor("$ZodMap", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, ctx) => {
         const input = payload.value;
@@ -50903,11 +64500,19 @@ const $ZodMap = /*@__PURE__*/ (/* unused pure expression or super */ null && (co
             return Promise.all(proms).then(() => payload);
         return payload;
     };
+<<<<<<< HEAD
 })));
 function handleMapResult(keyResult, valueResult, final, key, input, inst, ctx) {
     if (keyResult.issues.length) {
         if (util.propertyKeyTypes.has(typeof key)) {
             final.issues.push(...util.prefixIssues(key, keyResult.issues));
+=======
+});
+function handleMapResult(keyResult, valueResult, final, key, input, inst, ctx) {
+    if (keyResult.issues.length) {
+        if (propertyKeyTypes.has(typeof key)) {
+            final.issues.push(...prefixIssues(key, keyResult.issues));
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         }
         else {
             final.issues.push({
@@ -50915,13 +64520,22 @@ function handleMapResult(keyResult, valueResult, final, key, input, inst, ctx) {
                 origin: "map",
                 input,
                 inst,
+<<<<<<< HEAD
                 issues: keyResult.issues.map((iss) => util.finalizeIssue(iss, ctx, core.config())),
+=======
+                issues: keyResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             });
         }
     }
     if (valueResult.issues.length) {
+<<<<<<< HEAD
         if (util.propertyKeyTypes.has(typeof key)) {
             final.issues.push(...util.prefixIssues(key, valueResult.issues));
+=======
+        if (propertyKeyTypes.has(typeof key)) {
+            final.issues.push(...prefixIssues(key, valueResult.issues));
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         }
         else {
             final.issues.push({
@@ -50930,13 +64544,21 @@ function handleMapResult(keyResult, valueResult, final, key, input, inst, ctx) {
                 input,
                 inst,
                 key: key,
+<<<<<<< HEAD
                 issues: valueResult.issues.map((iss) => util.finalizeIssue(iss, ctx, core.config())),
+=======
+                issues: valueResult.issues.map((iss) => finalizeIssue(iss, ctx, config())),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             });
         }
     }
     final.value.set(keyResult.value, valueResult.value);
 }
+<<<<<<< HEAD
 const $ZodSet = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodSet", (inst, def) => {
+=======
+const $ZodSet = /*@__PURE__*/ $constructor("$ZodSet", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, ctx) => {
         const input = payload.value;
@@ -50963,7 +64585,11 @@ const $ZodSet = /*@__PURE__*/ (/* unused pure expression or super */ null && (co
             return Promise.all(proms).then(() => payload);
         return payload;
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function handleSetResult(result, final) {
     if (result.issues.length) {
         final.issues.push(...result.issues);
@@ -51017,7 +64643,11 @@ const $ZodLiteral = /*@__PURE__*/ $constructor("$ZodLiteral", (inst, def) => {
         return payload;
     };
 });
+<<<<<<< HEAD
 const $ZodFile = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodFile", (inst, def) => {
+=======
+const $ZodFile = /*@__PURE__*/ $constructor("$ZodFile", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, _ctx) => {
         const input = payload.value;
@@ -51032,7 +64662,11 @@ const $ZodFile = /*@__PURE__*/ (/* unused pure expression or super */ null && (c
         });
         return payload;
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodTransform = /*@__PURE__*/ $constructor("$ZodTransform", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, ctx) => {
@@ -51173,11 +64807,19 @@ function handleNonOptionalResult(payload, inst) {
     }
     return payload;
 }
+<<<<<<< HEAD
 const $ZodSuccess = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodSuccess", (inst, def) => {
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, ctx) => {
         if (ctx.direction === "backward") {
             throw new core.$ZodEncodeError("ZodSuccess");
+=======
+const $ZodSuccess = /*@__PURE__*/ $constructor("$ZodSuccess", (inst, def) => {
+    $ZodType.init(inst, def);
+    inst._zod.parse = (payload, ctx) => {
+        if (ctx.direction === "backward") {
+            throw new $ZodEncodeError("ZodSuccess");
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         }
         const result = def.innerType._zod.run(payload, ctx);
         if (result instanceof Promise) {
@@ -51189,7 +64831,11 @@ const $ZodSuccess = /*@__PURE__*/ (/* unused pure expression or super */ null &&
         payload.value = result.issues.length === 0;
         return payload;
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodCatch = /*@__PURE__*/ $constructor("$ZodCatch", (inst, def) => {
     $ZodType.init(inst, def);
     defineLazy(inst._zod, "optin", () => def.innerType._zod.optin);
@@ -51231,7 +64877,11 @@ const $ZodCatch = /*@__PURE__*/ $constructor("$ZodCatch", (inst, def) => {
         return payload;
     };
 });
+<<<<<<< HEAD
 const $ZodNaN = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodNaN", (inst, def) => {
+=======
+const $ZodNaN = /*@__PURE__*/ $constructor("$ZodNaN", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, _ctx) => {
         if (typeof payload.value !== "number" || !Number.isNaN(payload.value)) {
@@ -51245,7 +64895,11 @@ const $ZodNaN = /*@__PURE__*/ (/* unused pure expression or super */ null && (co
         }
         return payload;
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodPipe = /*@__PURE__*/ $constructor("$ZodPipe", (inst, def) => {
     $ZodType.init(inst, def);
     defineLazy(inst._zod, "values", () => def.in._zod.values);
@@ -51275,12 +64929,21 @@ function handlePipeResult(left, next, ctx) {
     }
     return next._zod.run({ value: left.value, issues: left.issues }, ctx);
 }
+<<<<<<< HEAD
 const $ZodCodec = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodCodec", (inst, def) => {
     $ZodType.init(inst, def);
     util.defineLazy(inst._zod, "values", () => def.in._zod.values);
     util.defineLazy(inst._zod, "optin", () => def.in._zod.optin);
     util.defineLazy(inst._zod, "optout", () => def.out._zod.optout);
     util.defineLazy(inst._zod, "propValues", () => def.in._zod.propValues);
+=======
+const $ZodCodec = /*@__PURE__*/ $constructor("$ZodCodec", (inst, def) => {
+    $ZodType.init(inst, def);
+    defineLazy(inst._zod, "values", () => def.in._zod.values);
+    defineLazy(inst._zod, "optin", () => def.in._zod.optin);
+    defineLazy(inst._zod, "optout", () => def.out._zod.optout);
+    defineLazy(inst._zod, "propValues", () => def.in._zod.propValues);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     inst._zod.parse = (payload, ctx) => {
         const direction = ctx.direction || "forward";
         if (direction === "forward") {
@@ -51298,7 +64961,11 @@ const $ZodCodec = /*@__PURE__*/ (/* unused pure expression or super */ null && (
             return handleCodecAResult(right, def, ctx);
         }
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function handleCodecAResult(result, def, ctx) {
     if (result.issues.length) {
         // prevent further checks
@@ -51350,7 +65017,11 @@ function handleReadonlyResult(payload) {
     payload.value = Object.freeze(payload.value);
     return payload;
 }
+<<<<<<< HEAD
 const $ZodTemplateLiteral = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodTemplateLiteral", (inst, def) => {
+=======
+const $ZodTemplateLiteral = /*@__PURE__*/ $constructor("$ZodTemplateLiteral", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     const regexParts = [];
     for (const part of def.parts) {
@@ -51367,8 +65038,13 @@ const $ZodTemplateLiteral = /*@__PURE__*/ (/* unused pure expression or super */
             const end = source.endsWith("$") ? source.length - 1 : source.length;
             regexParts.push(source.slice(start, end));
         }
+<<<<<<< HEAD
         else if (part === null || util.primitiveTypes.has(typeof part)) {
             regexParts.push(util.escapeRegex(`${part}`));
+=======
+        else if (part === null || primitiveTypes.has(typeof part)) {
+            regexParts.push(escapeRegex(`${part}`));
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         }
         else {
             throw new Error(`Invalid template literal part: ${part}`);
@@ -51398,8 +65074,13 @@ const $ZodTemplateLiteral = /*@__PURE__*/ (/* unused pure expression or super */
         }
         return payload;
     };
+<<<<<<< HEAD
 })));
 const $ZodFunction = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodFunction", (inst, def) => {
+=======
+});
+const $ZodFunction = /*@__PURE__*/ $constructor("$ZodFunction", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     inst._def = def;
     inst._zod.def = def;
@@ -51477,14 +65158,24 @@ const $ZodFunction = /*@__PURE__*/ (/* unused pure expression or super */ null &
         });
     };
     return inst;
+<<<<<<< HEAD
 })));
 const $ZodPromise = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodPromise", (inst, def) => {
+=======
+});
+const $ZodPromise = /*@__PURE__*/ $constructor("$ZodPromise", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     inst._zod.parse = (payload, ctx) => {
         return Promise.resolve(payload.value).then((inner) => def.innerType._zod.run({ value: inner, issues: [] }, ctx));
     };
+<<<<<<< HEAD
 })));
 const $ZodLazy = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("$ZodLazy", (inst, def) => {
+=======
+});
+const $ZodLazy = /*@__PURE__*/ $constructor("$ZodLazy", (inst, def) => {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     $ZodType.init(inst, def);
     // let _innerType!: any;
     // util.defineLazy(def, "getter", () => {
@@ -51493,16 +65184,28 @@ const $ZodLazy = /*@__PURE__*/ (/* unused pure expression or super */ null && (c
     //   }
     //   return () => _innerType;
     // });
+<<<<<<< HEAD
     util.defineLazy(inst._zod, "innerType", () => def.getter());
     util.defineLazy(inst._zod, "pattern", () => inst._zod.innerType?._zod?.pattern);
     util.defineLazy(inst._zod, "propValues", () => inst._zod.innerType?._zod?.propValues);
     util.defineLazy(inst._zod, "optin", () => inst._zod.innerType?._zod?.optin ?? undefined);
     util.defineLazy(inst._zod, "optout", () => inst._zod.innerType?._zod?.optout ?? undefined);
+=======
+    defineLazy(inst._zod, "innerType", () => def.getter());
+    defineLazy(inst._zod, "pattern", () => inst._zod.innerType?._zod?.pattern);
+    defineLazy(inst._zod, "propValues", () => inst._zod.innerType?._zod?.propValues);
+    defineLazy(inst._zod, "optin", () => inst._zod.innerType?._zod?.optin ?? undefined);
+    defineLazy(inst._zod, "optout", () => inst._zod.innerType?._zod?.optout ?? undefined);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     inst._zod.parse = (payload, ctx) => {
         const inner = inst._zod.innerType;
         return inner._zod.run(payload, ctx);
     };
+<<<<<<< HEAD
 })));
+=======
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const $ZodCustom = /*@__PURE__*/ $constructor("$ZodCustom", (inst, def) => {
     $ZodCheck.init(inst, def);
     $ZodType.init(inst, def);
@@ -51535,7 +65238,11 @@ function handleRefineResult(result, payload, input, inst) {
     }
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ar.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ar.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const error = () => {
     const Sizable = {
@@ -51653,7 +65360,11 @@ const error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/az.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/az.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const az_error = () => {
     const Sizable = {
@@ -51770,7 +65481,11 @@ const az_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/be.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/be.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 function getBelarusianPlural(count, one, few, many) {
     const absCount = Math.abs(count);
@@ -51936,7 +65651,11 @@ const be_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/bg.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/bg.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const parsedType = (data) => {
     const t = typeof data;
@@ -52066,7 +65785,11 @@ const bg_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ca.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ca.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ca_error = () => {
     const Sizable = {
@@ -52186,7 +65909,11 @@ const ca_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/cs.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/cs.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const cs_error = () => {
     const Sizable = {
@@ -52323,7 +66050,11 @@ const cs_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/da.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/da.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const da_error = () => {
     const Sizable = {
@@ -52456,7 +66187,11 @@ const da_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/de.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/de.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const de_error = () => {
     const Sizable = {
@@ -52574,7 +66309,11 @@ const de_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/en.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/en.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const en_parsedType = (data) => {
     const t = typeof data;
@@ -52694,7 +66433,11 @@ const en_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/eo.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/eo.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const eo_parsedType = (data) => {
     const t = typeof data;
@@ -52812,7 +66555,11 @@ const eo_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/es.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/es.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const es_error = () => {
     const Sizable = {
@@ -52963,7 +66710,11 @@ const es_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/fa.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/fa.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const fa_error = () => {
     const Sizable = {
@@ -53087,7 +66838,11 @@ const fa_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/fi.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/fi.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const fi_error = () => {
     const Sizable = {
@@ -53211,7 +66966,11 @@ const fi_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/fr.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/fr.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const fr_error = () => {
     const Sizable = {
@@ -53329,7 +67088,11 @@ const fr_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/fr-CA.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/fr-CA.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const fr_CA_error = () => {
     const Sizable = {
@@ -53448,7 +67211,11 @@ const fr_CA_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/he.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/he.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const he_error = () => {
     // Hebrew labels + grammatical gender
@@ -53678,7 +67445,11 @@ const he_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/hu.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/hu.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const hu_error = () => {
     const Sizable = {
@@ -53797,7 +67568,11 @@ const hu_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/id.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/id.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const id_error = () => {
     const Sizable = {
@@ -53915,7 +67690,11 @@ const id_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/is.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/is.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const is_parsedType = (data) => {
     const t = typeof data;
@@ -54034,7 +67813,11 @@ const is_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/it.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/it.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const it_error = () => {
     const Sizable = {
@@ -54153,7 +67936,11 @@ const it_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ja.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ja.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ja_error = () => {
     const Sizable = {
@@ -54270,7 +68057,11 @@ const ja_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ka.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ka.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ka_parsedType = (data) => {
     const t = typeof data;
@@ -54397,7 +68188,11 @@ const ka_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/km.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/km.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const km_error = () => {
     const Sizable = {
@@ -54516,14 +68311,22 @@ const km_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/kh.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/kh.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /** @deprecated Use `km` instead. */
 /* harmony default export */ function kh() {
     return km();
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ko.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ko.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ko_error = () => {
     const Sizable = {
@@ -54646,7 +68449,11 @@ const ko_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/lt.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/lt.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const lt_parsedType = (data) => {
     const t = typeof data;
@@ -54878,7 +68685,11 @@ const lt_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/mk.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/mk.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const mk_error = () => {
     const Sizable = {
@@ -54998,7 +68809,11 @@ const mk_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ms.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ms.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ms_error = () => {
     const Sizable = {
@@ -55116,7 +68931,11 @@ const ms_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/nl.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/nl.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const nl_error = () => {
     const Sizable = {
@@ -55235,7 +69054,11 @@ const nl_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/no.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/no.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const no_error = () => {
     const Sizable = {
@@ -55353,7 +69176,11 @@ const no_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ota.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ota.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ota_error = () => {
     const Sizable = {
@@ -55472,7 +69299,11 @@ const ota_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ps.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ps.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ps_error = () => {
     const Sizable = {
@@ -55596,7 +69427,11 @@ const ps_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/pl.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/pl.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const pl_error = () => {
     const Sizable = {
@@ -55715,7 +69550,11 @@ const pl_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/pt.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/pt.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const pt_error = () => {
     const Sizable = {
@@ -55833,7 +69672,11 @@ const pt_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ru.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ru.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 function getRussianPlural(count, one, few, many) {
     const absCount = Math.abs(count);
@@ -55999,7 +69842,11 @@ const ru_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/sl.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/sl.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const sl_error = () => {
     const Sizable = {
@@ -56118,7 +69965,11 @@ const sl_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/sv.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/sv.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const sv_error = () => {
     const Sizable = {
@@ -56238,7 +70089,11 @@ const sv_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ta.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ta.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ta_error = () => {
     const Sizable = {
@@ -56357,7 +70212,11 @@ const ta_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/th.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/th.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const th_error = () => {
     const Sizable = {
@@ -56476,7 +70335,11 @@ const th_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/tr.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/tr.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const tr_parsedType = (data) => {
     const t = typeof data;
@@ -56593,7 +70456,11 @@ const tr_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/uk.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/uk.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const uk_error = () => {
     const Sizable = {
@@ -56712,14 +70579,22 @@ const uk_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ua.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ua.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 /** @deprecated Use `uk` instead. */
 /* harmony default export */ function ua() {
     return uk();
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/ur.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/ur.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const ur_error = () => {
     const Sizable = {
@@ -56838,7 +70713,11 @@ const ur_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/vi.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/vi.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const vi_error = () => {
     const Sizable = {
@@ -56956,7 +70835,11 @@ const vi_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/zh-CN.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/zh-CN.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const zh_CN_error = () => {
     const Sizable = {
@@ -57074,7 +70957,11 @@ const zh_CN_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/zh-TW.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/zh-TW.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const zh_TW_error = () => {
     const Sizable = {
@@ -57193,7 +71080,11 @@ const zh_TW_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/yo.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/yo.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 const yo_error = () => {
     const Sizable = {
@@ -57310,7 +71201,11 @@ const yo_error = () => {
     };
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/locales/index.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/locales/index.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -57359,7 +71254,11 @@ const yo_error = () => {
 
 
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/registries.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/registries.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 var _a;
 const $output = Symbol("ZodOutput");
 const $input = Symbol("ZodInput");
@@ -57415,7 +71314,11 @@ function registry() {
 (_a = globalThis).__zod_globalRegistry ?? (_a.__zod_globalRegistry = registry());
 const globalRegistry = globalThis.__zod_globalRegistry;
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/api.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/api.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -57586,7 +71489,11 @@ function _mac(Class, params) {
         format: "mac",
         check: "string_format",
         abort: false,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _cidrv4(Class, params) {
@@ -57716,7 +71623,11 @@ function _float32(Class, params) {
         check: "number_format",
         abort: false,
         format: "float32",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _float64(Class, params) {
@@ -57725,7 +71636,11 @@ function _float64(Class, params) {
         check: "number_format",
         abort: false,
         format: "float64",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _int32(Class, params) {
@@ -57734,7 +71649,11 @@ function _int32(Class, params) {
         check: "number_format",
         abort: false,
         format: "int32",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _uint32(Class, params) {
@@ -57743,7 +71662,11 @@ function _uint32(Class, params) {
         check: "number_format",
         abort: false,
         format: "uint32",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _boolean(Class, params) {
@@ -57762,7 +71685,11 @@ function _coercedBoolean(Class, params) {
 function _bigint(Class, params) {
     return new Class({
         type: "bigint",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _coercedBigint(Class, params) {
@@ -57778,7 +71705,11 @@ function _int64(Class, params) {
         check: "bigint_format",
         abort: false,
         format: "int64",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _uint64(Class, params) {
@@ -57787,25 +71718,41 @@ function _uint64(Class, params) {
         check: "bigint_format",
         abort: false,
         format: "uint64",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _symbol(Class, params) {
     return new Class({
         type: "symbol",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function api_undefined(Class, params) {
     return new Class({
         type: "undefined",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function api_null(Class, params) {
     return new Class({
         type: "null",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _any(Class) {
@@ -57833,7 +71780,11 @@ function _void(Class, params) {
 function _date(Class, params) {
     return new Class({
         type: "date",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _coercedDate(Class, params) {
@@ -57846,7 +71797,11 @@ function _coercedDate(Class, params) {
 function _nan(Class, params) {
     return new Class({
         type: "nan",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _lt(value, params) {
@@ -57906,23 +71861,41 @@ function _multipleOf(value, params) {
     });
 }
 function _maxSize(maximum, params) {
+<<<<<<< HEAD
     return new checks.$ZodCheckMaxSize({
         check: "max_size",
         ...util.normalizeParams(params),
+=======
+    return new $ZodCheckMaxSize({
+        check: "max_size",
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         maximum,
     });
 }
 function _minSize(minimum, params) {
+<<<<<<< HEAD
     return new checks.$ZodCheckMinSize({
         check: "min_size",
         ...util.normalizeParams(params),
+=======
+    return new $ZodCheckMinSize({
+        check: "min_size",
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         minimum,
     });
 }
 function _size(size, params) {
+<<<<<<< HEAD
     return new checks.$ZodCheckSizeEquals({
         check: "size_equals",
         ...util.normalizeParams(params),
+=======
+    return new $ZodCheckSizeEquals({
+        check: "size_equals",
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         size,
     });
 }
@@ -57995,6 +71968,7 @@ function _endsWith(suffix, params) {
     });
 }
 function _property(property, schema, params) {
+<<<<<<< HEAD
     return new checks.$ZodCheckProperty({
         check: "property",
         property,
@@ -58007,6 +71981,20 @@ function _mime(types, params) {
         check: "mime_type",
         mime: types,
         ...util.normalizeParams(params),
+=======
+    return new $ZodCheckProperty({
+        check: "property",
+        property,
+        schema,
+        ...normalizeParams(params),
+    });
+}
+function _mime(types, params) {
+    return new $ZodCheckMimeType({
+        check: "mime_type",
+        mime: types,
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _overwrite(tx) {
@@ -58157,7 +72145,11 @@ function _literal(Class, value, params) {
 function _file(Class, params) {
     return new Class({
         type: "file",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function _transform(Class, fn) {
@@ -58240,7 +72232,11 @@ function _promise(Class, innerType) {
     });
 }
 function _custom(Class, fn, _params) {
+<<<<<<< HEAD
     const norm = util.normalizeParams(_params);
+=======
+    const norm = normalizeParams(_params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     norm.abort ?? (norm.abort = true); // default to abort:false
     const schema = new Class({
         type: "custom",
@@ -58313,7 +72309,11 @@ function meta(metadata) {
     return ch;
 }
 function _stringbool(Classes, _params) {
+<<<<<<< HEAD
     const params = util.normalizeParams(_params);
+=======
+    const params = normalizeParams(_params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     let truthyArray = params.truthy ?? ["true", "1", "yes", "on", "y", "enabled"];
     let falsyArray = params.falsy ?? ["false", "0", "no", "off", "n", "disabled"];
     if (params.case !== "sensitive") {
@@ -58322,9 +72322,15 @@ function _stringbool(Classes, _params) {
     }
     const truthySet = new Set(truthyArray);
     const falsySet = new Set(falsyArray);
+<<<<<<< HEAD
     const _Codec = Classes.Codec ?? schemas.$ZodCodec;
     const _Boolean = Classes.Boolean ?? schemas.$ZodBoolean;
     const _String = Classes.String ?? schemas.$ZodString;
+=======
+    const _Codec = Classes.Codec ?? $ZodCodec;
+    const _Boolean = Classes.Boolean ?? $ZodBoolean;
+    const _String = Classes.String ?? $ZodString;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     const stringSchema = new _String({ type: "string", error: params.error });
     const booleanSchema = new _Boolean({ type: "boolean", error: params.error });
     const codec = new _Codec({
@@ -58366,9 +72372,15 @@ function _stringbool(Classes, _params) {
     return codec;
 }
 function _stringFormat(Class, format, fnOrRegex, _params = {}) {
+<<<<<<< HEAD
     const params = util.normalizeParams(_params);
     const def = {
         ...util.normalizeParams(_params),
+=======
+    const params = normalizeParams(_params);
+    const def = {
+        ...normalizeParams(_params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         check: "string_format",
         type: "string",
         format,
@@ -58382,7 +72394,11 @@ function _stringFormat(Class, format, fnOrRegex, _params = {}) {
     return inst;
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/to-json-schema.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/to-json-schema.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 // function initializeContext<T extends schemas.$ZodType>(inputs: JSONSchemaGeneratorParams<T>): ToJSONSchemaContext<T> {
 //   return {
@@ -58767,7 +72783,11 @@ const createStandardJSONSchemaMethod = (schema, io) => (params) => {
     return to_json_schema_finalize(ctx, schema);
 };
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/json-schema-processors.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/json-schema-processors.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 const formatMap = {
@@ -59343,7 +73363,11 @@ function toJSONSchema(input, params) {
     return finalize(ctx, input);
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/json-schema-generator.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/json-schema-generator.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 /**
@@ -59440,7 +73464,11 @@ class JSONSchemaGenerator {
     }
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/core/index.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/core/index.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -59458,10 +73486,17 @@ class JSONSchemaGenerator {
 
 
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/checks.js
 
 
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/iso.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/checks.js
+
+
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/iso.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 const ZodISODateTime = /*@__PURE__*/ $constructor("ZodISODateTime", (inst, def) => {
@@ -59493,7 +73528,11 @@ function iso_duration(params) {
     return _isoDuration(ZodISODuration, params);
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/errors.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/errors.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -59543,11 +73582,19 @@ const ZodRealError = $constructor("ZodError", errors_initializer, {
 // /** @deprecated Use `z.core.$ZodErrorMapCtx` instead. */
 // export type ErrorMapCtx = core.$ZodErrorMapCtx;
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/parse.js
 
 
 const classic_parse_parse = /* @__PURE__ */ _parse(ZodRealError);
 const classic_parse_parseAsync = /* @__PURE__ */ _parseAsync(ZodRealError);
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/parse.js
+
+
+const parse_parse = /* @__PURE__ */ _parse(ZodRealError);
+const parse_parseAsync = /* @__PURE__ */ _parseAsync(ZodRealError);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 const parse_safeParse = /* @__PURE__ */ _safeParse(ZodRealError);
 const parse_safeParseAsync = /* @__PURE__ */ _safeParseAsync(ZodRealError);
 // Codec functions
@@ -59560,7 +73607,11 @@ const parse_safeDecode = /* @__PURE__ */ _safeDecode(ZodRealError);
 const parse_safeEncodeAsync = /* @__PURE__ */ _safeEncodeAsync(ZodRealError);
 const parse_safeDecodeAsync = /* @__PURE__ */ _safeDecodeAsync(ZodRealError);
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/schemas.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/schemas.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -59596,9 +73647,15 @@ const ZodType = /*@__PURE__*/ $constructor("ZodType", (inst, def) => {
         return inst;
     });
     // parsing
+<<<<<<< HEAD
     inst.parse = (data, params) => classic_parse_parse(inst, data, params, { callee: inst.parse });
     inst.safeParse = (data, params) => parse_safeParse(inst, data, params);
     inst.parseAsync = async (data, params) => classic_parse_parseAsync(inst, data, params, { callee: inst.parseAsync });
+=======
+    inst.parse = (data, params) => parse_parse(inst, data, params, { callee: inst.parse });
+    inst.safeParse = (data, params) => parse_safeParse(inst, data, params);
+    inst.parseAsync = async (data, params) => parse_parseAsync(inst, data, params, { callee: inst.parseAsync });
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     inst.safeParseAsync = async (data, params) => parse_safeParseAsync(inst, data, params);
     inst.spa = inst.safeParseAsync;
     // encoding/decoding
@@ -59726,7 +73783,11 @@ const ZodEmail = /*@__PURE__*/ $constructor("ZodEmail", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_email(params) {
+<<<<<<< HEAD
     return core._email(ZodEmail, params);
+=======
+    return _email(ZodEmail, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodGUID = /*@__PURE__*/ $constructor("ZodGUID", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59734,7 +73795,11 @@ const ZodGUID = /*@__PURE__*/ $constructor("ZodGUID", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_guid(params) {
+<<<<<<< HEAD
     return core._guid(ZodGUID, params);
+=======
+    return _guid(ZodGUID, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodUUID = /*@__PURE__*/ $constructor("ZodUUID", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59742,6 +73807,7 @@ const ZodUUID = /*@__PURE__*/ $constructor("ZodUUID", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_uuid(params) {
+<<<<<<< HEAD
     return core._uuid(ZodUUID, params);
 }
 function uuidv4(params) {
@@ -59754,6 +73820,20 @@ function uuidv6(params) {
 // ZodUUIDv7
 function uuidv7(params) {
     return core._uuidv7(ZodUUID, params);
+=======
+    return _uuid(ZodUUID, params);
+}
+function uuidv4(params) {
+    return _uuidv4(ZodUUID, params);
+}
+// ZodUUIDv6
+function uuidv6(params) {
+    return _uuidv6(ZodUUID, params);
+}
+// ZodUUIDv7
+function uuidv7(params) {
+    return _uuidv7(ZodUUID, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodURL = /*@__PURE__*/ $constructor("ZodURL", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59761,6 +73841,7 @@ const ZodURL = /*@__PURE__*/ $constructor("ZodURL", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function url(params) {
+<<<<<<< HEAD
     return core._url(ZodURL, params);
 }
 function httpUrl(params) {
@@ -59768,6 +73849,15 @@ function httpUrl(params) {
         protocol: /^https?$/,
         hostname: core.regexes.domain,
         ...util.normalizeParams(params),
+=======
+    return _url(ZodURL, params);
+}
+function httpUrl(params) {
+    return _url(ZodURL, {
+        protocol: /^https?$/,
+        hostname: domain,
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 const ZodEmoji = /*@__PURE__*/ $constructor("ZodEmoji", (inst, def) => {
@@ -59776,7 +73866,11 @@ const ZodEmoji = /*@__PURE__*/ $constructor("ZodEmoji", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_emoji(params) {
+<<<<<<< HEAD
     return core._emoji(ZodEmoji, params);
+=======
+    return api_emoji(ZodEmoji, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodNanoID = /*@__PURE__*/ $constructor("ZodNanoID", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59784,7 +73878,11 @@ const ZodNanoID = /*@__PURE__*/ $constructor("ZodNanoID", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_nanoid(params) {
+<<<<<<< HEAD
     return core._nanoid(ZodNanoID, params);
+=======
+    return _nanoid(ZodNanoID, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodCUID = /*@__PURE__*/ $constructor("ZodCUID", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59792,7 +73890,11 @@ const ZodCUID = /*@__PURE__*/ $constructor("ZodCUID", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_cuid(params) {
+<<<<<<< HEAD
     return core._cuid(ZodCUID, params);
+=======
+    return _cuid(ZodCUID, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodCUID2 = /*@__PURE__*/ $constructor("ZodCUID2", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59800,7 +73902,11 @@ const ZodCUID2 = /*@__PURE__*/ $constructor("ZodCUID2", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_cuid2(params) {
+<<<<<<< HEAD
     return core._cuid2(ZodCUID2, params);
+=======
+    return _cuid2(ZodCUID2, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodULID = /*@__PURE__*/ $constructor("ZodULID", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59808,7 +73914,11 @@ const ZodULID = /*@__PURE__*/ $constructor("ZodULID", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_ulid(params) {
+<<<<<<< HEAD
     return core._ulid(ZodULID, params);
+=======
+    return _ulid(ZodULID, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodXID = /*@__PURE__*/ $constructor("ZodXID", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59816,7 +73926,11 @@ const ZodXID = /*@__PURE__*/ $constructor("ZodXID", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_xid(params) {
+<<<<<<< HEAD
     return core._xid(ZodXID, params);
+=======
+    return _xid(ZodXID, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodKSUID = /*@__PURE__*/ $constructor("ZodKSUID", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59824,7 +73938,11 @@ const ZodKSUID = /*@__PURE__*/ $constructor("ZodKSUID", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_ksuid(params) {
+<<<<<<< HEAD
     return core._ksuid(ZodKSUID, params);
+=======
+    return _ksuid(ZodKSUID, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodIPv4 = /*@__PURE__*/ $constructor("ZodIPv4", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59832,6 +73950,7 @@ const ZodIPv4 = /*@__PURE__*/ $constructor("ZodIPv4", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_ipv4(params) {
+<<<<<<< HEAD
     return core._ipv4(ZodIPv4, params);
 }
 const ZodMAC = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodMAC", (inst, def) => {
@@ -59841,6 +73960,17 @@ const ZodMAC = /*@__PURE__*/ (/* unused pure expression or super */ null && (cor
 })));
 function schemas_mac(params) {
     return core._mac(ZodMAC, params);
+=======
+    return _ipv4(ZodIPv4, params);
+}
+const ZodMAC = /*@__PURE__*/ $constructor("ZodMAC", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
+    $ZodMAC.init(inst, def);
+    ZodStringFormat.init(inst, def);
+});
+function schemas_mac(params) {
+    return _mac(ZodMAC, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodIPv6 = /*@__PURE__*/ $constructor("ZodIPv6", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59848,21 +73978,33 @@ const ZodIPv6 = /*@__PURE__*/ $constructor("ZodIPv6", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_ipv6(params) {
+<<<<<<< HEAD
     return core._ipv6(ZodIPv6, params);
+=======
+    return _ipv6(ZodIPv6, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodCIDRv4 = /*@__PURE__*/ $constructor("ZodCIDRv4", (inst, def) => {
     $ZodCIDRv4.init(inst, def);
     ZodStringFormat.init(inst, def);
 });
 function schemas_cidrv4(params) {
+<<<<<<< HEAD
     return core._cidrv4(ZodCIDRv4, params);
+=======
+    return _cidrv4(ZodCIDRv4, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodCIDRv6 = /*@__PURE__*/ $constructor("ZodCIDRv6", (inst, def) => {
     $ZodCIDRv6.init(inst, def);
     ZodStringFormat.init(inst, def);
 });
 function schemas_cidrv6(params) {
+<<<<<<< HEAD
     return core._cidrv6(ZodCIDRv6, params);
+=======
+    return _cidrv6(ZodCIDRv6, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodBase64 = /*@__PURE__*/ $constructor("ZodBase64", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59870,7 +74012,11 @@ const ZodBase64 = /*@__PURE__*/ $constructor("ZodBase64", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_base64(params) {
+<<<<<<< HEAD
     return core._base64(ZodBase64, params);
+=======
+    return _base64(ZodBase64, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodBase64URL = /*@__PURE__*/ $constructor("ZodBase64URL", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59878,7 +74024,11 @@ const ZodBase64URL = /*@__PURE__*/ $constructor("ZodBase64URL", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_base64url(params) {
+<<<<<<< HEAD
     return core._base64url(ZodBase64URL, params);
+=======
+    return _base64url(ZodBase64URL, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodE164 = /*@__PURE__*/ $constructor("ZodE164", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59886,7 +74036,11 @@ const ZodE164 = /*@__PURE__*/ $constructor("ZodE164", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function schemas_e164(params) {
+<<<<<<< HEAD
     return core._e164(ZodE164, params);
+=======
+    return _e164(ZodE164, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodJWT = /*@__PURE__*/ $constructor("ZodJWT", (inst, def) => {
     // ZodStringFormat.init(inst, def);
@@ -59894,6 +74048,7 @@ const ZodJWT = /*@__PURE__*/ $constructor("ZodJWT", (inst, def) => {
     ZodStringFormat.init(inst, def);
 });
 function jwt(params) {
+<<<<<<< HEAD
     return core._jwt(ZodJWT, params);
 }
 const ZodCustomStringFormat = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodCustomStringFormat", (inst, def) => {
@@ -59909,14 +74064,38 @@ function schemas_hostname(_params) {
 }
 function schemas_hex(_params) {
     return core._stringFormat(ZodCustomStringFormat, "hex", core.regexes.hex, _params);
+=======
+    return _jwt(ZodJWT, params);
+}
+const ZodCustomStringFormat = /*@__PURE__*/ $constructor("ZodCustomStringFormat", (inst, def) => {
+    // ZodStringFormat.init(inst, def);
+    $ZodCustomStringFormat.init(inst, def);
+    ZodStringFormat.init(inst, def);
+});
+function stringFormat(format, fnOrRegex, _params = {}) {
+    return _stringFormat(ZodCustomStringFormat, format, fnOrRegex, _params);
+}
+function schemas_hostname(_params) {
+    return _stringFormat(ZodCustomStringFormat, "hostname", hostname, _params);
+}
+function schemas_hex(_params) {
+    return _stringFormat(ZodCustomStringFormat, "hex", hex, _params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 function hash(alg, params) {
     const enc = params?.enc ?? "hex";
     const format = `${alg}_${enc}`;
+<<<<<<< HEAD
     const regex = core.regexes[format];
     if (!regex)
         throw new Error(`Unrecognized hash format: ${format}`);
     return core._stringFormat(ZodCustomStringFormat, format, regex, params);
+=======
+    const regex = regexes_namespaceObject[format];
+    if (!regex)
+        throw new Error(`Unrecognized hash format: ${format}`);
+    return _stringFormat(ZodCustomStringFormat, format, regex, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodNumber = /*@__PURE__*/ $constructor("ZodNumber", (inst, def) => {
     $ZodNumber.init(inst, def);
@@ -59958,6 +74137,7 @@ function schemas_int(params) {
     return _int(ZodNumberFormat, params);
 }
 function float32(params) {
+<<<<<<< HEAD
     return core._float32(ZodNumberFormat, params);
 }
 function float64(params) {
@@ -59968,6 +74148,18 @@ function int32(params) {
 }
 function uint32(params) {
     return core._uint32(ZodNumberFormat, params);
+=======
+    return _float32(ZodNumberFormat, params);
+}
+function float64(params) {
+    return _float64(ZodNumberFormat, params);
+}
+function int32(params) {
+    return _int32(ZodNumberFormat, params);
+}
+function uint32(params) {
+    return _uint32(ZodNumberFormat, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodBoolean = /*@__PURE__*/ $constructor("ZodBoolean", (inst, def) => {
     $ZodBoolean.init(inst, def);
@@ -60000,6 +74192,7 @@ const ZodBigInt = /*@__PURE__*/ $constructor("ZodBigInt", (inst, def) => {
     inst.format = bag.format ?? null;
 });
 function schemas_bigint(params) {
+<<<<<<< HEAD
     return core._bigint(ZodBigInt, params);
 }
 const ZodBigIntFormat = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodBigIntFormat", (inst, def) => {
@@ -60038,6 +74231,46 @@ const ZodNull = /*@__PURE__*/ (/* unused pure expression or super */ null && (co
 })));
 function schemas_null(params) {
     return core._null(ZodNull, params);
+=======
+    return _bigint(ZodBigInt, params);
+}
+const ZodBigIntFormat = /*@__PURE__*/ $constructor("ZodBigIntFormat", (inst, def) => {
+    $ZodBigIntFormat.init(inst, def);
+    ZodBigInt.init(inst, def);
+});
+// int64
+function int64(params) {
+    return _int64(ZodBigIntFormat, params);
+}
+// uint64
+function uint64(params) {
+    return _uint64(ZodBigIntFormat, params);
+}
+const ZodSymbol = /*@__PURE__*/ $constructor("ZodSymbol", (inst, def) => {
+    $ZodSymbol.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => symbolProcessor(inst, ctx, json, params);
+});
+function symbol(params) {
+    return _symbol(ZodSymbol, params);
+}
+const ZodUndefined = /*@__PURE__*/ $constructor("ZodUndefined", (inst, def) => {
+    $ZodUndefined.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => undefinedProcessor(inst, ctx, json, params);
+});
+function schemas_undefined(params) {
+    return api_undefined(ZodUndefined, params);
+}
+
+const ZodNull = /*@__PURE__*/ $constructor("ZodNull", (inst, def) => {
+    $ZodNull.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => nullProcessor(inst, ctx, json, params);
+});
+function schemas_null(params) {
+    return api_null(ZodNull, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 
 const ZodAny = /*@__PURE__*/ $constructor("ZodAny", (inst, def) => {
@@ -60084,7 +74317,11 @@ const ZodDate = /*@__PURE__*/ $constructor("ZodDate", (inst, def) => {
     inst.maxDate = c.maximum ? new Date(c.maximum) : null;
 });
 function schemas_date(params) {
+<<<<<<< HEAD
     return core._date(ZodDate, params);
+=======
+    return _date(ZodDate, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodArray = /*@__PURE__*/ $constructor("ZodArray", (inst, def) => {
     $ZodArray.init(inst, def);
@@ -60153,7 +74390,11 @@ function looseObject(shape, params) {
         type: "object",
         shape,
         catchall: unknown(),
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 const ZodUnion = /*@__PURE__*/ $constructor("ZodUnion", (inst, def) => {
@@ -60169,12 +74410,21 @@ function union(options, params) {
         ...normalizeParams(params),
     });
 }
+<<<<<<< HEAD
 const ZodXor = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodXor", (inst, def) => {
     ZodUnion.init(inst, def);
     core.$ZodXor.init(inst, def);
     inst._zod.processJSONSchema = (ctx, json, params) => processors.unionProcessor(inst, ctx, json, params);
     inst.options = def.options;
 })));
+=======
+const ZodXor = /*@__PURE__*/ $constructor("ZodXor", (inst, def) => {
+    ZodUnion.init(inst, def);
+    $ZodXor.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => unionProcessor(inst, ctx, json, params);
+    inst.options = def.options;
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 /** Creates an exclusive union (XOR) where exactly one option must match.
  * Unlike regular unions that succeed when any option matches, xor fails if
  * zero or more than one option matches the input. */
@@ -60183,6 +74433,7 @@ function xor(options, params) {
         type: "union",
         options: options,
         inclusive: false,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
     });
 }
@@ -60190,13 +74441,26 @@ const ZodDiscriminatedUnion = /*@__PURE__*/ (/* unused pure expression or super 
     ZodUnion.init(inst, def);
     core.$ZodDiscriminatedUnion.init(inst, def);
 })));
+=======
+        ...normalizeParams(params),
+    });
+}
+const ZodDiscriminatedUnion = /*@__PURE__*/ $constructor("ZodDiscriminatedUnion", (inst, def) => {
+    ZodUnion.init(inst, def);
+    $ZodDiscriminatedUnion.init(inst, def);
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function discriminatedUnion(discriminator, options, params) {
     // const [options, params] = args;
     return new ZodDiscriminatedUnion({
         type: "union",
         options,
         discriminator,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 const ZodIntersection = /*@__PURE__*/ $constructor("ZodIntersection", (inst, def) => {
@@ -60211,24 +74475,41 @@ function intersection(left, right) {
         right: right,
     });
 }
+<<<<<<< HEAD
 const ZodTuple = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodTuple", (inst, def) => {
     core.$ZodTuple.init(inst, def);
     ZodType.init(inst, def);
     inst._zod.processJSONSchema = (ctx, json, params) => processors.tupleProcessor(inst, ctx, json, params);
+=======
+const ZodTuple = /*@__PURE__*/ $constructor("ZodTuple", (inst, def) => {
+    $ZodTuple.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => tupleProcessor(inst, ctx, json, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     inst.rest = (rest) => inst.clone({
         ...inst._zod.def,
         rest: rest,
     });
+<<<<<<< HEAD
 })));
 function tuple(items, _paramsOrRest, _params) {
     const hasRest = _paramsOrRest instanceof core.$ZodType;
+=======
+});
+function tuple(items, _paramsOrRest, _params) {
+    const hasRest = _paramsOrRest instanceof $ZodType;
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     const params = hasRest ? _params : _paramsOrRest;
     const rest = hasRest ? _paramsOrRest : null;
     return new ZodTuple({
         type: "tuple",
         items: items,
         rest,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 const ZodRecord = /*@__PURE__*/ $constructor("ZodRecord", (inst, def) => {
@@ -60248,13 +74529,21 @@ function record(keyType, valueType, params) {
 }
 // type alksjf = core.output<core.$ZodRecordKey>;
 function partialRecord(keyType, valueType, params) {
+<<<<<<< HEAD
     const k = core.clone(keyType);
+=======
+    const k = clone(keyType);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     k._zod.values = undefined;
     return new ZodRecord({
         type: "record",
         keyType: k,
         valueType: valueType,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 function looseRecord(keyType, valueType, params) {
@@ -60263,6 +74552,7 @@ function looseRecord(keyType, valueType, params) {
         keyType,
         valueType: valueType,
         mode: "loose",
+<<<<<<< HEAD
         ...util.normalizeParams(params),
     });
 }
@@ -60273,11 +74563,24 @@ const ZodMap = /*@__PURE__*/ (/* unused pure expression or super */ null && (cor
     inst.keyType = def.keyType;
     inst.valueType = def.valueType;
 })));
+=======
+        ...normalizeParams(params),
+    });
+}
+const ZodMap = /*@__PURE__*/ $constructor("ZodMap", (inst, def) => {
+    $ZodMap.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => mapProcessor(inst, ctx, json, params);
+    inst.keyType = def.keyType;
+    inst.valueType = def.valueType;
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function map(keyType, valueType, params) {
     return new ZodMap({
         type: "map",
         keyType: keyType,
         valueType: valueType,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
     });
 }
@@ -60290,11 +74593,29 @@ const ZodSet = /*@__PURE__*/ (/* unused pure expression or super */ null && (cor
     inst.max = (...args) => inst.check(core._maxSize(...args));
     inst.size = (...args) => inst.check(core._size(...args));
 })));
+=======
+        ...normalizeParams(params),
+    });
+}
+const ZodSet = /*@__PURE__*/ $constructor("ZodSet", (inst, def) => {
+    $ZodSet.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => setProcessor(inst, ctx, json, params);
+    inst.min = (...args) => inst.check(_minSize(...args));
+    inst.nonempty = (params) => inst.check(_minSize(1, params));
+    inst.max = (...args) => inst.check(_maxSize(...args));
+    inst.size = (...args) => inst.check(_size(...args));
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function set(valueType, params) {
     return new ZodSet({
         type: "set",
         valueType: valueType,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 const ZodEnum = /*@__PURE__*/ $constructor("ZodEnum", (inst, def) => {
@@ -60357,7 +74678,11 @@ function nativeEnum(entries, params) {
     return new ZodEnum({
         type: "enum",
         entries,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
 }
 const ZodLiteral = /*@__PURE__*/ $constructor("ZodLiteral", (inst, def) => {
@@ -60381,6 +74706,7 @@ function literal(value, params) {
         ...normalizeParams(params),
     });
 }
+<<<<<<< HEAD
 const ZodFile = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodFile", (inst, def) => {
     core.$ZodFile.init(inst, def);
     ZodType.init(inst, def);
@@ -60391,6 +74717,18 @@ const ZodFile = /*@__PURE__*/ (/* unused pure expression or super */ null && (co
 })));
 function file(params) {
     return core._file(ZodFile, params);
+=======
+const ZodFile = /*@__PURE__*/ $constructor("ZodFile", (inst, def) => {
+    $ZodFile.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => fileProcessor(inst, ctx, json, params);
+    inst.min = (size, params) => inst.check(_minSize(size, params));
+    inst.max = (size, params) => inst.check(_maxSize(size, params));
+    inst.mime = (types, params) => inst.check(_mime(Array.isArray(types) ? types : [types], params));
+});
+function file(params) {
+    return _file(ZodFile, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodTransform = /*@__PURE__*/ $constructor("ZodTransform", (inst, def) => {
     $ZodTransform.init(inst, def);
@@ -60505,12 +74843,21 @@ function nonoptional(innerType, params) {
         ...normalizeParams(params),
     });
 }
+<<<<<<< HEAD
 const ZodSuccess = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodSuccess", (inst, def) => {
     core.$ZodSuccess.init(inst, def);
     ZodType.init(inst, def);
     inst._zod.processJSONSchema = (ctx, json, params) => processors.successProcessor(inst, ctx, json, params);
     inst.unwrap = () => inst._zod.def.innerType;
 })));
+=======
+const ZodSuccess = /*@__PURE__*/ $constructor("ZodSuccess", (inst, def) => {
+    $ZodSuccess.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => successProcessor(inst, ctx, json, params);
+    inst.unwrap = () => inst._zod.def.innerType;
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function success(innerType) {
     return new ZodSuccess({
         type: "success",
@@ -60532,6 +74879,7 @@ function schemas_catch(innerType, catchValue) {
     });
 }
 
+<<<<<<< HEAD
 const ZodNaN = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodNaN", (inst, def) => {
     core.$ZodNaN.init(inst, def);
     ZodType.init(inst, def);
@@ -60539,6 +74887,15 @@ const ZodNaN = /*@__PURE__*/ (/* unused pure expression or super */ null && (cor
 })));
 function nan(params) {
     return core._nan(ZodNaN, params);
+=======
+const ZodNaN = /*@__PURE__*/ $constructor("ZodNaN", (inst, def) => {
+    $ZodNaN.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => nanProcessor(inst, ctx, json, params);
+});
+function nan(params) {
+    return _nan(ZodNaN, params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 const ZodPipe = /*@__PURE__*/ $constructor("ZodPipe", (inst, def) => {
     $ZodPipe.init(inst, def);
@@ -60555,10 +74912,17 @@ function pipe(in_, out) {
         // ...util.normalizeParams(params),
     });
 }
+<<<<<<< HEAD
 const ZodCodec = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodCodec", (inst, def) => {
     ZodPipe.init(inst, def);
     core.$ZodCodec.init(inst, def);
 })));
+=======
+const ZodCodec = /*@__PURE__*/ $constructor("ZodCodec", (inst, def) => {
+    ZodPipe.init(inst, def);
+    $ZodCodec.init(inst, def);
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function codec(in_, out, params) {
     return new ZodCodec({
         type: "pipe",
@@ -60580,15 +74944,24 @@ function readonly(innerType) {
         innerType: innerType,
     });
 }
+<<<<<<< HEAD
 const ZodTemplateLiteral = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodTemplateLiteral", (inst, def) => {
     core.$ZodTemplateLiteral.init(inst, def);
     ZodType.init(inst, def);
     inst._zod.processJSONSchema = (ctx, json, params) => processors.templateLiteralProcessor(inst, ctx, json, params);
 })));
+=======
+const ZodTemplateLiteral = /*@__PURE__*/ $constructor("ZodTemplateLiteral", (inst, def) => {
+    $ZodTemplateLiteral.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => templateLiteralProcessor(inst, ctx, json, params);
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function templateLiteral(parts, params) {
     return new ZodTemplateLiteral({
         type: "template_literal",
         parts,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
     });
 }
@@ -60598,29 +74971,57 @@ const ZodLazy = /*@__PURE__*/ (/* unused pure expression or super */ null && (co
     inst._zod.processJSONSchema = (ctx, json, params) => processors.lazyProcessor(inst, ctx, json, params);
     inst.unwrap = () => inst._zod.def.getter();
 })));
+=======
+        ...normalizeParams(params),
+    });
+}
+const ZodLazy = /*@__PURE__*/ $constructor("ZodLazy", (inst, def) => {
+    $ZodLazy.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => lazyProcessor(inst, ctx, json, params);
+    inst.unwrap = () => inst._zod.def.getter();
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function lazy(getter) {
     return new ZodLazy({
         type: "lazy",
         getter: getter,
     });
 }
+<<<<<<< HEAD
 const ZodPromise = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodPromise", (inst, def) => {
     core.$ZodPromise.init(inst, def);
     ZodType.init(inst, def);
     inst._zod.processJSONSchema = (ctx, json, params) => processors.promiseProcessor(inst, ctx, json, params);
     inst.unwrap = () => inst._zod.def.innerType;
 })));
+=======
+const ZodPromise = /*@__PURE__*/ $constructor("ZodPromise", (inst, def) => {
+    $ZodPromise.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => promiseProcessor(inst, ctx, json, params);
+    inst.unwrap = () => inst._zod.def.innerType;
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function promise(innerType) {
     return new ZodPromise({
         type: "promise",
         innerType: innerType,
     });
 }
+<<<<<<< HEAD
 const ZodFunction = /*@__PURE__*/ (/* unused pure expression or super */ null && (core.$constructor("ZodFunction", (inst, def) => {
     core.$ZodFunction.init(inst, def);
     ZodType.init(inst, def);
     inst._zod.processJSONSchema = (ctx, json, params) => processors.functionProcessor(inst, ctx, json, params);
 })));
+=======
+const ZodFunction = /*@__PURE__*/ $constructor("ZodFunction", (inst, def) => {
+    $ZodFunction.init(inst, def);
+    ZodType.init(inst, def);
+    inst._zod.processJSONSchema = (ctx, json, params) => functionProcessor(inst, ctx, json, params);
+});
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function _function(params) {
     return new ZodFunction({
         type: "function",
@@ -60636,7 +75037,11 @@ const ZodCustom = /*@__PURE__*/ $constructor("ZodCustom", (inst, def) => {
 });
 // custom checks
 function check(fn) {
+<<<<<<< HEAD
     const ch = new core.$ZodCheck({
+=======
+    const ch = new $ZodCheck({
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         check: "custom",
         // ...util.normalizeParams(params),
     });
@@ -60644,7 +75049,11 @@ function check(fn) {
     return ch;
 }
 function custom(fn, _params) {
+<<<<<<< HEAD
     return core._custom(ZodCustom, fn ?? (() => true), _params);
+=======
+    return _custom(ZodCustom, fn ?? (() => true), _params);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 }
 function refine(fn, _params = {}) {
     return _refine(ZodCustom, fn, _params);
@@ -60664,14 +75073,22 @@ function _instanceof(cls, params = {
         check: "custom",
         fn: (data) => data instanceof cls,
         abort: true,
+<<<<<<< HEAD
         ...util.normalizeParams(params),
+=======
+        ...normalizeParams(params),
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
     inst._zod.bag.Class = cls;
     return inst;
 }
 
 // stringbool
+<<<<<<< HEAD
 const stringbool = (...args) => core._stringbool({
+=======
+const stringbool = (...args) => _stringbool({
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     Codec: ZodCodec,
     Boolean: ZodBoolean,
     String: ZodString,
@@ -60688,7 +75105,11 @@ function preprocess(fn, schema) {
     return pipe(transform(fn), schema);
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/compat.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/compat.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 // Zod 3 compat layer
 
 /** @deprecated Use the raw string literal codes instead, e.g. "invalid_type". */
@@ -60721,6 +75142,7 @@ var ZodFirstPartyTypeKind;
 (function (ZodFirstPartyTypeKind) {
 })(ZodFirstPartyTypeKind || (ZodFirstPartyTypeKind = {}));
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/index.js
 
 
@@ -60734,6 +75156,18 @@ var ZodFirstPartyTypeKind;
 
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/from-json-schema.js
 
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/from-json-schema.js
+
+
+
+// Local z object to avoid circular dependency with ../index.js
+const z = {
+    ...classic_schemas_namespaceObject,
+    ...classic_checks_namespaceObject,
+    iso: iso_namespaceObject,
+};
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function detectVersion(schema, defaultTarget) {
     const $schema = schema.$schema;
     if ($schema === "https://json-schema.org/draft/2020-12/schema") {
@@ -61211,7 +75645,11 @@ function fromJSONSchema(schema, params) {
     return convertSchema(schema, ctx);
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/coerce.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/coerce.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 function coerce_string(params) {
@@ -61230,7 +75668,11 @@ function coerce_date(params) {
     return _coercedDate(ZodDate, params);
 }
 
+<<<<<<< HEAD
 ;// ./node_modules/.pnpm/zod@4.2.0/node_modules/zod/v4/classic/external.js
+=======
+;// ./node_modules/.pnpm/zod@4.2.1/node_modules/zod/v4/classic/external.js
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -61308,7 +75750,10 @@ var external_node_process_ = __webpack_require__(1708);
 // EXTERNAL MODULE: ./node_modules/.pnpm/yaml@2.8.2/node_modules/yaml/dist/index.js
 var dist = __webpack_require__(2075);
 ;// ./src/server/settings.ts
+<<<<<<< HEAD
 var __webpack_dirname__ = __webpack_fileURLToPath__(import.meta.url.replace(/\/(?:[^\/]*)$/, ""));
+=======
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -63174,9 +77619,15 @@ function watch_on(path) {
 
 ;// external "node:http"
 const external_node_http_namespaceObject = __WEBPACK_EXTERNAL_createRequire_require("node:http");
+<<<<<<< HEAD
 // EXTERNAL MODULE: ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.0.9_utf-8-validate@6.0.5/node_modules/socket.io/dist/index.js
 var socket_io_dist = __webpack_require__(5263);
 ;// ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.0.9_utf-8-validate@6.0.5/node_modules/socket.io/wrapper.mjs
+=======
+// EXTERNAL MODULE: ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.1.0_utf-8-validate@6.0.6/node_modules/socket.io/dist/index.js
+var socket_io_dist = __webpack_require__(4302);
+;// ./node_modules/.pnpm/socket.io@4.8.1_bufferutil@4.1.0_utf-8-validate@6.0.6/node_modules/socket.io/wrapper.mjs
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 const {Server, Namespace, Socket} = socket_io_dist;
@@ -63239,7 +77690,10 @@ function exit_on_error(error) {
 }
 
 ;// ./src/server/syncer/interface.ts
+<<<<<<< HEAD
 var interface_webpack_dirname_ = __webpack_fileURLToPath__(import.meta.url.replace(/\/(?:[^\/]*)$/, ""));
+=======
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -63269,9 +77723,15 @@ class Syncer_interface {
         this.type_zh = type_zh;
         this.config_name = config_name;
         this.name = name;
+<<<<<<< HEAD
         this.file = (0,external_node_path_.resolve)(interface_webpack_dirname_, file);
         this.dir = (0,external_node_path_.dirname)(this.file);
         this.export_file = export_file ? (0,external_node_path_.resolve)(interface_webpack_dirname_, export_file) : (0,external_node_path_.resolve)(this.dir, `${this.config_name}.json`);
+=======
+        this.file = (0,external_node_path_.resolve)(__webpack_dirname__, file);
+        this.dir = (0,external_node_path_.dirname)(this.file);
+        this.export_file = export_file ? (0,external_node_path_.resolve)(__webpack_dirname__, export_file) : (0,external_node_path_.resolve)(this.dir, `${this.config_name}.json`);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         this.en_type = en_type;
         this.zh_type = zh_type;
         this.zh_to_en_map = zh_to_en_map;
@@ -63432,10 +77892,18 @@ ${this.do_beautify_config(tavern_data, language)}`;
             exit_on_error(dist.stringify({ [`打包${this.type_zh} '${this.name}' 失败`]: error_data }));
         }
         write_file_recursively(this.dir, this.export_file, JSON.stringify(result_data, null, 2));
+<<<<<<< HEAD
     }
 }
 
 ;// ./node_modules/.pnpm/dedent@1.7.0/node_modules/dedent/dist/dedent.mjs
+=======
+        console.info(`成功将${this.type_zh} '${this.name}' 打包到 '${(0,external_node_path_.resolve)(this.dir, this.export_file)}' 中`);
+    }
+}
+
+;// ./node_modules/.pnpm/dedent@1.7.1/node_modules/dedent/dist/dedent.mjs
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -63503,6 +77971,21 @@ function createDedent(options) {
     if (escapeSpecialCharacters) {
       result = result.replace(/\\n/g, "\n");
     }
+<<<<<<< HEAD
+=======
+
+    // Workaround for Bun issue with Unicode characters
+    // https://github.com/oven-sh/bun/issues/8745
+    if (typeof Bun !== "undefined") {
+      result = result.replace(
+      // Matches e.g. \\u{1f60a} or \\u5F1F
+      /\\u(?:\{([\da-fA-F]{1,6})\}|([\da-fA-F]{4}))/g, (_, braced, unbraced) => {
+        var _ref;
+        const hex = (_ref = braced !== null && braced !== void 0 ? braced : unbraced) !== null && _ref !== void 0 ? _ref : "";
+        return String.fromCodePoint(parseInt(hex, 16));
+      });
+    }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     return result;
   }
 }
@@ -65210,12 +79693,22 @@ function add_configs_to_command(command) {
 }
 
 ;// ./src/server/component/check_update.ts
+<<<<<<< HEAD
 var __webpack_filename__ = __webpack_fileURLToPath__(import.meta.url);
+=======
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
 
+<<<<<<< HEAD
 async function download_latest() {
+=======
+function is_abort_error(error) {
+    return error.name === 'AbortError';
+}
+async function download_latest(signal) {
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     const urls = [
         'https://raw.githubusercontent.com/StageDog/tavern_sync/refs/heads/main/dist/tavern_sync.mjs',
         'https://cdn.jsdelivr.net/gh/StageDog/tavern_sync/dist/tavern_sync.mjs',
@@ -65225,7 +79718,14 @@ async function download_latest() {
     const erorr_data = {};
     const fetches = urls.map(async (url) => {
         try {
+<<<<<<< HEAD
             const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+=======
+            const timeout_signal = AbortSignal.timeout(5000);
+            const response = await fetch(url, {
+                signal: signal ? AbortSignal.any([timeout_signal, signal]) : timeout_signal,
+            });
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             if (response.ok) {
                 return { url, content: await response.text(), error: null };
             }
@@ -65233,7 +79733,15 @@ async function download_latest() {
                 return { url, content: null, error: `HTTP ${response.status} ${response.statusText}` };
             }
         }
+<<<<<<< HEAD
         catch (error) {
+=======
+        catch (err) {
+            const error = err;
+            if (is_abort_error(error) && signal?.aborted) {
+                throw error;
+            }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             return { url, content: null, error: error.message };
         }
     });
@@ -65247,16 +79755,27 @@ async function download_latest() {
     }
     throw Error(dist.stringify({ 无法获取最新版脚本: erorr_data }));
 }
+<<<<<<< HEAD
 async function check_update() {
     const current_content = (0,external_node_fs_.readFileSync)(__webpack_filename__, 'utf8');
     const remote_content = await download_latest();
+=======
+async function check_update(signal) {
+    const current_content = (0,external_node_fs_.readFileSync)(__webpack_filename__, 'utf8');
+    const remote_content = await download_latest(signal);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     if (current_content === remote_content) {
         return null;
     }
     return remote_content;
 }
+<<<<<<< HEAD
 async function check_update_silently() {
     return check_update()
+=======
+async function check_update_silently(signal) {
+    return check_update(signal)
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         .then(result => {
         if (result !== null) {
             console.info(dist_dedent(`
@@ -65267,6 +79786,12 @@ async function check_update_silently() {
         }
     })
         .catch(error => {
+<<<<<<< HEAD
+=======
+        if (is_abort_error(error)) {
+            return;
+        }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         console.error('*************************************************************');
         console.error('检查更新失败，如需手动检查更新，请运行 `node tavern_sync.mjs update`');
         console.error(error instanceof Error ? error.message : String(error));
@@ -65282,8 +79807,19 @@ function add_bundle_command() {
     const command = new Command('bundle').description("将本地内容打包到 '导出文件路径' 处");
     add_configs_to_command(command);
     command.action(async (syncers) => {
+<<<<<<< HEAD
         check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.bundle()));
+=======
+        const update_abort_controller = new AbortController();
+        check_update_silently(update_abort_controller.signal);
+        try {
+            await Promise.all(syncers.map(syncer => syncer.bundle()));
+        }
+        finally {
+            update_abort_controller.abort();
+        }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
     return command;
 }
@@ -65311,8 +79847,19 @@ function add_pull_command() {
     command.option('-i, --inline', '内嵌提示词: 如果酒馆中有新增条目, 则该条目的提示词内容应该内嵌在配置文件中, 而不是拆成外链提示词文件', false);
     command.option('-f, --force', '强制拉取: 如果酒馆中的条目名称或数量与本地中的不一致, 将会覆盖本地文件中的内容', false);
     command.action(async (syncers, options) => {
+<<<<<<< HEAD
         check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force })));
+=======
+        const update_abort_controller = new AbortController();
+        check_update_silently(update_abort_controller.signal);
+        try {
+            await Promise.all(syncers.map(syncer => syncer.pull({ language: options.language, should_split: !options.inline, should_force: options.force })));
+        }
+        finally {
+            update_abort_controller.abort();
+        }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         close_server();
     });
     return command;
@@ -65329,15 +79876,29 @@ function add_push_command() {
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
     command.option('-e, --export', "导出结果: 将推送结果导出为 JSON 文件, 存放在配置文件中 '导出文件路径 (export_file)' 所指定路径下; 如果没有填写 '导出文件路径', 则存放在与 '本地文件路径 (file)' 同目录下", false);
     command.action(async (syncers, options) => {
+<<<<<<< HEAD
         check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force, should_export: options.export })));
+=======
+        const update_abort_controller = new AbortController();
+        check_update_silently(update_abort_controller.signal);
+        try {
+            await Promise.all(syncers.map(syncer => syncer.push({ should_force: options.force, should_export: options.export })));
+        }
+        finally {
+            update_abort_controller.abort();
+        }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
         close_server();
     });
     return command;
 }
 
 ;// ./src/server/command/update.ts
+<<<<<<< HEAD
 var update_webpack_filename_ = __webpack_fileURLToPath__(import.meta.url);
+=======
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
 
 
 
@@ -65352,7 +79913,11 @@ function add_update_command() {
                 console.info('当前版本已是最新版本，无需更新');
                 return;
             }
+<<<<<<< HEAD
             (0,external_node_fs_.writeFileSync)(update_webpack_filename_, result);
+=======
+            (0,external_node_fs_.writeFileSync)(__webpack_filename__, result);
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
             console.info('更新成功! 请重新启动脚本以使用新版本');
         }
         catch (error) {
@@ -65371,8 +79936,19 @@ function add_watch_command() {
     add_configs_to_command(command);
     command.option('-f, --force', '强制推送: 如果本地文件中的条目名称或数量与酒馆中的不一致, 将会覆盖酒馆中的内容', false);
     command.action(async (syncers, options) => {
+<<<<<<< HEAD
         check_update_silently();
         await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
+=======
+        const update_abort_controller = new AbortController();
+        check_update_silently(update_abort_controller.signal);
+        try {
+            await Promise.all(syncers.map(syncer => syncer.watch({ should_force: options.force })));
+        }
+        finally {
+            update_abort_controller.abort();
+        }
+>>>>>>> 170141cb8741287228b58218d6c0f3b5196ecdf6
     });
     return command;
 }
