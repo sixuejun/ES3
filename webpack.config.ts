@@ -534,6 +534,10 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
       if (builtin.includes(request)) {
         return callback();
       }
+      // 所有 @pixi/* 包必须内联打包（pixi-live2d-display 的依赖）
+      if (request.startsWith('@pixi/')) {
+        return callback();
+      }
       // 关键依赖（vue / pixi / live2d）必须始终内联打包，避免生产环境缺少全局变量
       if (['vue', 'pixi'].some(key => request.includes(key))) {
         return callback();

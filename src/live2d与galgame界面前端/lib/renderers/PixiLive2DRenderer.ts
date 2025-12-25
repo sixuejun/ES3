@@ -90,7 +90,7 @@ export class PixiLive2DRenderer {
         console.warn('[PixiLive2DRenderer] Canvas 尺寸为 0，使用后备值:', {
           width: canvasWidth,
           height: canvasHeight,
-        });
+      });
       }
 
       this.canvas = canvas;
