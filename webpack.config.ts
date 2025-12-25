@@ -530,7 +530,7 @@ function parse_configuration(entry: Entry): (_env: any, argv: any) => webpack.Co
         return callback();
       }
 
-      const builtin = ['vue3-pixi', 'vue-demi'];
+      const builtin = ['vue3-pixi', 'vue-demi', 'pixi-live2d-display'];
       if (builtin.includes(request)) {
         return callback();
       }
