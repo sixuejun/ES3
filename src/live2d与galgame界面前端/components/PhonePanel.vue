@@ -351,17 +351,40 @@ function parseTheaterContent(content: string): PhoneMessage[] {
   const regex = /【([^：:]+)[：:](.*?)】/g;
   let match;
 
-  // 获取当前用户名称
-  let userName = 'user';
+  // 获取用户显示名称（从 localStorage 读取）
+  let userDisplayName = '';
   try {
-    const rawChar = new RawCharacter(RawCharacter.find({ name: 'current' }));
-    const charData = rawChar.getCardData();
-    // 尝试从角色卡获取用户名称
-    if ((charData.data as any)?.user_name) {
-      userName = (charData.data as any).user_name;
+    const stored = localStorage.getItem('galgame_user_display_name');
+    if (stored) {
+      userDisplayName = JSON.parse(stored);
     }
   } catch (error) {
-    console.warn('[PhonePanel] 获取用户名称失败，使用默认值 "user"');
+    console.warn('[PhonePanel] 从 localStorage 读取 userDisplayName 失败:', error);
+  }
+
+  // 判断是否是用户角色的辅助函数（与 messageParser.ts 中的逻辑保持一致）
+  function isUserCharacter(characterName: string | undefined): boolean {
+    if (!characterName) return false;
+    const normalized = characterName.trim().toLowerCase();
+
+    // 检查默认的用户标识符
+    const isDefaultUser =
+      normalized === '<user>' ||
+      normalized === '{{user}}' ||
+      normalized === 'user' ||
+      normalized === '用户' ||
+      normalized === '你' ||
+      normalized === '玩家';
+
+    if (isDefaultUser) return true;
+
+    // 如果提供了 userDisplayName，检查是否匹配（不区分大小写）
+    if (userDisplayName && userDisplayName.trim()) {
+      const normalizedUserDisplayName = userDisplayName.trim().toLowerCase();
+      return normalized === normalizedUserDisplayName;
+    }
+
+    return false;
   }
 
   while ((match = regex.exec(content)) !== null) {
@@ -371,8 +394,8 @@ function parseTheaterContent(content: string): PhoneMessage[] {
     // 移除括号内的描述，获取纯粹的发言者名称
     const speakerName = fullSpeaker.split('（')[0].split('(')[0].trim();
 
-    // 判断是否是用户消息（支持 <user> 标签和用户名匹配）
-    const isUser = /<user>/i.test(fullSpeaker) || speakerName === userName || /user|玩家|你/i.test(speakerName);
+    // 判断是否是用户消息（使用统一的判断逻辑）
+    const isUser = isUserCharacter(speakerName) || isUserCharacter(fullSpeaker);
 
     messages.push({
       speaker: fullSpeaker,
@@ -420,19 +443,43 @@ function parsePhoneContent(content: string): { contact: string; messages: PhoneM
   const messageContent = contactMatch[2].trim();
   const timestamp = contactMatch[3]?.trim();
 
-  // 判断是否是用户消息
-  let userName = 'user';
+  // 获取用户显示名称（从 localStorage 读取）
+  let userDisplayName = '';
   try {
-    const rawChar = new RawCharacter(RawCharacter.find({ name: 'current' }));
-    const charData = rawChar.getCardData();
-    if ((charData.data as any)?.user_name) {
-      userName = (charData.data as any).user_name;
+    const stored = localStorage.getItem('galgame_user_display_name');
+    if (stored) {
+      userDisplayName = JSON.parse(stored);
     }
   } catch (error) {
-    console.warn('[PhonePanel] 获取用户名称失败');
+    console.warn('[PhonePanel] 从 localStorage 读取 userDisplayName 失败:', error);
   }
 
-  const isUser = contact === userName || /user|玩家|你/i.test(contact);
+  // 判断是否是用户角色的辅助函数（与 messageParser.ts 中的逻辑保持一致）
+  function isUserCharacter(characterName: string | undefined): boolean {
+    if (!characterName) return false;
+    const normalized = characterName.trim().toLowerCase();
+
+    // 检查默认的用户标识符
+    const isDefaultUser =
+      normalized === '<user>' ||
+      normalized === '{{user}}' ||
+      normalized === 'user' ||
+      normalized === '用户' ||
+      normalized === '你' ||
+      normalized === '玩家';
+
+    if (isDefaultUser) return true;
+
+    // 如果提供了 userDisplayName，检查是否匹配（不区分大小写）
+    if (userDisplayName && userDisplayName.trim()) {
+      const normalizedUserDisplayName = userDisplayName.trim().toLowerCase();
+      return normalized === normalizedUserDisplayName;
+    }
+
+    return false;
+  }
+
+  const isUser = isUserCharacter(contact);
 
   return {
     contact: isUser ? '' : contact,
@@ -622,15 +669,40 @@ async function loadHistoryMessages(contact: string) {
     const historyMessages: PhoneMessage[] = [];
     const lines = historyContent.split('\n').filter(line => line.trim());
 
-    let userName = 'user';
+    // 获取用户显示名称（从 localStorage 读取）
+    let userDisplayName = '';
     try {
-      const rawChar = new RawCharacter(RawCharacter.find({ name: 'current' }));
-      const charData = rawChar.getCardData();
-      if ((charData.data as any)?.user_name) {
-        userName = (charData.data as any).user_name;
+      const stored = localStorage.getItem('galgame_user_display_name');
+      if (stored) {
+        userDisplayName = JSON.parse(stored);
       }
     } catch (error) {
-      console.warn('[PhonePanel] 获取用户名称失败');
+      console.warn('[PhonePanel] 从 localStorage 读取 userDisplayName 失败:', error);
+    }
+
+    // 判断是否是用户角色的辅助函数（与 messageParser.ts 中的逻辑保持一致）
+    function isUserCharacter(characterName: string | undefined): boolean {
+      if (!characterName) return false;
+      const normalized = characterName.trim().toLowerCase();
+
+      // 检查默认的用户标识符
+      const isDefaultUser =
+        normalized === '<user>' ||
+        normalized === '{{user}}' ||
+        normalized === 'user' ||
+        normalized === '用户' ||
+        normalized === '你' ||
+        normalized === '玩家';
+
+      if (isDefaultUser) return true;
+
+      // 如果提供了 userDisplayName，检查是否匹配（不区分大小写）
+      if (userDisplayName && userDisplayName.trim()) {
+        const normalizedUserDisplayName = userDisplayName.trim().toLowerCase();
+        return normalized === normalizedUserDisplayName;
+      }
+
+      return false;
     }
 
     for (const line of lines) {
@@ -639,7 +711,7 @@ async function loadHistoryMessages(contact: string) {
         const speaker = match[1].trim();
         const content = match[2].trim();
         const timestamp = match[3]?.trim();
-        const isUser = speaker === userName || speaker === 'user' || /user|玩家|你/i.test(speaker);
+        const isUser = isUserCharacter(speaker);
 
         historyMessages.push({
           speaker,
@@ -887,6 +959,7 @@ async function loadHtml2Canvas(): Promise<any> {
     }
 
     const script = document.createElement('script');
+    // 使用最新版本的 html2canvas（支持更多 CSS 特性）
     script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
     script.onload = () => {
       if (typeof (window as any).html2canvas !== 'undefined') {
@@ -900,7 +973,7 @@ async function loadHtml2Canvas(): Promise<any> {
   });
 }
 
-// 截屏功能
+// 截屏功能（参考模板的实现）
 async function handleScreenshot() {
   try {
     // 动态加载 html2canvas
@@ -911,22 +984,100 @@ async function handleScreenshot() {
 
     await nextTick();
 
-    if (!chatLog.value) return;
+    // 参考模板：截取整个 display-wrapper（包含背景、水印等）
+    const targetElement = scrollContainer.value?.parentElement; // display-wrapper
+    if (!targetElement) {
+      console.warn('[PhonePanel] 找不到截图目标元素');
+      return;
+    }
 
-    const canvas = await html2canvas(chatLog.value, {
+    // 参考模板的截图配置
+    // 使用 onclone 回调在克隆 DOM 后替换 oklch 变量为 rgb 值
+    const canvas = await html2canvas(targetElement, {
       backgroundColor: '#fdfdfb',
       scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      logging: false,
+      onclone: (clonedDoc: Document, _element: HTMLElement) => {
+        // 在克隆的文档中，替换所有 oklch CSS 变量为 rgb 值
+        const style = clonedDoc.createElement('style');
+        style.textContent = `
+          /* 临时覆盖 oklch 变量为 rgb 值（html2canvas 兼容性处理） */
+          :root {
+            --background: rgb(247, 250, 252) !important;
+            --foreground: rgb(51, 65, 85) !important;
+            --card: rgb(253, 253, 253) !important;
+            --card-foreground: rgb(51, 65, 85) !important;
+            --popover: rgb(253, 253, 253) !important;
+            --popover-foreground: rgb(51, 65, 85) !important;
+            --primary: rgb(76, 175, 80) !important;
+            --primary-foreground: rgb(253, 253, 253) !important;
+            --secondary: rgb(235, 245, 240) !important;
+            --secondary-foreground: rgb(89, 110, 100) !important;
+            --muted: rgb(240, 245, 243) !important;
+            --muted-foreground: rgb(128, 140, 135) !important;
+            --accent: rgb(200, 230, 200) !important;
+            --accent-foreground: rgb(51, 65, 85) !important;
+            --destructive: rgb(220, 80, 80) !important;
+            --destructive-foreground: rgb(220, 80, 80) !important;
+            --border: rgb(217, 230, 225) !important;
+            --input: rgb(230, 240, 235) !important;
+            --ring: rgb(76, 175, 80) !important;
+            --color-background: rgb(247, 250, 252) !important;
+            --color-foreground: rgb(51, 65, 85) !important;
+            --color-card: rgb(253, 253, 253) !important;
+            --color-card-foreground: rgb(51, 65, 85) !important;
+            --color-popover: rgb(253, 253, 253) !important;
+            --color-popover-foreground: rgb(51, 65, 85) !important;
+            --color-primary: rgb(76, 175, 80) !important;
+            --color-primary-foreground: rgb(253, 253, 253) !important;
+            --color-secondary: rgb(235, 245, 240) !important;
+            --color-secondary-foreground: rgb(89, 110, 100) !important;
+            --color-muted: rgb(240, 245, 243) !important;
+            --color-muted-foreground: rgb(128, 140, 135) !important;
+            --color-accent: rgb(200, 230, 200) !important;
+            --color-accent-foreground: rgb(51, 65, 85) !important;
+            --color-destructive: rgb(220, 80, 80) !important;
+            --color-destructive-foreground: rgb(220, 80, 80) !important;
+            --color-border: rgb(217, 230, 225) !important;
+            --color-input: rgb(230, 240, 235) !important;
+            --color-ring: rgb(76, 175, 80) !important;
+          }
+          /* 展开滚动容器，显示所有对话内容（参考模板的截图功能） */
+          .scroll-container {
+            height: auto !important;
+            max-height: none !important;
+            overflow: visible !important;
+            position: relative !important;
+          }
+          .chat-log {
+            height: auto !important;
+            max-height: none !important;
+          }
+          .display-wrapper {
+            height: auto !important;
+            min-height: auto !important;
+            overflow: visible !important;
+          }
+        `;
+        clonedDoc.head.appendChild(style);
+      },
     });
 
     // 下载图片
     const link = document.createElement('a');
-    link.download = `小剧场_${Date.now()}.png`;
-    link.href = canvas.toDataURL();
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    link.download = `小剧场_${timestamp}.png`;
+    link.href = canvas.toDataURL('image/png');
     link.click();
 
     console.info('[PhonePanel] 截屏完成');
   } catch (error) {
     console.error('[PhonePanel] 截屏失败:', error);
+    if (typeof toastr !== 'undefined') {
+      toastr.error('截屏失败，请检查控制台日志');
+    }
   }
 }
 
@@ -1336,15 +1487,20 @@ defineExpose({
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
 }
 
 .panel-body {
-  height: auto;
-  max-height: 400px;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .display-wrapper {
   flex: 1;
+  min-height: 0;
   border: 1px solid rgba(165, 214, 167, 0.3);
   margin: 8px 8px 0 8px;
   position: relative;
@@ -1353,6 +1509,8 @@ defineExpose({
   overflow: hidden;
   box-shadow: inset 0 0 30px rgba(76, 175, 80, 0.05);
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 .bg-image {
@@ -1364,9 +1522,9 @@ defineExpose({
   background-image: url('https://files.catbox.moe/2td8l0.jpg');
   background-position: center center;
   background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.06;
-  filter: sepia(0.2) hue-rotate(80deg) saturate(1.5) brightness(1.2);
+  background-size: cover; /* 参考模板：使用 cover 填满整个对话界面 */
+  opacity: 0.15; /* 参考模板：使用 0.15 的透明度 */
+  filter: sepia(0.4) contrast(0.9); /* 参考模板：使用相同的滤镜效果 */
   z-index: 0;
   mix-blend-mode: multiply;
 }
@@ -1498,6 +1656,7 @@ defineExpose({
 
 .cmd-bar {
   height: 48px;
+  min-height: 48px;
   background: rgba(232, 245, 233, 0.5);
   backdrop-filter: blur(10px);
   padding: 8px 16px;
@@ -1566,6 +1725,7 @@ defineExpose({
 
 .status-bar {
   height: 48px;
+  min-height: 48px;
   background: rgba(240, 253, 244, 0.8);
   backdrop-filter: blur(10px);
   display: flex;
@@ -1778,21 +1938,14 @@ defineExpose({
   }
 
   .theater-window {
-    max-height: none;
-    height: auto;
+    max-height: 90vh;
   }
 
   .theater-window-fullscreen {
     width: 90%;
     max-width: 28rem; /* 在手机上使用更小的尺寸，与角色状态栏保持一致 */
     border-radius: 12px; /* 保留圆角，不完全占满屏幕 */
-    height: auto;
-    max-height: none;
-  }
-
-  .panel-body {
-    height: auto;
-    max-height: none;
+    max-height: 90vh;
   }
 }
 </style>

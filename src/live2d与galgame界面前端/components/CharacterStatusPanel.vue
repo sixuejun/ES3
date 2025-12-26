@@ -23,7 +23,7 @@
           <div class="status-info-bar">
             <div class="info-item">
               <span>🕒</span>
-              <span v-text="'{{get_message_variable::stat_data.时间}}'"></span>
+              <span>{{ mvuData.时间 || '未知' }}</span>
             </div>
             <div class="info-item">
               <span>📍</span>
@@ -35,19 +35,19 @@
           <div class="status-values-grid">
             <div class="value-card">
               <div class="value-name">亲情</div>
-              <div class="value-number" v-text="'{{get_message_variable::stat_data.程北极.亲情}}'"></div>
+              <div class="value-number">{{ mvuData.程北极?.亲情 ?? 0 }}</div>
             </div>
             <div class="value-card">
               <div class="value-name">爱欲</div>
-              <div class="value-number" v-text="'{{get_message_variable::stat_data.程北极.爱欲}}'"></div>
+              <div class="value-number">{{ mvuData.程北极?.爱欲 ?? 0 }}</div>
             </div>
             <div class="value-card">
               <div class="value-name">厌恶</div>
-              <div class="value-number" v-text="'{{get_message_variable::stat_data.程北极.厌恶}}'"></div>
+              <div class="value-number">{{ mvuData.程北极?.厌恶 ?? 0 }}</div>
             </div>
             <div class="value-card">
               <div class="value-name">自我</div>
-              <div class="value-number" v-text="'{{get_message_variable::stat_data.程北极.自我}}'"></div>
+              <div class="value-number">{{ mvuData.程北极?.自我 ?? 0 }}</div>
             </div>
           </div>
 
@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, watch, ref } from 'vue';
 import type { StatusBlockData } from '../types/message';
 
 interface Props {
@@ -88,6 +88,69 @@ interface Props {
 }
 
 const props = defineProps<Props>();
+
+// MVU 变量数据
+const mvuData = ref<{
+  时间?: string;
+  程北极?: {
+    亲情?: number;
+    爱欲?: number;
+    厌恶?: number;
+    自我?: number;
+  };
+}>({});
+
+// 从消息楼层变量获取 MVU 数据
+function loadMvuData() {
+  if (props.messageId === undefined) {
+    mvuData.value = {};
+    return;
+  }
+
+  try {
+    // 获取消息楼层变量
+    const variables = getVariables({
+      type: 'message',
+      message_id: props.messageId,
+    });
+
+    // 提取 stat_data
+    const statData = variables?.stat_data || {};
+    mvuData.value = {
+      时间: statData.时间 || '未知',
+      程北极: {
+        亲情: statData.程北极?.亲情 ?? 0,
+        爱欲: statData.程北极?.爱欲 ?? 0,
+        厌恶: statData.程北极?.厌恶 ?? 0,
+        自我: statData.程北极?.自我 ?? 0,
+      },
+    };
+  } catch (error) {
+    console.warn('获取 MVU 数据失败:', error);
+    mvuData.value = {};
+  }
+}
+
+// 监听 messageId 变化，重新加载 MVU 数据
+watch(
+  () => props.messageId,
+  () => {
+    if (props.show) {
+      loadMvuData();
+    }
+  },
+  { immediate: true },
+);
+
+// 监听面板显示状态，显示时加载数据
+watch(
+  () => props.show,
+  show => {
+    if (show) {
+      loadMvuData();
+    }
+  },
+);
 
 // 从 StatusBlock 获取的数据（地点、关系、心情、吐槽、待办）
 const statusData = computed(() => {

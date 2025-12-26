@@ -70,39 +70,18 @@
             @keydown.enter="handleInputConfirm"
             autofocus
           />
-          <!-- 回车图标（保存输入/确认选项） -->
-          <svg
-            v-if="inputText.trim()"
-            class="h-5 w-5 transition-colors cursor-pointer"
-            :style="{ color: selectedCustom ? dialogStyle.colors.nameText : dialogStyle.colors.narrationText }"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            @click.stop="handleInputConfirm"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <!-- 保存按钮 -->
+          <!-- 发送按钮 -->
           <button
             v-if="inputText.trim()"
             class="p-1 transition-colors hover:opacity-80"
             :style="{ color: dialogStyle.colors.nameText }"
-            aria-label="保存到正文"
-            title="保存到正文（不发送）"
-            @click.stop="handleSave"
+            aria-label="发送"
+            @click.stop="handleInputConfirm"
           >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="h-5 w-5" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"
-              />
+                d="M1023.200312 43.682936L877.057399 920.640375c-1.899258 10.995705-8.096837 19.592347-18.292854 25.689965-5.29793 2.898868-11.295588 4.598204-17.693089 4.598204-4.19836 0-8.796564-0.99961-13.69465-2.898868l-236.707536-96.762202c-12.994924-5.29793-27.889106-1.499414-36.785631 9.296368l-123.251855 150.341273c-6.897306 8.796564-16.293635 13.094885-27.989066 13.094885-4.898087 0-9.096447-0.799688-12.695041-2.299102-7.197189-2.698946-12.994924-6.997267-17.393206-13.394768-4.398282-6.29754-6.697384-13.194846-6.697384-20.891839V811.083171c0-14.794221 5.098009-28.988676 14.394377-40.484186l478.912925-587.070676-602.864506 521.796174c-4.598204 3.898477-10.995705 4.998048-16.493557 2.698945L23.390863 619.358063C9.296369 614.060133 1.599375 603.664194 0.599766 587.870363c-0.799688-15.194065 5.29793-26.489652 18.292854-33.786802L968.921515 5.997657c5.797735-3.498633 11.795392-5.098009 18.292854-5.098008 7.696993 0 14.594299 2.199141 20.691918 6.397501 12.695041 8.996486 17.593128 21.291683 15.294025 36.385786z"
+              ></path>
             </svg>
           </button>
         </div>
@@ -145,20 +124,16 @@ function handleCustomClick() {
     nextTick(() => {
       inputRef.value?.focus();
     });
-  } else if (inputText.value.trim() && !selectedCustom.value) {
-    selectedCustom.value = true;
-  } else if (selectedCustom.value) {
+  } else if (inputText.value.trim()) {
+    // 直接发送，不需要先选中再点击
     props.onSelect('custom', inputText.value);
   }
 }
 
 function handleInputConfirm() {
   if (inputText.value.trim()) {
-    if (!selectedCustom.value) {
-      selectedCustom.value = true;
-    } else {
-      props.onSelect('custom', inputText.value);
-    }
+    // 直接发送，不需要先选中再点击
+    props.onSelect('custom', inputText.value);
   }
 }
 

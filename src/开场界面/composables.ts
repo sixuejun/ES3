@@ -126,9 +126,9 @@ export async function selectOpening(opening: Opening) {
 
     // id01, id03, id04: 跳转到对应的 swipe
     const swipeIdMap: Record<string, number> = {
-      '01': 2, // id01 -> swipe2
-      '03': 3, // id03 -> swipe3
-      '04': 4, // id04 -> swipe4
+      '01': 1, // id01 -> swipe2
+      '03': 2, // id03 -> swipe3
+      '04': 3, // id04 -> swipe4
     };
 
     const swipeId = swipeIdMap[opening.id];

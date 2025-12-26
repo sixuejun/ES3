@@ -79,14 +79,16 @@
         aria-label="手机"
         @click.stop="handleTheaterClick"
       >
-        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 1024 1024"
+          version="1.1"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+        >
           <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M7 4h10a1 1 0 011 1v14a1 1 0 01-1 1H7a1 1 0 01-1-1V5a1 1 0 011-1z"
-          />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2m-2 14h2" />
+            d="M820.409449 797.228346q0 25.19685-10.07874 46.866142t-27.716535 38.299213-41.322835 26.204724-50.897638 9.574803l-357.795276 0q-27.212598 0-50.897638-9.574803t-41.322835-26.204724-27.716535-38.299213-10.07874-46.866142l0-675.275591q0-25.19685 10.07874-47.370079t27.716535-38.80315 41.322835-26.204724 50.897638-9.574803l357.795276 0q27.212598 0 50.897638 9.574803t41.322835 26.204724 27.716535 38.80315 10.07874 47.370079l0 675.275591zM738.771654 170.330709l-455.559055 0 0 577.511811 455.559055 0 0-577.511811zM510.992126 776.062992q-21.165354 0-36.787402 15.11811t-15.622047 37.291339q0 21.165354 15.622047 36.787402t36.787402 15.622047q22.173228 0 37.291339-15.622047t15.11811-36.787402q0-22.173228-15.11811-37.291339t-37.291339-15.11811zM591.622047 84.661417q0-8.062992-5.03937-12.598425t-11.086614-4.535433l-128 0q-5.03937 0-10.582677 4.535433t-5.543307 12.598425 5.03937 12.598425 11.086614 4.535433l128 0q6.047244 0 11.086614-4.535433t5.03937-12.598425z"
+          ></path>
         </svg>
         <span class="text-sm">手机</span>
       </button>
@@ -290,8 +292,8 @@
       :on-next="nextDialogue"
       :dialog-key="currentDialogIndex"
       :custom-style="dialogStyle"
-      :is-loading="isStreaming && streamingMessageId === currentDialogue.message_id"
-      :streaming-text="isStreaming && streamingMessageId === currentDialogue.message_id ? streamingText : undefined"
+      :is-loading="false"
+      :streaming-text="undefined"
       :is-through="currentDialogue.isThrough"
       :is-editable="currentDialogue.isEditable"
       :message-id="currentDialogue.message_id"
@@ -303,6 +305,13 @@
     <SettingsPanel
       v-if="showSettings"
       :on-close="() => (showSettings = false)"
+      :user-display-name="userDisplayName"
+      :on-user-display-name-change="
+        (name: string) => {
+          userDisplayName = name;
+          saveToStorage(STORAGE_KEYS.USER_DISPLAY_NAME, name);
+        }
+      "
       :sprite-settings="spriteSettings"
       :on-sprite-settings-change="s => (spriteSettings = s)"
       :live2d-settings="live2dSettings"
@@ -491,13 +500,16 @@
             title="保存到正文（不发送）"
             @click.stop="handleSaveInput"
           >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg
+              class="h-6 w-6"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+            >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3-3m0 0l-3 3m3-3v12"
-              />
+                d="M170.666667 128h597.333333l115.498667 115.498667a42.666667 42.666667 0 0 1 12.501333 30.165333V853.333333a42.666667 42.666667 0 0 1-42.666667 42.666667H170.666667a42.666667 42.666667 0 0 1-42.666667-42.666667V170.666667a42.666667 42.666667 0 0 1 42.666667-42.666667z m128 42.666667v213.333333h384V170.666667H298.666667z m-42.666667 341.333333v298.666667h512v-298.666667H256z m298.666667-298.666667h85.333333v128h-85.333333V213.333333z"
+              ></path>
             </svg>
           </button>
           <!-- 发送按钮 -->
@@ -508,8 +520,16 @@
             aria-label="发送"
             @click.stop="handleSendInput"
           >
-            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M12 5l7 7-7 7" />
+            <svg
+              class="h-5 w-5"
+              viewBox="0 0 1024 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+            >
+              <path
+                d="M1023.200312 43.682936L877.057399 920.640375c-1.899258 10.995705-8.096837 19.592347-18.292854 25.689965-5.29793 2.898868-11.295588 4.598204-17.693089 4.598204-4.19836 0-8.796564-0.99961-13.69465-2.898868l-236.707536-96.762202c-12.994924-5.29793-27.889106-1.499414-36.785631 9.296368l-123.251855 150.341273c-6.897306 8.796564-16.293635 13.094885-27.989066 13.094885-4.898087 0-9.096447-0.799688-12.695041-2.299102-7.197189-2.698946-12.994924-6.997267-17.393206-13.394768-4.398282-6.29754-6.697384-13.194846-6.697384-20.891839V811.083171c0-14.794221 5.098009-28.988676 14.394377-40.484186l478.912925-587.070676-602.864506 521.796174c-4.598204 3.898477-10.995705 4.998048-16.493557 2.698945L23.390863 619.358063C9.296369 614.060133 1.599375 603.664194 0.599766 587.870363c-0.799688-15.194065 5.29793-26.489652 18.292854-33.786802L968.921515 5.997657c5.797735-3.498633 11.795392-5.098009 18.292854-5.098008 7.696993 0 14.594299 2.199141 20.691918 6.397501 12.695041 8.996486 17.593128 21.291683 15.294025 36.385786z"
+              ></path>
             </svg>
           </button>
         </div>
@@ -542,6 +562,7 @@ const STORAGE_KEYS = {
   DIALOG_STYLE: 'galgame_dialog_style',
   SPRITE_SETTINGS: 'galgame_sprite_settings',
   LIVE2D_SETTINGS: 'galgame_live2d_settings',
+  USER_DISPLAY_NAME: 'galgame_user_display_name',
 } as const;
 
 const containerRef = ref<HTMLDivElement | null>(null);
@@ -604,10 +625,7 @@ const inputText = ref('');
 const inputRef = ref<HTMLInputElement | null>(null);
 const phonePanelRef = ref<InstanceType<typeof PhonePanel> | null>(null);
 
-// 流式界面状态
-const isStreaming = ref(false);
-const streamingText = ref('');
-const streamingMessageId = ref<number | null>(null);
+// 移除流式界面状态（已取消流式功能）
 
 // 样式设置 - 从 localStorage 加载
 // 立绘设置（静态图片）- 默认 Galgame 风格：左侧，底部对齐
@@ -628,6 +646,9 @@ const live2dSettings = ref(
 );
 const dialogStyle = ref<DialogBoxStyle>(loadFromStorage(STORAGE_KEYS.DIALOG_STYLE, defaultDialogStyle));
 const previewStyle = ref<DialogBoxStyle>({ ...dialogStyle.value });
+
+// 用户显示名称 - 从 localStorage 加载，默认为空（使用默认判断逻辑）
+const userDisplayName = ref<string>(loadFromStorage(STORAGE_KEYS.USER_DISPLAY_NAME, ''));
 
 // Live2D 模型数据 - 从世界书加载，使用 shallowRef（模型配置不需要深层响应式）
 const live2dModels = shallowRef<any[]>([]);
@@ -805,6 +826,128 @@ const currentLive2dModelId = computed(() => {
 // 用户消息编辑状态（内存中）
 const userMessageEdits = ref<Map<number, { text?: string; deleted?: boolean }>>(new Map());
 
+// 判断用户是否在最后一条对话
+function isUserAtLastDialogue(): boolean {
+  return currentDialogIndex.value >= dialogues.value.length - 1;
+}
+
+// 深度比较两个对话项是否相同（比较关键字段）
+function areDialoguesEqual(d1: DialogueItem, d2: DialogueItem): boolean {
+  // 比较关键标识字段
+  if (d1.unitId !== d2.unitId || d1.message_id !== d2.message_id) {
+    return false;
+  }
+
+  // 比较主要内容字段
+  if (d1.character !== d2.character || d1.text !== d2.text || d1.type !== d2.type || d1.role !== d2.role) {
+    return false;
+  }
+
+  // 比较场景和视觉效果
+  if (
+    d1.scene !== d2.scene ||
+    d1.sceneImageUrl !== d2.sceneImageUrl ||
+    d1.motion !== d2.motion ||
+    d1.expression !== d2.expression ||
+    d1.isCG !== d2.isCG ||
+    d1.cgImageUrl !== d2.cgImageUrl
+  ) {
+    return false;
+  }
+
+  // 比较立绘状态
+  if (
+    d1.sprite?.type !== d2.sprite?.type ||
+    d1.sprite?.live2dModelId !== d2.sprite?.live2dModelId ||
+    d1.sprite?.imageUrl !== d2.sprite?.imageUrl
+  ) {
+    return false;
+  }
+
+  // 比较选项（简单比较选项数量）
+  if ((d1.options?.length || 0) !== (d2.options?.length || 0)) {
+    return false;
+  }
+
+  return true;
+}
+
+// 比较两个对话列表是否实质性相同
+function areDialoguesListsEqual(oldList: DialogueItem[], newList: DialogueItem[]): boolean {
+  if (oldList.length !== newList.length) {
+    return false;
+  }
+
+  for (let i = 0; i < oldList.length; i++) {
+    if (!areDialoguesEqual(oldList[i], newList[i])) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+// 增量更新对话列表
+function updateDialoguesIncremental(newDialogues: DialogueItem[]): boolean {
+  const oldList = dialogues.value;
+  const oldIndex = currentDialogIndex.value;
+
+  // 如果列表完全相同，跳过更新
+  if (areDialoguesListsEqual(oldList, newDialogues)) {
+    return false; // 没有变化
+  }
+
+  // 如果新列表为空或更短，直接替换（可能是清空或重置）
+  if (newDialogues.length === 0 || newDialogues.length < oldList.length) {
+    dialogues.value = newDialogues;
+    // 调整索引
+    if (currentDialogIndex.value >= newDialogues.length) {
+      currentDialogIndex.value = Math.max(0, newDialogues.length - 1);
+    }
+    return true; // 有变化
+  }
+
+  // 增量更新：只添加新对话，不删除或修改已有对话
+  // 找到第一个新对话的起始位置
+  let firstNewIndex = oldList.length;
+
+  // 检查是否有新对话（通过 message_id 判断）
+  const oldLastMessageId = oldList.length > 0 ? oldList[oldList.length - 1].message_id : -1;
+  const newLastMessageId = newDialogues.length > 0 ? newDialogues[newDialogues.length - 1].message_id : -1;
+
+  // 如果新列表的最后一条消息ID大于旧列表的最后一条，说明有新消息
+  if (newLastMessageId !== undefined && oldLastMessageId !== undefined && newLastMessageId > oldLastMessageId) {
+    // 找到新消息的起始位置
+    for (let i = 0; i < newDialogues.length; i++) {
+      if (newDialogues[i].message_id !== undefined && newDialogues[i].message_id! > oldLastMessageId) {
+        firstNewIndex = i;
+        break;
+      }
+    }
+
+    // 只添加新对话
+    const newDialoguesToAdd = newDialogues.slice(firstNewIndex);
+    if (newDialoguesToAdd.length > 0) {
+      dialogues.value = [...oldList, ...newDialoguesToAdd];
+
+      // 保持当前播放位置（不自动跳转）
+      currentDialogIndex.value = oldIndex;
+
+      return true; // 有变化
+    }
+  }
+
+  // 如果没有新对话，但内容有更新，进行完整替换（但保持播放位置）
+  dialogues.value = newDialogues;
+
+  // 保持当前播放位置（如果索引仍然有效）
+  if (currentDialogIndex.value >= dialogues.value.length) {
+    currentDialogIndex.value = Math.max(0, dialogues.value.length - 1);
+  }
+
+  return true; // 有变化
+}
+
 // 从酒馆读取对话数据
 async function loadDialoguesFromTavern() {
   try {
@@ -913,7 +1056,7 @@ async function loadDialoguesFromTavern() {
       const messageText = msg.message || '';
 
       // 解析消息块（传入上一行的场景用于继承）
-      const blocks = await parseMessageBlocks(messageText, lastScene);
+      const blocks = await parseMessageBlocks(messageText, lastScene, userDisplayName.value);
 
       // 如果没有解析到块，不显示该消息（它很可能不属于我们的剧情文本）
       // StatusBlock 位于 <content> 之外，只用于状态栏显示，不创建对话项
@@ -966,10 +1109,7 @@ async function loadDialoguesFromTavern() {
               // 为格式1选项分配唯一ID，避免多个 choice 块默认使用相同的 choice_0 导致点击错乱
               const mergedOptions = allOptions.map((opt, idx) => ({
                 ...opt,
-                id:
-                  opt.id && opt.id !== 'choice_0'
-                    ? opt.id
-                    : `choice_${msg.message_id}_${unitIndex}_${idx}`,
+                id: opt.id && opt.id !== 'choice_0' ? opt.id : `choice_${msg.message_id}_${unitIndex}_${idx}`,
               }));
 
               const choiceDialogue: DialogueItem = {
@@ -1255,9 +1395,9 @@ async function loadDialoguesFromTavern() {
     // 记录当前播放位置（如果对话列表已存在）
     const previousLength = dialogues.value.length;
 
-    dialogues.value = filteredDialogues;
+    // 使用增量更新逻辑，避免不必要的响应式更新
+    updateDialoguesIncremental(filteredDialogues);
 
-    // 不自动跳转到最新，保持用户播放位置
     // 如果正在执行历史跳转，不修改索引（由跳转函数自己处理）
     if (isJumpingToHistory.value) {
       // 历史跳转中，不修改索引
@@ -1267,13 +1407,7 @@ async function loadDialoguesFromTavern() {
     else if (previousLength === 0 && filteredDialogues.length > 0) {
       currentDialogIndex.value = 0;
     }
-    // 如果之前已经在末尾，且新对话数量增加，保持在当前位置（不跳转）
-    // 否则保持在当前索引（如果索引仍然有效）
-    else if (currentDialogIndex.value >= filteredDialogues.length) {
-      // 如果当前索引超出范围，调整到最后一个有效索引
-      currentDialogIndex.value = Math.max(0, filteredDialogues.length - 1);
-    }
-    // 其他情况保持当前索引不变（包括流式状态更新时）
+    // updateDialoguesIncremental 已经处理了索引更新，这里不需要额外处理
 
     console.info(`加载了 ${dialogues.value.length} 条对话`);
 
@@ -1560,8 +1694,7 @@ async function loadLive2dModels() {
 
 function nextDialogue(skipBlackscreen = false) {
   if (currentDialogIndex.value < dialogues.value.length - 1) {
-    const nextIndex = currentDialogIndex.value + 1;
-    currentDialogIndex.value = nextIndex;
+    currentDialogIndex.value++;
     if (skipBlackscreen) {
       blackScreen.value = false;
     }
@@ -1583,12 +1716,7 @@ watch(
     const dialogue = currentDialogue.value;
     if (!dialogue) return;
 
-    // 如果切换到的对话不是正在流式加载的消息，清除流式状态
-    if (streamingMessageId.value !== null && dialogue.message_id !== streamingMessageId.value) {
-      isStreaming.value = false;
-      streamingText.value = '';
-      streamingMessageId.value = null;
-    }
+    // 移除流式状态检查（已取消流式功能）
 
     if (dialogue.type === 'blackscreen') {
       blackScreenText.value = dialogue.text;
@@ -1711,13 +1839,21 @@ onMounted(() => {
         console.warn('解析 phone 标签失败:', error);
       }
 
+      // 保存当前播放位置（无论用户是否在最后一个演出单元，都保持当前位置不变）
+      const currentIndex = currentDialogIndex.value;
+
+      // 重新加载对话数据
       await loadDialoguesFromTavern();
-      // 不自动跳转到最新消息，保持用户播放位置（流式只是预加载资源）
-      // 如果收到的消息ID与正在流式加载的消息ID匹配，清除流式状态
-      if (!Number.isNaN(messageIdNum) && streamingMessageId.value === messageIdNum) {
-        isStreaming.value = false;
-        streamingText.value = '';
-        streamingMessageId.value = null;
+
+      // 保持当前位置不变（套用"用户不在最后一个演出单元"的逻辑）
+      // 如果索引仍然有效，保持当前位置；如果索引超出范围，调整到最后一个有效位置
+      if (currentIndex < dialogues.value.length) {
+        currentDialogIndex.value = currentIndex;
+        console.info('保持当前播放位置:', currentIndex);
+      } else if (dialogues.value.length > 0) {
+        // 如果索引超出范围，调整到最后一个有效位置
+        currentDialogIndex.value = dialogues.value.length - 1;
+        console.info('索引超出范围，调整到最后一个演出单元');
       }
     });
     if (messageReceivedCleanup) {
@@ -1727,15 +1863,6 @@ onMounted(() => {
     // 监听消息更新
     const messageUpdatedCleanup = eventOn(tavern_events.MESSAGE_UPDATED, async () => {
       await loadDialoguesFromTavern();
-      // 如果当前正在流式加载的消息已更新，停止流式状态
-      if (streamingMessageId.value !== null) {
-        const updatedMessage = dialogues.value.find(d => d.message_id === streamingMessageId.value);
-        if (updatedMessage && updatedMessage.text === streamingText.value) {
-          isStreaming.value = false;
-          streamingText.value = '';
-          streamingMessageId.value = null;
-        }
-      }
     });
     if (messageUpdatedCleanup) {
       eventCleanups.push(() => messageUpdatedCleanup.stop());
@@ -1745,21 +1872,12 @@ onMounted(() => {
     const chatChangedCleanup = eventOn(tavern_events.CHAT_CHANGED, () => {
       loadDialoguesFromTavern();
       currentDialogIndex.value = 0;
-      isStreaming.value = false;
-      streamingText.value = '';
-      streamingMessageId.value = null;
     });
     if (chatChangedCleanup) {
       eventCleanups.push(() => chatChangedCleanup.stop());
     }
 
-    // 监听流式token
-    const streamTokenCleanup = eventOn(tavern_events.STREAM_TOKEN_RECEIVED, (text: string) => {
-      handleStreamToken(text);
-    });
-    if (streamTokenCleanup) {
-      eventCleanups.push(() => streamTokenCleanup.stop());
-    }
+    // 移除流式token监听（已取消流式功能）
   }
 });
 
@@ -2017,8 +2135,22 @@ async function sendUserMessageWithPhone(messageText: string) {
         message: finalMessage,
       },
     ],
-    { refresh: 'all' },
+    { refresh: 'none' },
   );
+}
+
+/**
+ * 裁剪消息文本，保留 </content> 标签及其之后的所有内容（用于智能裁剪）
+ */
+function trimMessageAfterContentTag(messageText: string): string {
+  // 查找 </content> 标签的结束位置
+  const contentEndIndex = messageText.indexOf('</content>');
+  if (contentEndIndex !== -1) {
+    // 保留 </content> 标签及其之后的所有内容
+    return messageText.substring(contentEndIndex + '</content>'.length);
+  }
+  // 如果没有找到 </content>，返回空字符串（删除所有内容）
+  return '';
 }
 
 /**
@@ -2073,6 +2205,8 @@ async function handleSaveToStory(text: string) {
     // 在本地对话列表中添加用户消息（不重新加载）
     const tempMessageId = getLastMessageId() + 1;
     const tempUnitIndex = dialogues.value.length;
+    // 继承当前对话的背景和立绘状态
+    const currentDialogueData = currentDialogue.value;
     const newDialogue: DialogueItem = {
       unitId: `msg_${tempMessageId}_unit_${tempUnitIndex}`,
       unitIndex: tempUnitIndex,
@@ -2082,8 +2216,19 @@ async function handleSaveToStory(text: string) {
       isEditable: true,
       message_id: tempMessageId, // 临时ID
       role: 'user',
+      // 继承背景
+      scene: currentDialogueData?.scene,
+      sceneImageUrl: currentDialogueData?.sceneImageUrl,
+      // 继承立绘状态
+      sprite: currentDialogueData?.sprite ? { ...currentDialogueData.sprite } : undefined,
+      motion: currentDialogueData?.motion,
+      expression: currentDialogueData?.expression,
+      // 继承CG状态
+      isCG: currentDialogueData?.isCG,
+      cgImageUrl: currentDialogueData?.cgImageUrl,
     };
 
+    // 插入到对话列表
     const newDialogues = [...dialogues.value];
     newDialogues.splice(currentDialogIndex.value + 1, 0, newDialogue);
     dialogues.value = newDialogues;
@@ -2091,7 +2236,7 @@ async function handleSaveToStory(text: string) {
     // 移动到新插入的对话
     currentDialogIndex.value = currentDialogIndex.value + 1;
 
-    console.info('已保存到正文（不刷新界面）:', text);
+    console.info('已保存到正文（不刷新界面，继承背景）:', text);
   } catch (error) {
     console.error('保存到正文失败:', error);
   }
@@ -2157,11 +2302,12 @@ async function trimChoiceText(messageId: number, selectedText: string): Promise<
         kvPairs['旁白'] ||
         kvPairs['narration'];
 
-      // 查找所有选项键（选项X）
+      // 查找所有选项键（选项X，允许带冒号）
       const optionKeys: string[] = [];
       for (const key in kvPairs) {
-        if (key.match(/^选项\d+$/)) {
-          const optionNum = key.replace(/^选项(\d+)$/, '$1');
+        // 匹配 "选项X" 或 "选项X：" 格式（X可以是任意数字）
+        if (key.match(/^选项\d+：?$/)) {
+          const optionNum = key.replace(/^选项(\d+)：?$/, '$1');
           optionKeys.push(optionNum);
         }
       }
@@ -2169,16 +2315,17 @@ async function trimChoiceText(messageId: number, selectedText: string): Promise<
       // 判断格式
       if (optionKeys.length === 1 && hasCharacterOrResponse) {
         // 格式1：单个选项 + 角色回复
-        // 提取选项内容
+        // 提取选项内容（兼容带冒号和不带冒号的键名）
         const optionKey = `选项${optionKeys[0]}`;
-        const optionText = kvPairs[optionKey];
+        const optionText = kvPairs[optionKey] || kvPairs[`${optionKey}：`];
 
-        if (optionText !== selectedText) {
+        if (optionText && optionText.trim() !== selectedText.trim()) {
           // 删除未选中的选项块
           contentText = contentText.replace(choiceBlock.block, '');
           hasChanges = true;
           console.info('已删除未选中的格式1选项块:', optionText);
-        } else {
+        } else if (optionText && optionText.trim() === selectedText.trim()) {
+          // 保留选中的选项块
           console.info('保留选中的格式1选项块:', optionText);
         }
       } else if (optionKeys.length > 1) {
@@ -2233,6 +2380,56 @@ async function trimChoiceText(messageId: number, selectedText: string): Promise<
   }
 }
 
+// 删除所有选项块（用于自定义输入时，因为都没有选择）
+async function trimAllChoiceBlocks(messageId: number): Promise<void> {
+  try {
+    const messages = getChatMessages(messageId);
+    if (messages.length === 0) return;
+
+    const originalMessage = messages[0];
+    const messageText = originalMessage.message || '';
+
+    // 提取 <content> 标签中的内容
+    const contentMatch = messageText.match(/<content>([\s\S]*?)<\/content>/i);
+    if (!contentMatch) {
+      console.warn('消息中没有找到 <content> 标签，跳过裁剪');
+      return;
+    }
+
+    let contentText = contentMatch[1];
+
+    // 查找所有 [[choice||...]] 块并删除
+    const choiceBlockRegex = /\[\[choice\|\|([^\]]+)\]\]/g;
+    const hasChoiceBlocks = choiceBlockRegex.test(contentText);
+
+    if (hasChoiceBlocks) {
+      // 删除所有选项块
+      contentText = contentText.replace(choiceBlockRegex, '');
+
+      // 清理多余的空行
+      contentText = contentText.replace(/\n{3,}/g, '\n\n').trim();
+
+      // 更新消息文本
+      const newMessageText = messageText.replace(contentMatch[0], `<content>${contentText}</content>`);
+
+      if (newMessageText !== messageText) {
+        await setChatMessages(
+          [
+            {
+              message_id: messageId,
+              message: newMessageText,
+            },
+          ],
+          { refresh: 'none' }, // 不刷新界面
+        );
+        console.info('已删除所有选项块（自定义输入）');
+      }
+    }
+  } catch (error) {
+    console.error('删除所有选项块失败:', error);
+  }
+}
+
 async function handleChoiceSelect(id: string, customText?: string) {
   console.info('选择选项:', id, customText);
 
@@ -2270,8 +2467,16 @@ async function handleChoiceSelect(id: string, customText?: string) {
       return;
     }
 
-    // 1. 自动识别并裁剪选项文本（只保留被选择的选项，删除其他未选择的选项）
-    await trimChoiceText(currentMessageId, messageText);
+    // 1. 自动识别并裁剪选项文本
+    // 如果是自定义输入，删除所有选项块（因为都没有选择）
+    // 如果是选择选项，只保留被选择的选项，删除其他未选择的选项
+    if (id === 'custom' && customText) {
+      // 自定义输入：删除所有选项块
+      await trimAllChoiceBlocks(currentMessageId);
+    } else {
+      // 选择选项：只保留被选择的选项
+      await trimChoiceText(currentMessageId, messageText);
+    }
 
     // 2. 格式1：插入演出单元3（用户选择）和演出单元4（角色回复）
     // 检查是否是格式1（有角色回复）
@@ -2434,20 +2639,24 @@ async function handleChoiceSelect(id: string, customText?: string) {
           messagesToDelete.push(i);
         }
         if (messagesToDelete.length > 0) {
-          await deleteChatMessages(messagesToDelete, { refresh: 'all' });
+          await deleteChatMessages(messagesToDelete, { refresh: 'none' });
           console.info(`已删除 ${messagesToDelete.length} 条后续消息`);
         }
       }
 
-      // 发送用户输入的消息（自动附加phone标签）
-      await sendUserMessageWithPhone(messageText);
-      console.info('已发送用户消息:', messageText);
+      // 发送用户输入的消息（不附加任何标签，直接发送纯文本）
+      await createChatMessages(
+        [
+          {
+            role: 'user',
+            message: messageText, // 直接发送纯文本，不附加任何标签
+          },
+        ],
+        { refresh: 'none' },
+      );
+      console.info('已发送用户消息（无标签）:', messageText);
 
-      // 准备流式界面：立即开始监听流式token
-      const expectedMessageId = getLastMessageId() + 1;
-      isStreaming.value = true;
-      streamingText.value = '';
-      streamingMessageId.value = expectedMessageId;
+      // 移除流式界面准备（已取消流式功能）
 
       // 触发 AI 生成回复
       await triggerSlash('/trigger');
@@ -2460,14 +2669,15 @@ async function handleChoiceSelect(id: string, customText?: string) {
     // 演出中：带角色回复的选项（格式1）会继续剧情演出，不触发 AI 回复
     // 如果是自定义输入选项，则裁剪当前消息并在 </content> 之前停止，然后删除后续对话并触发 AI 回复
     if (!isAllDialoguesLoaded && id === 'custom' && customText) {
-      // 自定义输入选项：先裁剪当前消息文本（在 </content> 标签之前停止）
+      // 自定义输入选项：智能裁剪 - 删除之后的演出文本，保留</content>之后的内容
       if (currentMessageId !== undefined) {
         try {
           const messages = getChatMessages(currentMessageId);
           if (messages.length > 0) {
             const currentMessage = messages[0];
             const originalText = currentMessage.message || '';
-            const trimmedText = trimMessageBeforeContentTag(originalText);
+            // 保留 </content> 标签及其之后的所有内容
+            const trimmedText = trimMessageAfterContentTag(originalText);
 
             if (trimmedText !== originalText) {
               await setChatMessages(
@@ -2479,7 +2689,7 @@ async function handleChoiceSelect(id: string, customText?: string) {
                 ],
                 { refresh: 'none' },
               );
-              console.info('已裁剪消息文本（在 </content> 标签之前停止）');
+              console.info('已裁剪消息文本（保留</content>之后的内容）');
             }
           }
         } catch (error) {
@@ -2494,28 +2704,24 @@ async function handleChoiceSelect(id: string, customText?: string) {
           messagesToDelete.push(i);
         }
         if (messagesToDelete.length > 0) {
-          await deleteChatMessages(messagesToDelete, { refresh: 'all' });
+          await deleteChatMessages(messagesToDelete, { refresh: 'none' });
           console.info(`已删除 ${messagesToDelete.length} 条后续消息`);
         }
       }
 
-      // 发送用户输入的消息
+      // 发送用户输入的消息（不附加任何标签，直接发送纯文本）
       await createChatMessages(
         [
           {
             role: 'user',
-            message: messageText,
+            message: messageText, // 直接发送纯文本，不附加任何标签
           },
         ],
-        { refresh: 'all' },
+        { refresh: 'none' },
       );
-      console.info('已发送用户消息（自定义输入）:', messageText);
+      console.info('已发送用户消息（自定义输入，无标签）:', messageText);
 
-      // 准备流式界面
-      const expectedMessageId = getLastMessageId() + 1;
-      isStreaming.value = true;
-      streamingText.value = '';
-      streamingMessageId.value = expectedMessageId;
+      // 移除流式界面准备（已取消流式功能）
 
       // 触发 AI 生成回复
       await triggerSlash('/trigger');
@@ -2530,9 +2736,6 @@ async function handleChoiceSelect(id: string, customText?: string) {
     }
   } catch (error) {
     console.error('处理选择时出错:', error);
-    isStreaming.value = false;
-    streamingText.value = '';
-    streamingMessageId.value = null;
     nextDialogue();
   }
 }
@@ -2546,25 +2749,11 @@ function getDisplayText(): string {
   const text = dialogue.text || '';
   if (!text) return '';
 
-  // 如果当前消息正在流式加载
-  if (isStreaming.value && streamingMessageId.value === dialogue.message_id) {
-    // 只返回消息中已保存的文本（已完成部分），不显示流式中的未完成部分
-    return text;
-  }
-
-  // 否则返回消息的完整文本
+  // 返回消息的完整文本
   return text;
 }
 
-// 处理流式token
-function handleStreamToken(text: string) {
-  if (!isStreaming.value || streamingMessageId.value === null) {
-    return;
-  }
-
-  // 更新流式文本
-  streamingText.value = text;
-}
+// 移除流式处理相关函数（已取消流式功能）
 
 // 历史功能：显示对话历史并允许快速跳转
 const showHistoryDialog = ref(false);
@@ -2605,7 +2794,7 @@ async function handleHistory() {
           const messageText = msg.message || '';
 
           // 解析消息块
-          const blocks = await parseMessageBlocks(messageText);
+          const blocks = await parseMessageBlocks(messageText, undefined, userDisplayName.value);
 
           const items: Array<{
             type: 'character' | 'user' | 'narration' | 'blacktext' | 'choice';
@@ -2828,13 +3017,11 @@ async function handleSendInput() {
   inputText.value = '';
   showInputBox.value = false;
 
-  // 判断是否所有对话演出加载完成
-  const isAllDialoguesLoaded = currentDialogIndex.value >= dialogues.value.length - 1;
   const currentMessageId = currentDialogue.value?.message_id;
   const lastMessageId = getLastMessageId();
 
-  // 如果演出中（还有后续对话），先裁剪之后的剧情文本，保留 <content>...</content> 标签块及其之后的所有内容
-  if (!isAllDialoguesLoaded && currentMessageId !== undefined) {
+  // 智能裁剪：无论是否演出完成，都需要裁剪当前消息，保留 <content>...</content> 标签块及其之后的所有内容
+  if (currentMessageId !== undefined) {
     try {
       // 获取当前消息的完整文本
       const messages = getChatMessages(currentMessageId);
@@ -2860,14 +3047,14 @@ async function handleSendInput() {
         }
       }
 
-      // 删除当前消息之后的所有消息
+      // 删除当前消息之后的所有消息（无论是否演出完成）
       if (currentMessageId < lastMessageId) {
         const messagesToDelete: number[] = [];
         for (let i = currentMessageId + 1; i <= lastMessageId; i++) {
           messagesToDelete.push(i);
         }
         if (messagesToDelete.length > 0) {
-          await deleteChatMessages(messagesToDelete, { refresh: 'all' });
+          await deleteChatMessages(messagesToDelete, { refresh: 'none' });
           console.info(`已删除 ${messagesToDelete.length} 条后续消息`);
         }
       }
@@ -2876,9 +3063,10 @@ async function handleSendInput() {
     }
   }
 
-  // 在当前位置后插入用户对话
+  // 在当前位置后插入用户对话，继承当前对话的背景和立绘状态
   const tempMessageId = getLastMessageId() + 1;
   const tempUnitIndex = dialogues.value.length;
+  const currentDialogueData = currentDialogue.value;
   const newDialogue: DialogueItem = {
     unitId: `msg_${tempMessageId}_unit_${tempUnitIndex}`,
     unitIndex: tempUnitIndex,
@@ -2888,6 +3076,16 @@ async function handleSendInput() {
     isEditable: true,
     message_id: tempMessageId, // 临时ID，实际会从酒馆获取
     role: 'user',
+    // 继承背景
+    scene: currentDialogueData?.scene,
+    sceneImageUrl: currentDialogueData?.sceneImageUrl,
+    // 继承立绘状态
+    sprite: currentDialogueData?.sprite ? { ...currentDialogueData.sprite } : undefined,
+    motion: currentDialogueData?.motion,
+    expression: currentDialogueData?.expression,
+    // 继承CG状态
+    isCG: currentDialogueData?.isCG,
+    cgImageUrl: currentDialogueData?.cgImageUrl,
   };
 
   // 插入到对话列表
@@ -2913,11 +3111,7 @@ async function handleSendInput() {
     await sendUserMessageWithPhone(formattedMessage);
     console.info('已发送用户消息:', text);
 
-    // 准备流式界面：立即开始监听流式token
-    const expectedMessageId = getLastMessageId() + 1;
-    isStreaming.value = true;
-    streamingText.value = '';
-    streamingMessageId.value = expectedMessageId;
+    // 移除流式界面准备（已取消流式功能）
 
     // 触发 AI 生成回复
     await triggerSlash('/trigger');
@@ -2927,9 +3121,6 @@ async function handleSendInput() {
     await loadDialoguesFromTavern();
   } catch (error) {
     console.error('发送消息失败:', error);
-    isStreaming.value = false;
-    streamingText.value = '';
-    streamingMessageId.value = null;
   }
 }
 

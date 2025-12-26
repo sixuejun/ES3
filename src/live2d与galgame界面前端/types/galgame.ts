@@ -62,6 +62,9 @@ export interface DialogueItem {
   isEditable?: boolean; // 是否为可编辑的用户消息
   editedText?: string; // 编辑后的文本（内存中）
   isDeleted?: boolean; // 是否已删除（内存中）
+
+  // ===== 阅读状态 =====
+  isRead?: boolean; // 是否已读，默认为 false（未读）
 }
 
 export interface ChoiceOption {

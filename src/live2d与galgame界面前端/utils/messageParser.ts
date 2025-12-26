@@ -524,17 +524,30 @@ export function parseStatusBlock(message: string): StatusBlockData | null {
 /**
  * 工具函数：判断角色名是否是用户角色
  * 统一处理 <user>、{{user}}、user、用户、你 等标识符
+ * 如果提供了 userDisplayName，也会检查是否匹配
  */
-function isUserCharacter(characterName: string | undefined): boolean {
+function isUserCharacter(characterName: string | undefined, userDisplayName?: string): boolean {
   if (!characterName) return false;
   const normalized = characterName.trim().toLowerCase();
-  return (
+
+  // 检查默认的用户标识符
+  const isDefaultUser =
     normalized === '<user>' ||
     normalized === '{{user}}' ||
     normalized === 'user' ||
     normalized === '用户' ||
-    normalized === '你'
-  );
+    normalized === '你' ||
+    normalized === '玩家';
+
+  if (isDefaultUser) return true;
+
+  // 如果提供了 userDisplayName，检查是否匹配（不区分大小写）
+  if (userDisplayName && userDisplayName.trim()) {
+    const normalizedUserDisplayName = userDisplayName.trim().toLowerCase();
+    return normalized === normalizedUserDisplayName;
+  }
+
+  return false;
 }
 
 /**
@@ -551,7 +564,11 @@ function isUserCharacter(characterName: string | undefined): boolean {
  * 智能识别：支持中文英文全角半角冒号，识别关键字（角色名、场景等）
  * 只解析 <content>...</content> 标签中的内容
  */
-export async function parseMessageBlocks(message: string, lastScene?: string): Promise<MessageBlock[]> {
+export async function parseMessageBlocks(
+  message: string,
+  lastScene?: string,
+  userDisplayName?: string,
+): Promise<MessageBlock[]> {
   const blocks: MessageBlock[] = [];
   let currentScene = lastScene; // 当前场景，用于继承
 
@@ -662,7 +679,7 @@ export async function parseMessageBlocks(message: string, lastScene?: string): P
 
       // 检查角色名是否为用户角色（<user>、{{user}}、user、用户、你），如果是则转换为 user 类型
       const characterName = kvPairs['角色名'] || kvPairs['character'] || '';
-      if (isUserCharacter(characterName)) {
+      if (isUserCharacter(characterName, userDisplayName)) {
         // 转换为 user 类型
         const scene = kvPairs['场景'] || kvPairs['scene'] || currentScene;
         let messageText = kvPairs['台词'] || kvPairs['台词内容'] || kvPairs['text'] || content;
