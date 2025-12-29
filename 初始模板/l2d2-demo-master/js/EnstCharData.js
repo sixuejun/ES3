@@ -1,0 +1,52 @@
+var EnstCharData = {
+
+/*"Character":[{ position_y, scale }*/
+
+"characters": {
+
+"Tetora":[{ position_y: "-0.158", scale: "1.47", icon:"Tetora.png", group: "group1-A", drive_url: "https://drive.google.com/drive/folders/1iNewBjcHozT-LGhB8oNL8wU_zVqTBhVa"}],
+"Hajime":[{ position_y: "-0.204", scale: "1.39", icon:"Hajime.png", group: "group1-A", drive_url: "https://drive.google.com/drive/folders/1ityXn9tPNKR_Wsr6lyv5YpkDq_FE9ZDG"}],
+"Tomoya":[{ position_y: "-0.176", scale: "1.4", icon:"Tomoya.png", group: "group1-A", drive_url: "https://drive.google.com/drive/folders/1ik8xJFRBSrldMCyN2H23nSC_zK2XmTXs"}],
+"Hinata":[{ position_y: "-0.139", scale: "1.425", icon:"Hinata.png", group: "group1-A", drive_url: "https://drive.google.com/drive/folders/1hX8KFmQ0V7OdnSxaeAS4PJSyfXxGWT6K"}],
+"Midori":[{ position_y: "-0.061", scale: "1.56", icon:"Midori.png", group: "group1-A", drive_url: "https://drive.google.com/drive/folders/1iheIt9kqWYz4vdKbxsfFl4XSg42f76Tl"}],
+"Tori":[{ position_y: "-0.299", scale: "1.335", icon:"Tori.png", group: "group1-B", drive_url: "https://drive.google.com/drive/folders/1hCwb5ia8E_z-W2bP_-tVvKVwLyHXikon"}],
+"Shinobu":[{ position_y: "-0.256", scale: "1.36", icon:"Shinobu.png", group: "group1-B", drive_url: "https://drive.google.com/drive/folders/1igBGFkSLs2_g5CPwg_JNm_5638gxVBIl"}],
+"Yuta":[{ position_y: "-0.139", scale: "1.425", icon:"Yuta.png", group: "group1-B", drive_url: "https://drive.google.com/drive/folders/1hTmL9s8i60Va_nvJEqNXKOL7-SM66aAJ"}],
+"Mitsuru":[{ position_y: "-0.183", scale: "1.45", icon:"Mitsuru.png", group: "group1-B", drive_url: "https://drive.google.com/drive/folders/1ivMNF3Isemo0uGEWsVhSMv7qiWaS_9tx"}],
+"Tsukasa":[{ position_y: "-0.212", scale: "1.45", icon:"Tsukasa.png", group: "group1-B", drive_url: "https://drive.google.com/drive/folders/1hbdv2ocovkE9GUih5BHbVSDKs89Cn3a-"}],
+"Sora":[{ position_y: "-0.215", scale: "1.4", icon:"Sora.png", group: "group1-B", drive_url: "https://drive.google.com/drive/folders/1hS1WRti2z6PiVouWxUQtGrfNhtJyPrWk"}],
+"Subaru":[{ position_y: "-0.163", scale: "1.49", icon:"Subaru.png", group: "group2-A", drive_url: "https://drive.google.com/drive/folders/1h-R1r4-Ova-0MP6F4RbAYiS2-YKGfUoY"}],
+"Hokuto":[{ position_y: "-0.147", scale: "1.52", icon:"Hokuto.png", group: "group2-A", drive_url: "https://drive.google.com/drive/folders/1gv9_MWhXZvdkhsufQN5tlbIKs9y8iqtA"}],
+"Makoto":[{ position_y: "-0.116", scale: "1.49", icon:"Makoto.png", group: "group2-A", drive_url: "https://drive.google.com/drive/folders/1h1c2-XpMZC16junYDEp-FADNQEf85MZW"}],
+"Souma":[{ position_y: "-0.133", scale: "1.53", icon:"Souma.png", group: "group2-A", drive_url: "https://drive.google.com/drive/folders/1j6RzseGWtFqqwBIGaf7g0s_1rekfKPUT"}],
+"Adonis":[{ position_y: "-0.099", scale: "1.64", icon:"Adonis.png", group: "group2-A", drive_url: "https://drive.google.com/drive/folders/1gifjwWydUpwJ4ejbl5zS_6y1PBwHLztq"}],
+"Natsume":[{ position_y: "-0.164", scale: "1.45", icon:"Natsume.png", group: "group2-A", drive_url: "https://drive.google.com/drive/folders/1hHWa05YQU8pQ25XgzDshCDtpdECVRLtY"}],
+"Koga":[{ position_y: "-0.11", scale: "1.53", icon:"Koga.png", group: "group2-B", drive_url: "https://drive.google.com/drive/folders/1gniXi209OwW5n_jdgNQYyamWNnH5Mv10"}],
+"Ritsu":[{ position_y: "-0.169", scale: "1.48", icon:"Ritsu.png", group: "group2-B", drive_url: "https://drive.google.com/drive/folders/1i-mVIBndL4P2FDjcH-EGzYsCXu-VNfI_"}],
+"Mao":[{ position_y: "-0.183", scale: "1.48", icon:"Mao.png", group: "group2-B", drive_url: "https://drive.google.com/drive/folders/1h4Ain4Fyn2ftmUxmIhw6_dOVWBCw7izw"}],
+"Yuzuru":[{ position_y: "-0.11", scale: "1.54", icon:"Yuzuru.png", group: "group2-B", drive_url: "https://drive.google.com/drive/folders/1hDexfsqib_A32QN5lfrGsNQQcUU92MFE"}],
+"Arashi":[{ position_y: "-0.113", scale: "1.56", icon:"Arashi.png", group: "group2-B", drive_url: "https://drive.google.com/drive/folders/1hsUi0LkZcp-FoQgVcmbTB4qNEMuTgk2Q"}],
+"Mika":[{ position_y: "-0.156", scale: "1.49", icon:"Mika.png", group: "group2-B", drive_url: "https://drive.google.com/drive/folders/1j54AJtDw11ZdYtITMQ8er8TF9S_LQ7tk"}],
+"Keito":[{ position_y: "-0.074", scale: "1.56", icon:"Keito.png", group: "group3-A", drive_url: "https://drive.google.com/drive/folders/1j8-OFf4XZqVEdFzN1wZN7qOTQ0XPkgQD"}],
+"Eichi":[{ position_y: "-0.031", scale: "1.52", icon:"Eichi.png", group: "group3-A", drive_url: "https://drive.google.com/drive/folders/1h6OViooG4S6e7iCO41zw4nfhgH4GaKGc"}],
+"Kaoru":[{ position_y: "-0.062", scale: "1.56", icon:"Kaoru.png", group: "group3-A", drive_url: "https://drive.google.com/drive/folders/1gs-TQY3_nOMYfrDFV3sdXdjYJWDgAxxe"}],
+"Izumi":[{ position_y: "-0.153", scale: "1.52", icon:"Izumi.png", group: "group3-A", drive_url: "https://drive.google.com/drive/folders/1hobg6nLsgL1bNLN9muGoEbsMooUVp28V"}],
+"Chiaki":[{ position_y: "-0.113", scale: "1.56", icon:"Chiaki.png", group: "group3-A", drive_url: "https://drive.google.com/drive/folders/1ie44QwBv7YWwuY_0oLIpwA7mF2F5m8h5"}],
+"Shu":[{ position_y: "-0.078", scale: "1.56", icon:"Shu.png", group: "group3-A", drive_url: "https://drive.google.com/drive/folders/1iyY53HI-NY12J7J_RWJL_1x2vWpvoUqV"}],
+"Madara":[{ position_y: "-0.048", scale: "1.58", icon:"Madara.png", group: "group3-A", drive_url: "https://drive.google.com/drive/folders/1jbBj76QlwkQ02cYsaXyazF55_jeApN56"}],
+"Kuro":[{ position_y: "-0.038", scale: "1.575", icon:"Kuro.png", group: "group3-B", drive_url: "https://drive.google.com/drive/folders/1j7WTex1K8SaLQ3X54NI4YfZoTSmQpl1q"}],
+"Wataru":[{ position_y: "-0.031", scale: "1.52", icon:"Wataru.png", group: "group3-B", drive_url: "https://drive.google.com/drive/folders/1hHDGXFN6_exKOBlFjxCknv_8YYrnsie_"}],
+"Kanata":[{ position_y: "-0.104", scale: "1.55", icon:"Kanata.png", group: "group3-B", drive_url: "https://drive.google.com/drive/folders/1ifeCtF7aTa8T95JJl3mzzcDRx5qFnq1Q"}],
+"Rei":[{ position_y: "-0.065", scale: "1.61", icon:"Rei.png", group: "group3-B", drive_url: "https://drive.google.com/drive/folders/1gkyVNSK0LxJyyXQkfH1usNmfa5-EXHO9"}],
+"Nazuna":[{ position_y: "-0.3", scale: "1.45", icon:"Nazuna.png", group: "group3-B", drive_url: "https://drive.google.com/drive/folders/1iqWLKEkoDR_A1MmxWgajDSImpVHOiXvl"}],
+"Leo":[{ position_y: "-0.184", scale: "1.47", icon:"Leo.png", group: "group3-B", drive_url: "https://drive.google.com/drive/folders/1hghaHaKmxVjVyJdvKxs3eJgdMYOE1qmn"}],
+"Tsumugi":[{ position_y: "-0.137", scale: "1.6", icon:"Tsumugi.png", group: "group3-B", drive_url: "https://drive.google.com/drive/folders/1hLCbuVagqjiOLNRDH4L9AFlaDkKTOxWi"}],
+"Nagisa":[{ position_y: "-0.067", scale: "1.58", icon:"Nagisa.png", group: "groupEden", drive_url: "https://drive.google.com/drive/folders/1jNLt1QIkhEINwukyVfRd9tQQw5UOLPC4"}],
+"Hiyori":[{ position_y: "-0.072", scale: "1.57", icon:"Hiyori.png", group: "groupEden", drive_url: "https://drive.google.com/drive/folders/1jLa1UJnyFtEKQnAdy-cFQdMtQF9mPNGC"}],
+"Ibara":[{ position_y: "-0.159", scale: "1.54", icon:"Ibara.png", group: "groupEden", drive_url: "https://drive.google.com/drive/folders/1jHVMxd2eqmJ1Qa3F_j4rS7oBdeLO2aZo"}],
+"Jun":[{ position_y: "-0.154", scale: "1.59", icon:"Jun.png", group: "groupEden", drive_url: "https://drive.google.com/drive/folders/1jO9igDG6SUgSCJx6QLHh4pHf-MR00nSQ"}],
+"Jin":[{ position_y: "-0.06", scale: "1.585", icon:"Jin.png", group: "groupTeachers", drive_url: "https://drive.google.com/drive/folders/1jg_I1maCQ54jXjlHJW40ktdL-Ev2j7BC"}],
+"Akiomi":[{ position_y: "-0.058", scale: "1.56", icon:"Akiomi.png", group: "groupTeachers", drive_url: "https://drive.google.com/drive/folders/1jzoMJTpVggD8w84MRwTj8WMyTskFig48"}],
+"Seiya":[{ position_y: "-0.076", scale: "1.555", icon:"Seiya.png", group: "groupTeachers", drive_url: "https://drive.google.com/drive/folders/1jiW6MgbJmVS2y3WgBNsrZ4ug9v8sxLBh"}]
+}
+}

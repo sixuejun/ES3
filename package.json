@@ -76,7 +76,7 @@
     "webpack-obfuscator": "^3.6.0"
   },
   "dependencies": {
-    "@pixi/react": "8.0.0-beta.25",
+    "@pixi/core": "7.4.3",
     "@vueuse/components": "^14.1.0",
     "@vueuse/core": "^13.9.0",
     "@vueuse/integrations": "^13.9.0",
@@ -90,7 +90,7 @@
     "lodash": "^4.17.21",
     "pinia": "^3.0.4",
     "pixi-live2d-display": "0.5.0-beta",
-    "pixi.js": "^8.14.3",
+    "pixi.js": "^7.4.3",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "toastr": "^2.1.4",

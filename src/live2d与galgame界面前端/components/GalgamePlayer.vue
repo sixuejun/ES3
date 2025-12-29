@@ -21,20 +21,22 @@
     <!-- 绿色清新滤镜叠加 -->
     <div class="bg-primary/5 absolute inset-0" />
 
-    <!-- 角色立绘 -->
+    <!-- 角色立绘 - 支持多角色显示 -->
     <CharacterSprite
-      :sprite-scale="spriteSettings.scale"
-      :sprite-position-x="spriteSettings.positionX"
-      :sprite-position-y="spriteSettings.positionY"
-      :live2d-scale="live2dSettings.scale"
-      :live2d-position-x="live2dSettings.positionX"
-      :live2d-position-y="live2dSettings.positionY"
-      :sprite-type="currentSpriteType"
-      :image-url="currentImageUrl"
-      :live2d-model-id="currentLive2dModelId"
+      v-for="(character, index) in displayCharacters"
+      :key="`character-${index}-${character.name}`"
+      :sprite-scale="character.scale"
+      :sprite-position-x="character.positionX"
+      :sprite-position-y="character.positionY"
+      :live2d-scale="character.scale"
+      :live2d-position-x="character.positionX"
+      :live2d-position-y="character.positionY"
+      :sprite-type="character.type"
+      :image-url="character.imageUrl"
+      :live2d-model-id="character.modelId"
       :live2d-models="live2dModels"
-      :motion="currentDialogue?.motion"
-      :expression="currentDialogue?.expression"
+      :motion="character.motion"
+      :expression="character.expression"
     />
 
     <!-- CG图片（CG模式） -->
@@ -545,6 +547,13 @@ import type { ChoiceOption, DialogBoxStyle, DialogueItem } from '../types/galgam
 import { defaultDialogStyle } from '../types/galgame';
 import type { MessageBlock } from '../types/message';
 import {
+  CharacterStateManager,
+  createCharacterConfig,
+  detectCharacterExit,
+  type CharacterDisplayConfig,
+  type CharacterSettings,
+} from '../utils/characterParser';
+import {
   hasMotionAndExpression,
   loadWorldbookResources,
   parseMessageBlocks,
@@ -632,22 +641,22 @@ const phonePanelRef = ref<InstanceType<typeof PhonePanel> | null>(null);
 // 移除流式界面状态（已取消流式功能）
 
 // 样式设置 - 从 localStorage 加载
-// 立绘设置（静态图片）- 默认 Galgame 风格：左侧，底部对齐
-const spriteSettings = ref(
-  loadFromStorage(STORAGE_KEYS.SPRITE_SETTINGS, {
-    scale: 1.15, // 立绘默认 115%
-    positionX: 24, // 左侧偏移 24%
-    positionY: 120, // 底部对齐（扩展范围后的合理值）
-  }),
-);
-// Live2D 模型设置 - 默认 Galgame 风格：左侧，底部对齐
-const live2dSettings = ref(
-  loadFromStorage(STORAGE_KEYS.LIVE2D_SETTINGS, {
-    scale: 1.15, // 模型默认 115%
-    positionX: 24, // 左侧偏移 24%
-    positionY: 120, // 底部对齐（扩展范围后的合理值）
-  }),
-);
+// 立绘设置（静态图片）- 支持左、右、单角色三种模式的独立设置
+const defaultSpriteSettings: CharacterSettings = {
+  left: { scale: 1.15, positionX: 30, positionY: 50 }, // 左侧：30%，缩放115%
+  right: { scale: 1.15, positionX: 70, positionY: 50 }, // 右侧：70%，缩放115%
+  single: { scale: 1.0, positionX: 30, positionY: 50 }, // 单角色：30%，缩放100%
+};
+
+const defaultLive2dSettings: CharacterSettings = {
+  left: { scale: 1.15, positionX: 30, positionY: 50 }, // 左侧：30%，缩放115%
+  right: { scale: 1.15, positionX: 70, positionY: 50 }, // 右侧：70%，缩放115%
+  single: { scale: 1.0, positionX: 30, positionY: 50 }, // 单角色：30%，缩放100%
+};
+
+const spriteSettings = ref<CharacterSettings>(loadFromStorage(STORAGE_KEYS.SPRITE_SETTINGS, defaultSpriteSettings));
+
+const live2dSettings = ref<CharacterSettings>(loadFromStorage(STORAGE_KEYS.LIVE2D_SETTINGS, defaultLive2dSettings));
 const dialogStyle = ref<DialogBoxStyle>(loadFromStorage(STORAGE_KEYS.DIALOG_STYLE, defaultDialogStyle));
 const previewStyle = ref<DialogBoxStyle>({ ...dialogStyle.value });
 
@@ -659,12 +668,50 @@ const live2dModels = shallowRef<any[]>([]);
 // Live2D 世界书资源缓存
 const live2dWorldbookModels = shallowRef<Map<string, any>>(new Map());
 
-// 工具函数：从 localStorage 加载数据
+// 工具函数：迁移旧格式的设置数据到新格式
+function migrateOldSettings(oldData: any): CharacterSettings | null {
+  // 检查是否是旧格式（有 scale, positionX, positionY 但没有 left, right, single）
+  if (
+    oldData &&
+    typeof oldData === 'object' &&
+    'scale' in oldData &&
+    'positionX' in oldData &&
+    'positionY' in oldData &&
+    !('left' in oldData) &&
+    !('right' in oldData) &&
+    !('single' in oldData)
+  ) {
+    // 旧格式：{ scale, positionX, positionY }
+    // 转换为新格式：{ left, right, single }
+    const oldScale = oldData.scale ?? 1.15;
+    return {
+      left: { scale: oldScale, positionX: 30, positionY: 50 },
+      right: { scale: oldScale, positionX: 70, positionY: 50 },
+      single: { scale: 1.0, positionX: 30, positionY: 50 },
+    };
+  }
+  return null;
+}
+
+// 工具函数：从 localStorage 加载数据，支持数据迁移
 function loadFromStorage<T>(key: string, defaultValue: T): T {
   try {
     const stored = localStorage.getItem(key);
     if (stored) {
-      return JSON.parse(stored) as T;
+      const parsed = JSON.parse(stored);
+
+      // 如果是设置相关的 key，检查是否需要迁移
+      if (key === STORAGE_KEYS.SPRITE_SETTINGS || key === STORAGE_KEYS.LIVE2D_SETTINGS) {
+        const migrated = migrateOldSettings(parsed);
+        if (migrated) {
+          // 保存迁移后的数据
+          localStorage.setItem(key, JSON.stringify(migrated));
+          console.info(`[GalgamePlayer] 已迁移 ${key} 数据格式`);
+          return migrated as T;
+        }
+      }
+
+      return parsed as T;
     }
   } catch (e) {
     console.warn(`从 localStorage 加载 ${key} 失败:`, e);
@@ -761,70 +808,209 @@ const backgroundImage = computed(() => {
   return null;
 });
 
-// 当前立绘配置
-const currentSpriteType = computed<'live2d' | 'image' | 'none'>(() => {
-  const dialogue = currentDialogue.value;
-  if (dialogue?.sprite?.type) {
-    console.info('[GalgamePlayer] currentSpriteType: 从 dialogue.sprite.type 获取', dialogue.sprite.type);
-    return dialogue.sprite.type;
-  }
-  // CG模式不显示立绘
-  if (dialogue?.isCG || dialogue?.type === 'cg') {
-    console.info('[GalgamePlayer] currentSpriteType: CG模式，返回 none');
-    return 'none';
-  }
-  // 默认：根据是否有 Live2D 模型或立绘资源来决定
-  if (dialogue?.character) {
-    const hasLive2d = live2dModels.value.some(m => m.name === dialogue.character);
-    const hasImage = !!dialogue.sprite?.imageUrl;
-    console.info('[GalgamePlayer] currentSpriteType: 自动判断', {
-      character: dialogue.character,
-      hasLive2d,
-      hasImage,
-      availableModels: live2dModels.value.map(m => ({ id: m.id, name: m.name })),
-    });
-    if (hasLive2d) return 'live2d';
-    if (hasImage) return 'image';
-    return 'none'; // 如果都没有，不显示
-  }
-  console.info('[GalgamePlayer] currentSpriteType: 无角色名，返回 none');
-  return 'none';
-});
+// 角色状态管理器（管理在场角色）
+const characterStateManager = new CharacterStateManager();
 
-const currentImageUrl = computed(() => {
-  const dialogue = currentDialogue.value;
-  return dialogue?.sprite?.imageUrl || '/placeholder-user.jpg';
-});
+// 为每个演出单元计算角色状态快照（用于回顾时保持正确的角色显示模式）
+function computeCharacterStateSnapshot(
+  dialogues: DialogueItem[],
+  targetIndex: number,
+): {
+  charactersBefore: string[];
+  charactersAfter: string[];
+  isNewCharacterEntry: boolean;
+  isCharacterExit: boolean;
+} {
+  const snapshotManager = new CharacterStateManager();
+  let isNewCharacterEntry = false;
+  let isCharacterExit = false;
 
-const currentLive2dModelId = computed(() => {
+  // 从第一个对话开始，逐个处理到目标索引之前
+  for (let i = 0; i < targetIndex; i++) {
+    const d = dialogues[i];
+    if (!d) continue;
+
+    // CG模式不处理角色状态
+    if (d.isCG || d.type === 'cg') {
+      snapshotManager.clearAll();
+      continue;
+    }
+
+    // 检测离场标记（优先从文本检测，如果文本包含"离场"关键字则使用character字段）
+    let exitCharacter = d.text ? detectCharacterExit(d.text) : null;
+    if (!exitCharacter && d.character && d.text && d.text.includes('离场')) {
+      exitCharacter = d.character;
+    }
+
+    if (exitCharacter) {
+      snapshotManager.processDialogue(exitCharacter, true);
+    } else if (d.character) {
+      snapshotManager.processDialogue(d.character, false);
+    }
+  }
+
+  // 获取目标索引之前的状态
+  const charactersBefore = snapshotManager.getOnStageCharacters();
+
+  // 处理目标索引的对话，检查是否是新角色登场或角色离场
+  const targetDialogue = dialogues[targetIndex];
+  if (targetDialogue && !targetDialogue.isCG && targetDialogue.type !== 'cg') {
+    // 检测离场标记（优先从文本检测，如果文本包含"离场"关键字则使用character字段）
+    let exitCharacter = targetDialogue.text ? detectCharacterExit(targetDialogue.text) : null;
+    if (!exitCharacter && targetDialogue.character && targetDialogue.text && targetDialogue.text.includes('离场')) {
+      exitCharacter = targetDialogue.character;
+    }
+
+    if (exitCharacter) {
+      // 角色离场
+      isCharacterExit = true;
+      snapshotManager.processDialogue(exitCharacter, true);
+    } else if (targetDialogue.character) {
+      // 检查是否是新角色登场
+      const beforeEntry = snapshotManager.getOnStageCharacters();
+      if (!beforeEntry.includes(targetDialogue.character)) {
+        isNewCharacterEntry = true;
+      }
+      snapshotManager.processDialogue(targetDialogue.character, false);
+    }
+  }
+
+  return {
+    charactersBefore,
+    charactersAfter: snapshotManager.getOnStageCharacters(),
+    isNewCharacterEntry,
+    isCharacterExit,
+  };
+}
+
+// 解析并返回当前需要显示的所有角色（自动管理双角色显示）
+const displayCharacters = computed<CharacterDisplayConfig[]>(() => {
   const dialogue = currentDialogue.value;
-  if (dialogue?.sprite?.live2dModelId) {
-    // dialogue.sprite.live2dModelId 是在创建 dialogue 时从世界书匹配得到的
-    // （通过 loadWorldbookResources() -> live2dModels.value -> 根据角色名匹配）
-    console.info('[GalgamePlayer] currentLive2dModelId: 使用已匹配的模型ID（来自世界书）', {
-      modelId: dialogue.sprite.live2dModelId,
-      character: dialogue.character,
-      source: 'dialogue.sprite.live2dModelId (在创建dialogue时从世界书匹配)',
-    });
-    return dialogue.sprite.live2dModelId;
+
+  if (!dialogue) {
+    return [];
   }
-  // 自动匹配：根据角色名从世界书加载的模型列表中查找
-  if (dialogue?.character) {
-    const model = live2dModels.value.find(m => m.name === dialogue.character);
-    console.info('[GalgamePlayer] currentLive2dModelId: 从世界书模型列表中匹配角色名', {
-      character: dialogue.character,
-      foundModel: model ? { id: model.id, name: model.name } : null,
-      availableModels: live2dModels.value.map(m => ({ id: m.id, name: m.name })),
-      source: 'live2dModels.value (从世界书加载)',
-    });
-    return model?.id;
+
+  // CG模式不显示角色
+  if (dialogue.isCG || dialogue.type === 'cg') {
+    // CG模式时清空在场角色
+    characterStateManager.clearAll();
+    return [];
   }
-  console.info('[GalgamePlayer] currentLive2dModelId: 未找到模型ID', {
-    hasDialogue: !!dialogue,
-    hasCharacter: !!dialogue?.character,
-    availableModels: live2dModels.value.map(m => ({ id: m.id, name: m.name })),
-  });
-  return undefined;
+
+  const currentIndex = currentDialogIndex.value;
+  const isReviewing = currentIndex < dialogues.value.length - 1;
+
+  let onStageCharacters: string[];
+  let reviewSnapshotManager: CharacterStateManager | null = null;
+
+  if (isReviewing) {
+    // 回顾模式：使用快照来决定角色状态
+    const snapshot = computeCharacterStateSnapshot(dialogues.value, currentIndex);
+
+    // 如果当前演出单元是新角色登场，回顾之前的应该保持单角色模式（只显示第一个角色）
+    // 如果当前演出单元是角色离场，回顾之前的应该保持双角色模式（显示离场前的两个角色）
+    if (snapshot.isNewCharacterEntry) {
+      // 新角色登场：回顾时保持单角色模式（只显示之前的第一个角色）
+      onStageCharacters = snapshot.charactersBefore.slice(0, 1);
+      // 创建一个临时的状态管理器来计算位置
+      reviewSnapshotManager = new CharacterStateManager();
+      snapshot.charactersBefore.slice(0, 1).forEach(char => {
+        reviewSnapshotManager!.processDialogue(char, false);
+      });
+    } else if (snapshot.isCharacterExit) {
+      // 角色离场：回顾时保持双角色模式（显示离场前的两个角色，即 charactersBefore）
+      // 确保最多显示2个角色
+      onStageCharacters = snapshot.charactersBefore.slice(0, 2);
+      // 创建一个临时的状态管理器来计算位置
+      reviewSnapshotManager = new CharacterStateManager();
+      snapshot.charactersBefore.slice(0, 2).forEach(char => {
+        reviewSnapshotManager!.processDialogue(char, false);
+      });
+    } else {
+      // 其他情况，使用之前的状态（保持原有逻辑）
+      onStageCharacters = snapshot.charactersBefore;
+      // 创建一个临时的状态管理器来计算位置
+      reviewSnapshotManager = new CharacterStateManager();
+      snapshot.charactersBefore.forEach(char => {
+        reviewSnapshotManager!.processDialogue(char, false);
+      });
+    }
+  } else {
+    // 正常播放模式：实时更新角色状态
+    // 检测离场标记（优先从文本中检测，如果没有则从character字段获取）
+    let exitCharacter = dialogue.text ? detectCharacterExit(dialogue.text) : null;
+
+    // 如果文本中没有检测到离场标记，但dialogue.character存在且文本中包含"离场"关键字，使用character字段
+    if (!exitCharacter && dialogue.character && dialogue.text && dialogue.text.includes('离场')) {
+      exitCharacter = dialogue.character;
+    }
+
+    // 更新角色状态
+    // 如果有离场标记，传入离场的角色名；否则传入当前对话的角色名
+    onStageCharacters = exitCharacter
+      ? characterStateManager.processDialogue(exitCharacter, true)
+      : characterStateManager.processDialogue(dialogue.character, false);
+  }
+
+  // 如果没有在场角色，返回空数组
+  if (onStageCharacters.length === 0) {
+    return [];
+  }
+
+  // 为每个在场角色创建显示配置
+  const manager = reviewSnapshotManager || characterStateManager;
+  return onStageCharacters
+    .map(charName => {
+      const position = manager.getCharacterPosition(charName);
+      const totalCount = onStageCharacters.length;
+
+      // 确定角色类型（live2d / image / none）
+      // 优先查找 Live2D 模型
+      const live2dModel = live2dModels.value.find(m => m.name === charName);
+
+      let config: CharacterDisplayConfig;
+
+      if (live2dModel) {
+        // Live2D 模型：使用 live2dSettings
+        config = createCharacterConfig(charName, position, totalCount, live2dSettings.value, false);
+        config.type = 'live2d';
+        config.modelId = live2dModel.id;
+      } else {
+        // 如果没有 Live2D 模型，查找立绘资源
+        // 使用 spriteSettings
+        config = createCharacterConfig(charName, position, totalCount, spriteSettings.value, true);
+
+        // 如果是当前发言的角色，使用当前对话的立绘资源
+        if (dialogue.character === charName && dialogue.sprite?.imageUrl) {
+          config.type = 'image';
+          config.imageUrl = dialogue.sprite.imageUrl;
+        } else {
+          // 对于非当前发言的角色，尝试从历史对话中查找立绘
+          // 查找该角色最近一次对话中的立绘资源
+          const characterDialogue = dialogues.value
+            .slice()
+            .reverse()
+            .find(d => d.character === charName && d.sprite?.imageUrl);
+
+          if (characterDialogue?.sprite?.imageUrl) {
+            config.type = 'image';
+            config.imageUrl = characterDialogue.sprite.imageUrl;
+          } else {
+            config.type = 'none';
+          }
+        }
+      }
+
+      // 应用动作和表情（只给当前发言的角色）
+      if (dialogue.character === charName) {
+        config.motion = dialogue.motion;
+        config.expression = dialogue.expression;
+      }
+
+      return config;
+    })
+    .filter(char => char.type !== 'none'); // 过滤掉没有资源的角色
 });
 
 // 用户消息编辑状态（内存中）
@@ -2135,9 +2321,15 @@ async function sendUserMessageWithPhone(messageText: string) {
 
   console.info('[GalgamePlayer] 准备发送消息');
   console.info('[GalgamePlayer] GalgamePlayer 输入的预发送文本数量:', inputTexts.length);
-  console.info('[GalgamePlayer] GalgamePlayer 输入的预发送文本:', inputTexts.map(t => t.text));
+  console.info(
+    '[GalgamePlayer] GalgamePlayer 输入的预发送文本:',
+    inputTexts.map(t => t.text),
+  );
   console.info('[GalgamePlayer] PhonePanel 预发送文本数量:', phoneTexts.length);
-  console.info('[GalgamePlayer] PhonePanel 预发送文本:', phoneTexts.map(t => t.text));
+  console.info(
+    '[GalgamePlayer] PhonePanel 预发送文本:',
+    phoneTexts.map(t => t.text),
+  );
 
   let finalMessage = '';
 
