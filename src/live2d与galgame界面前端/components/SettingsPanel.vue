@@ -87,9 +87,7 @@
                 />
               </div>
               <div class="space-y-2">
-                <label class="text-muted-foreground text-xs"
-                  >水平位置 ({{ displayedSpriteSettings.positionX }}%)</label
-                >
+                <label class="text-muted-foreground text-xs">水平位置 ({{ displayedSpriteSettings.positionX }}%)</label>
                 <input
                   type="range"
                   :value="displayedSpriteSettings.positionX"
@@ -107,9 +105,7 @@
                 />
               </div>
               <div class="space-y-2">
-                <label class="text-muted-foreground text-xs"
-                  >垂直位置 ({{ displayedSpriteSettings.positionY }}%)</label
-                >
+                <label class="text-muted-foreground text-xs">垂直位置 ({{ displayedSpriteSettings.positionY }}%)</label>
                 <input
                   type="range"
                   :value="displayedSpriteSettings.positionY"
@@ -183,9 +179,7 @@
                 />
               </div>
               <div class="space-y-2">
-                <label class="text-muted-foreground text-xs"
-                  >水平位置 ({{ displayedLive2dSettings.positionX }}%)</label
-                >
+                <label class="text-muted-foreground text-xs">水平位置 ({{ displayedLive2dSettings.positionX }}%)</label>
                 <input
                   type="range"
                   :value="displayedLive2dSettings.positionX"
@@ -203,9 +197,7 @@
                 />
               </div>
               <div class="space-y-2">
-                <label class="text-muted-foreground text-xs"
-                  >垂直位置 ({{ displayedLive2dSettings.positionY }}%)</label
-                >
+                <label class="text-muted-foreground text-xs">垂直位置 ({{ displayedLive2dSettings.positionY }}%)</label>
                 <input
                   type="range"
                   :value="displayedLive2dSettings.positionY"

@@ -751,13 +751,14 @@ export async function parseMessageBlocks(
       block.character = characterName;
 
       // 检查是否是离场指令：[[character||角色名：{{角色名}}||离场]]
-      const shouldExit = kvPairs['离场'] !== undefined || 
-                         kvPairs['exit'] !== undefined || 
-                         kvPairs['动作'] === '离场' || 
-                         kvPairs['motion'] === 'exit' ||
-                         kvPairs['表情'] === '离场' ||
-                         kvPairs['expression'] === 'exit';
-      
+      const shouldExit =
+        kvPairs['离场'] !== undefined ||
+        kvPairs['exit'] !== undefined ||
+        kvPairs['动作'] === '离场' ||
+        kvPairs['motion'] === 'exit' ||
+        kvPairs['表情'] === '离场' ||
+        kvPairs['expression'] === 'exit';
+
       if (shouldExit) {
         // 标记为离场，离场单元不包含台词，作为独立的分割标记
         block.shouldExit = true;

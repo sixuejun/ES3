@@ -1041,15 +1041,15 @@ export function classifyFiles(files: File[], defaultModelName: string): Record<s
     const modelName = defaultModelName;
 
     if (!modelFiles[modelName]) {
-      modelFiles[modelName] = { 
-        textures: [], 
-        moc3: null, 
-        model3: null, 
-        cdi3: null, 
-        moc: null, 
-        model: null, 
-        physics: null, 
-        motions: [] 
+      modelFiles[modelName] = {
+        textures: [],
+        moc3: null,
+        model3: null,
+        cdi3: null,
+        moc: null,
+        model: null,
+        physics: null,
+        motions: [],
       };
     }
 
@@ -1314,7 +1314,7 @@ function convertToLive2DConfig(model: ImportedModel, baseDir?: string): Live2DMo
   // 检测模型版本和文件类型
   let modelFile: VirtualModelFile | undefined;
   let detectedVersion = 3; // 默认版本 3
-  
+
   // 优先使用 model3.json (Cubism 3/4)
   modelFile = model.files.find(f => f.type === 'model3');
   if (modelFile) {
@@ -1345,10 +1345,13 @@ function convertToLive2DConfig(model: ImportedModel, baseDir?: string): Live2DMo
   }
 
   // 如果只有 moc/moc3 文件，创建虚拟的配置文件路径
-  const modelPath = modelFile.type === 'moc' || modelFile.type === 'moc3' 
-    ? (detectedVersion === 2 ? 'model.model.json' : 'model.model3.json')
-    : modelFile.filename;
-  
+  const modelPath =
+    modelFile.type === 'moc' || modelFile.type === 'moc3'
+      ? detectedVersion === 2
+        ? 'model.model.json'
+        : 'model.model3.json'
+      : modelFile.filename;
+
   let basePath: string;
 
   if (isLocalFile && modelFile.fileId) {
@@ -1405,7 +1408,8 @@ function convertToLive2DConfig(model: ImportedModel, baseDir?: string): Live2DMo
         // 格式：indexeddb:fileId 或直接使用 fileId 作为文件引用
         // 为了兼容性，我们使用相对路径格式，但在 _fileIds 中存储映射
         const filename = motion.url || motion.name + (detectedVersion === 2 ? '.motion.json' : '.motion3.json');
-        fileReference = filename.split('/').pop() || motion.name + (detectedVersion === 2 ? '.motion.json' : '.motion3.json');
+        fileReference =
+          filename.split('/').pop() || motion.name + (detectedVersion === 2 ? '.motion.json' : '.motion3.json');
       } else {
         // URL 文件：提取文件名或相对路径
         const filename = motion.url.includes('/')
@@ -1545,7 +1549,7 @@ export async function parseModel3Motions(model3File: File): Promise<
           const motions = motionsArray.map((motion: any, index: number) => {
             const file = motion.File || motion.file;
             const name = extractMotionName(file, '');
-            
+
             return {
               file,
               name,
@@ -1608,7 +1612,7 @@ export async function parseModelMotions(modelFile: File): Promise<
           const motions = motionsArray.map((motion: any, index: number) => {
             const file = motion.file || motion.File;
             const name = extractMotionName(file, '');
-            
+
             return {
               file,
               name,

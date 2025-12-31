@@ -56,7 +56,7 @@ export async function validateTextMappings(
     // 检查动作文件是否存在
     if (motion.file) {
       const fileUrl = motion.file.startsWith('http') ? motion.file : `${basePath}${motion.file}`;
-      
+
       // 检查文件是否存在（使用缓存避免重复请求）
       if (!fileExistenceCache.has(fileUrl)) {
         const exists = await checkFileExists(fileUrl, fileIds, motion.file);
@@ -125,11 +125,7 @@ export async function validateTextMappings(
  * @param filename 文件名
  * @returns 文件是否存在
  */
-async function checkFileExists(
-  fileUrl: string,
-  fileIds?: Record<string, string>,
-  filename?: string,
-): Promise<boolean> {
+async function checkFileExists(fileUrl: string, fileIds?: Record<string, string>, filename?: string): Promise<boolean> {
   try {
     // 如果是本地文件（IndexedDB），检查 fileId 是否存在
     if (fileUrl.startsWith('indexeddb://') && fileIds && filename) {
@@ -205,10 +201,7 @@ export function formatValidationResult(result: ValidationResult): string {
  * @param concurrency 最大并发数
  * @returns Promise 数组的结果
  */
-export async function limitConcurrency<T>(
-  tasks: (() => Promise<T>)[],
-  concurrency: number,
-): Promise<T[]> {
+export async function limitConcurrency<T>(tasks: (() => Promise<T>)[], concurrency: number): Promise<T[]> {
   const results: T[] = [];
   const executing: Promise<void>[] = [];
 
@@ -232,4 +225,3 @@ export async function limitConcurrency<T>(
   await Promise.all(executing);
   return results;
 }
-

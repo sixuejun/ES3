@@ -15,7 +15,7 @@ export interface PendingTextItem {
 
 /**
  * 预发送文本 Store
- * 
+ *
  * 用于存储 PhonePanel 和 GalgamePlayer "输入"功能输入的文本
  */
 export const usePendingTextStore = defineStore('pendingText', () => {
@@ -29,7 +29,7 @@ export const usePendingTextStore = defineStore('pendingText', () => {
     const id = `${item.source}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const newItem: PendingTextItem = { ...item, id };
     pendingTexts.value.push(newItem);
-    
+
     console.info('[PendingTextStore] 添加预发送文本:', {
       id,
       text: item.text,
@@ -37,12 +37,15 @@ export const usePendingTextStore = defineStore('pendingText', () => {
       unitId: item.unitId,
       contact: item.contact,
     });
-    console.info('[PendingTextStore] 当前预发送文本列表:', pendingTexts.value.map(t => ({
-      id: t.id,
-      text: t.text,
-      source: t.source,
-    })));
-    
+    console.info(
+      '[PendingTextStore] 当前预发送文本列表:',
+      pendingTexts.value.map(t => ({
+        id: t.id,
+        text: t.text,
+        source: t.source,
+      })),
+    );
+
     return id;
   }
 
@@ -82,11 +85,14 @@ export const usePendingTextStore = defineStore('pendingText', () => {
         text: removed.text,
         source: removed.source,
       });
-      console.info('[PendingTextStore] 剩余预发送文本列表:', pendingTexts.value.map(t => ({
-        id: t.id,
-        text: t.text,
-        source: t.source,
-      })));
+      console.info(
+        '[PendingTextStore] 剩余预发送文本列表:',
+        pendingTexts.value.map(t => ({
+          id: t.id,
+          text: t.text,
+          source: t.source,
+        })),
+      );
     }
   }
 
@@ -96,18 +102,21 @@ export const usePendingTextStore = defineStore('pendingText', () => {
   function clearByUnitId(unitId: string) {
     const itemsToRemove = pendingTexts.value.filter(t => t.unitId === unitId);
     pendingTexts.value = pendingTexts.value.filter(t => t.unitId !== unitId);
-    
+
     if (itemsToRemove.length > 0) {
       console.info('[PendingTextStore] 清除预发送文本 (by unitId):', {
         unitId,
         removedCount: itemsToRemove.length,
         removedTexts: itemsToRemove.map(t => t.text),
       });
-      console.info('[PendingTextStore] 剩余预发送文本列表:', pendingTexts.value.map(t => ({
-        id: t.id,
-        text: t.text,
-        source: t.source,
-      })));
+      console.info(
+        '[PendingTextStore] 剩余预发送文本列表:',
+        pendingTexts.value.map(t => ({
+          id: t.id,
+          text: t.text,
+          source: t.source,
+        })),
+      );
     }
   }
 
@@ -117,18 +126,21 @@ export const usePendingTextStore = defineStore('pendingText', () => {
   function clearByContact(contact: string) {
     const itemsToRemove = pendingTexts.value.filter(t => t.source === 'phone' && t.contact === contact);
     pendingTexts.value = pendingTexts.value.filter(t => !(t.source === 'phone' && t.contact === contact));
-    
+
     if (itemsToRemove.length > 0) {
       console.info('[PendingTextStore] 清除预发送文本 (by contact):', {
         contact,
         removedCount: itemsToRemove.length,
         removedTexts: itemsToRemove.map(t => t.text),
       });
-      console.info('[PendingTextStore] 剩余预发送文本列表:', pendingTexts.value.map(t => ({
-        id: t.id,
-        text: t.text,
-        source: t.source,
-      })));
+      console.info(
+        '[PendingTextStore] 剩余预发送文本列表:',
+        pendingTexts.value.map(t => ({
+          id: t.id,
+          text: t.text,
+          source: t.source,
+        })),
+      );
     }
   }
 
@@ -139,7 +151,7 @@ export const usePendingTextStore = defineStore('pendingText', () => {
     const count = pendingTexts.value.length;
     const allTexts = pendingTexts.value.map(t => ({ text: t.text, source: t.source }));
     pendingTexts.value = [];
-    
+
     console.info('[PendingTextStore] 清除所有预发送文本:', {
       clearedCount: count,
       clearedTexts: allTexts,
@@ -169,13 +181,13 @@ export const usePendingTextStore = defineStore('pendingText', () => {
     const filtered = contact
       ? pendingTexts.value.filter(t => t.source === 'phone' && t.contact === contact)
       : pendingTexts.value.filter(t => t.source === 'phone');
-    
+
     console.info('[PendingTextStore] 获取 PhonePanel 预发送文本:', {
       contact,
       count: filtered.length,
       texts: filtered.map(t => t.text),
     });
-    
+
     return filtered;
   }
 
@@ -184,12 +196,12 @@ export const usePendingTextStore = defineStore('pendingText', () => {
    */
   function getInputTexts(): PendingTextItem[] {
     const filtered = pendingTexts.value.filter(t => t.source === 'input');
-    
+
     console.info('[PendingTextStore] 获取 GalgamePlayer 输入预发送文本:', {
       count: filtered.length,
       texts: filtered.map(t => ({ text: t.text, unitId: t.unitId })),
     });
-    
+
     return filtered;
   }
 
@@ -243,5 +255,3 @@ export const usePendingTextStore = defineStore('pendingText', () => {
     updateTextByUnitId,
   };
 });
-
-
