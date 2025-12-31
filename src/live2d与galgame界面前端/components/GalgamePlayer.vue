@@ -293,19 +293,7 @@
     </div>
 
     <!-- 对话框 -->
-    <!-- 离场标记（独立显示，不使用 DialogBox） -->
-    <div
-      v-if="!blackScreen && !showChoices && currentDialogue && currentDialogue.isCharacterExit && !currentDialogue.text"
-      class="absolute bottom-4 left-1/2 z-20 -translate-x-1/2"
-    >
-      <div
-        class="rounded-full border border-gray-600/30 bg-gray-800/50 px-6 py-2 text-sm text-gray-300 italic backdrop-blur-sm"
-      >
-        {{ currentDialogue.character }} 离场
-      </div>
-    </div>
-
-    <!-- 普通对话框 -->
+    <!-- 对话框 -->
     <DialogBox
       v-if="
         !blackScreen &&
@@ -313,7 +301,6 @@
         currentDialogue &&
         currentDialogue.type !== 'blackscreen' &&
         currentDialogue.type !== 'choice' &&
-        !currentDialogue.isCharacterExit &&
         getDisplayText()
       "
       :character="currentDialogue.character || ''"
@@ -758,7 +745,46 @@ interface ActiveCharacter {
   position: 'left' | 'right';
 }
 
-const activeCharacters = ref<ActiveCharacter[]>([]);
+// 注意：活跃角色需要“随播放位置变化”，否则离场在回放/跳转时无法正确生效
+const activeCharacters = computed<ActiveCharacter[]>(() => {
+  const characters: ActiveCharacter[] = [];
+
+  // 遍历到当前位置之前的所有对话（包含 marker）
+  for (let i = 0; i <= currentDialogIndex.value && i < dialogues.value.length; i++) {
+    const d = dialogues.value[i];
+    const name = d.character;
+    if (!name) continue;
+
+    // 离场标记：从列表中移除
+    if (d.isCharacterExit) {
+      const idx = characters.findIndex(c => c.name === name);
+      if (idx >= 0) characters.splice(idx, 1);
+      // 只剩一个角色时，将其移到左侧
+      if (characters.length === 1) characters[0].position = 'left';
+      continue;
+    }
+
+    // 非角色演出单元（如旁白）也可能带 character，但我们只认 sprite/台词来源于 character 块
+    // 这里以“有角色名就算角色出现/说话”为准（现有结构）
+    const existingIndex = characters.findIndex(c => c.name === name);
+    if (existingIndex >= 0) {
+      characters[existingIndex].lastSpokeIndex = i;
+    } else if (characters.length >= 2) {
+      const oldestIndex = characters.reduce(
+        (minIdx, curr, idx, arr) => (curr.lastSpokeIndex < arr[minIdx].lastSpokeIndex ? idx : minIdx),
+        0,
+      );
+      const position = characters[oldestIndex].position;
+      characters.splice(oldestIndex, 1);
+      characters.push({ name, lastSpokeIndex: i, position });
+    } else {
+      const position = characters.length === 0 ? 'left' : 'right';
+      characters.push({ name, lastSpokeIndex: i, position });
+    }
+  }
+
+  return characters;
+});
 
 // 工具函数：从 localStorage 加载数据
 function loadFromStorage<T>(key: string, defaultValue: T): T {
@@ -999,19 +1025,8 @@ const leftCharacterConfig = computed<CharacterConfig | null>(() => {
     };
   }
 
-  // 如果没有历史配置，尝试使用模型默认配置
-  const model = live2dModels.value.find(m => m.name === leftChar.name);
-  if (model) {
-    return {
-      spriteType: 'live2d',
-      imageUrl: undefined,
-      live2dModelId: model.id || model.name,
-      motion: undefined,
-      expression: undefined,
-    };
-  }
-
-  // 如果都没有，不显示
+  // 如果没有历史配置，说明角色还未真正出场，不显示
+  // 只有在角色有过对话记录后才会显示默认状态
   return {
     spriteType: 'none',
     imageUrl: undefined,
@@ -1054,19 +1069,8 @@ const rightCharacterConfig = computed<CharacterConfig | null>(() => {
     };
   }
 
-  // 如果没有历史配置，尝试使用模型默认配置
-  const model = live2dModels.value.find(m => m.name === rightChar.name);
-  if (model) {
-    return {
-      spriteType: 'live2d',
-      imageUrl: undefined,
-      live2dModelId: model.id || model.name,
-      motion: undefined,
-      expression: undefined,
-    };
-  }
-
-  // 如果都没有，不显示
+  // 如果没有历史配置，说明角色还未真正出场，不显示
+  // 只有在角色有过对话记录后才会显示默认状态
   return {
     spriteType: 'none',
     imageUrl: undefined,
@@ -1203,85 +1207,11 @@ function updateDialoguesIncremental(newDialogues: DialogueItem[]): boolean {
 
 // 从酒馆读取对话数据
 // 更新活跃角色列表
-/**
- * 更新活跃角色列表
- * @returns { isEntrance: boolean, isExit: boolean } - 是否为首次出现和是否为离场
- */
-function updateActiveCharacters(
-  characterName: string,
-  dialogueIndex: number,
-  shouldExit: boolean,
-): { isEntrance: boolean; isExit: boolean } {
-  if (!characterName) return { isEntrance: false, isExit: false };
-
-  if (shouldExit) {
-    // 角色离场，从列表中移除
-    const index = activeCharacters.value.findIndex(c => c.name === characterName);
-    if (index >= 0) {
-      activeCharacters.value.splice(index, 1);
-      console.info(
-        `[活跃角色] 角色 "${characterName}" 离场，当前活跃角色:`,
-        activeCharacters.value.map(c => c.name),
-      );
-
-      // 如果只剩一个角色，将其移到左侧
-      if (activeCharacters.value.length === 1) {
-        activeCharacters.value[0].position = 'left';
-      }
-    }
-    return { isEntrance: false, isExit: true };
-  }
-
-  // 查找是否已存在
-  const existingIndex = activeCharacters.value.findIndex(c => c.name === characterName);
-
-  if (existingIndex >= 0) {
-    // 角色已在列表中，更新最后发言索引
-    activeCharacters.value[existingIndex].lastSpokeIndex = dialogueIndex;
-    return { isEntrance: false, isExit: false };
-  } else {
-    // 新角色首次出现
-    if (activeCharacters.value.length >= 2) {
-      // 列表已满，移除最久未发言的角色
-      const oldestIndex = activeCharacters.value.reduce(
-        (minIdx, curr, idx, arr) => (curr.lastSpokeIndex < arr[minIdx].lastSpokeIndex ? idx : minIdx),
-        0,
-      );
-
-      const removed = activeCharacters.value[oldestIndex];
-      console.info(`[活跃角色] 列表已满，移除最久未发言的角色: "${removed.name}"`);
-
-      // 新角色继承被移除角色的位置
-      const position = removed.position;
-      activeCharacters.value.splice(oldestIndex, 1);
-
-      activeCharacters.value.push({
-        name: characterName,
-        lastSpokeIndex: dialogueIndex,
-        position,
-      });
-    } else {
-      // 列表未满，添加新角色
-      const position = activeCharacters.value.length === 0 ? 'left' : 'right';
-      activeCharacters.value.push({
-        name: characterName,
-        lastSpokeIndex: dialogueIndex,
-        position,
-      });
-    }
-
-    console.info(
-      `[活跃角色] 新角色 "${characterName}" 加入，当前活跃角色:`,
-      activeCharacters.value.map(c => c.name),
-    );
-    return { isEntrance: true, isExit: false };
-  }
-}
-
 async function loadDialoguesFromTavern() {
   try {
     const messages = getChatMessages('0-{{lastMessageId}}');
     const newDialogues: DialogueItem[] = [];
+    const seenCharacters = new Set<string>(); // 用于标记角色首次出现（跨整段剧情）
     let lastScene: string | undefined; // 用于场景继承
     let lastSceneImageUrl: string | undefined; // 上一次解析到的背景图，用于避免重复场景闪动
     let lastSpriteState: DialogueItem['sprite'] | undefined; // 上一次角色立绘/Live2D 状态
@@ -1393,16 +1323,6 @@ async function loadDialoguesFromTavern() {
         continue;
       }
 
-      // 预先计算角色出现/离场状态（用于标记 dialogue）
-      const characterStatus = new Map<string, { isEntrance: boolean; isExit: boolean }>();
-      for (let i = 0; i < blocks.length; i++) {
-        const block = blocks[i];
-        if (block.type === 'character' && block.character) {
-          const status = updateActiveCharacters(block.character, newDialogues.length + i, !!block.shouldExit);
-          characterStatus.set(`${i}`, status);
-        }
-      }
-
       // 解析StatusBlock（用于状态栏显示，不作为对话项）
       const statusBlock = parseStatusBlock(messageText);
 
@@ -1511,6 +1431,34 @@ async function loadDialoguesFromTavern() {
 
         // 处理非choice块
         if (block.type === 'character') {
+          // 离场：生成一个 marker 单元（不显示、不停顿），但会在播放经过时触发隐藏
+          if (block.shouldExit) {
+            const marker: DialogueItem = {
+              unitId: `msg_${msg.message_id}_unit_${unitIndex}`,
+              unitIndex: unitIndex++,
+              character: block.character,
+              text: '',
+              message_id: msg.message_id,
+              role: 'system',
+              type: 'marker',
+              isMarker: true,
+              isCharacterEntrance: false,
+              isCharacterExit: true,
+              // marker 不应改变立绘状态；这里只放 none 作为占位
+              sprite: { type: 'none' },
+              statusBlock,
+            };
+
+            inheritSceneAndBackground(marker);
+            inheritCGState(marker);
+            inheritSpriteState(marker);
+            newDialogues.push(marker);
+            updateSceneState(marker);
+
+            blockIndex++;
+            continue;
+          }
+
           // 优先使用原始文本关键词（用于 playMotionByText 匹配），回退到文件路径（向后兼容）
           const motionToUse = block.motion || block.motionFile;
           const expressionToUse = block.expression || block.expressionFile;
@@ -1552,8 +1500,8 @@ async function loadDialoguesFromTavern() {
                   : '未设置isCG，使用默认逻辑',
           });
 
-          // 获取角色出现/离场状态
-          const status = characterStatus.get(`${blockIndex}`) || { isEntrance: false, isExit: false };
+          const isEntrance = !!block.character && !seenCharacters.has(block.character);
+          if (block.character) seenCharacters.add(block.character);
 
           const dialogue: DialogueItem = {
             unitId: `msg_${msg.message_id}_unit_${unitIndex}`,
@@ -1571,8 +1519,8 @@ async function loadDialoguesFromTavern() {
             isCG: isCGMode,
             cgImageUrl: isCGMode ? block.cgImageUrl || block.scene : undefined, // 优先使用从世界书匹配到的CG URL
             statusBlock,
-            isCharacterEntrance: status.isEntrance, // 标记角色首次出现
-            isCharacterExit: status.isExit, // 标记角色离场
+            isCharacterEntrance: isEntrance, // 标记角色首次出现
+            isCharacterExit: false, // 普通角色块不是离场
             sprite: isCGMode
               ? { type: 'none' } // CG模式不显示立绘
               : (() => {
@@ -2083,6 +2031,18 @@ watch(
     if (!dialogue) return;
 
     // 移除流式状态检查（已取消流式功能）
+
+    if (dialogue.type === 'marker' || dialogue.isMarker) {
+      // marker 单元：不显示，不停顿。用于执行离场等分割逻辑（活跃角色列表会随 currentDialogIndex 变化自动生效）
+      blackScreen.value = false;
+      showChoices.value = false;
+
+      // 立刻跳到下一条可见内容（保持“离场行不占演出单元”的体验）
+      if (currentDialogIndex.value < dialogues.value.length - 1) {
+        Promise.resolve().then(() => nextDialogue());
+      }
+      return;
+    }
 
     if (dialogue.type === 'blackscreen') {
       blackScreenText.value = dialogue.text;

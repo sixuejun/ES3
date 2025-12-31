@@ -102,6 +102,11 @@ const spriteContainerStyle = computed(() => {
 
 // 播放动作（支持通过文件名或 textMappings 匹配）
 function playMotion(modelConfig: Live2DModelConfig, motion: string) {
+  // 检查 motion 是否有效
+  if (!motion || typeof motion !== 'string') {
+    return;
+  }
+
   if (!live2dRenderer) {
     return;
   }
@@ -166,6 +171,11 @@ function playMotion(modelConfig: Live2DModelConfig, motion: string) {
 
 // 播放表情（统一使用 motion API）
 function playExpression(modelConfig: Live2DModelConfig, expression: string) {
+  // 检查 expression 是否有效
+  if (!expression || typeof expression !== 'string') {
+    return;
+  }
+
   if (!live2dRenderer) {
     return;
   }

@@ -18,7 +18,7 @@ export interface DialogueItem {
   // ===== 主对话内容 =====
   character?: string;
   text: string;
-  type?: 'blackscreen' | 'choice' | 'narration' | 'user' | 'cg';
+  type?: 'blackscreen' | 'choice' | 'narration' | 'user' | 'cg' | 'marker';
 
   // ===== 酒馆消息信息 =====
   message_id?: number; // 酒馆消息ID
@@ -69,6 +69,7 @@ export interface DialogueItem {
   // ===== 角色在场标记 =====
   isCharacterEntrance?: boolean; // 是否为角色首次出现的单元（用于回顾时分割）
   isCharacterExit?: boolean; // 是否为角色离场的单元（用于回顾时分割）
+  isMarker?: boolean; // 是否为 marker 单元（不显示，自动跳过）
 }
 
 export interface ChoiceOption {

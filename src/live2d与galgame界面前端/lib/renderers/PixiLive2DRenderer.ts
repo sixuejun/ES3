@@ -90,7 +90,7 @@ export class PixiLive2DRenderer {
         console.warn('[PixiLive2DRenderer] Canvas 尺寸为 0，使用后备值:', {
           width: canvasWidth,
           height: canvasHeight,
-      });
+        });
       }
 
       this.canvas = canvas;
@@ -347,6 +347,11 @@ export class PixiLive2DRenderer {
    * @returns 是否成功匹配并播放
    */
   playMotionByText(text: string, priority?: number): boolean {
+    // 检查 text 是否有效
+    if (!text || typeof text !== 'string') {
+      return false;
+    }
+
     if (!this.model || !this.config?.motions) {
       return false;
     }
