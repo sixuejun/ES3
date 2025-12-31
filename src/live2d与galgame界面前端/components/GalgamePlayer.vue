@@ -745,31 +745,42 @@ interface ActiveCharacter {
   position: 'left' | 'right';
 }
 
-// 注意：活跃角色需要“随播放位置变化”，否则离场在回放/跳转时无法正确生效
+// 注意：活跃角色需要"随播放位置变化"，否则离场在回放/跳转时无法正确生效
 const activeCharacters = computed<ActiveCharacter[]>(() => {
   const characters: ActiveCharacter[] = [];
 
   // 遍历到当前位置之前的所有对话（包含 marker）
   for (let i = 0; i <= currentDialogIndex.value && i < dialogues.value.length; i++) {
     const d = dialogues.value[i];
-    const name = d.character;
-    if (!name) continue;
 
-    // 离场标记：从列表中移除
+    // 跳过非角色单元
+    if (!d.character) continue;
+
+    // 处理离场标记
     if (d.isCharacterExit) {
-      const idx = characters.findIndex(c => c.name === name);
-      if (idx >= 0) characters.splice(idx, 1);
-      // 只剩一个角色时，将其移到左侧
-      if (characters.length === 1) characters[0].position = 'left';
+      const idx = characters.findIndex(c => c.name === d.character);
+      if (idx >= 0) {
+        characters.splice(idx, 1);
+        // 只剩一个角色时，移到左侧
+        if (characters.length === 1) {
+          characters[0].position = 'left';
+        }
+      }
       continue;
     }
 
-    // 非角色演出单元（如旁白）也可能带 character，但我们只认 sprite/台词来源于 character 块
-    // 这里以“有角色名就算角色出现/说话”为准（现有结构）
+    // 只处理真正的角色对话单元（有 sprite 或 text）
+    // 跳过 marker 单元和空单元
+    if ((!d.sprite && !d.text) || d.isMarker || d.type === 'marker') continue;
+
+    const name = d.character;
     const existingIndex = characters.findIndex(c => c.name === name);
+
     if (existingIndex >= 0) {
+      // 角色已在列表中，更新最后发言索引
       characters[existingIndex].lastSpokeIndex = i;
     } else if (characters.length >= 2) {
+      // 新角色，列表已满，替换最久未发言的角色
       const oldestIndex = characters.reduce(
         (minIdx, curr, idx, arr) => (curr.lastSpokeIndex < arr[minIdx].lastSpokeIndex ? idx : minIdx),
         0,
@@ -778,6 +789,7 @@ const activeCharacters = computed<ActiveCharacter[]>(() => {
       characters.splice(oldestIndex, 1);
       characters.push({ name, lastSpokeIndex: i, position });
     } else {
+      // 新角色，列表未满，添加新角色
       const position = characters.length === 0 ? 'left' : 'right';
       characters.push({ name, lastSpokeIndex: i, position });
     }
@@ -992,14 +1004,14 @@ interface CharacterConfig {
   expression?: string;
 }
 
-const leftCharacterConfig = computed<CharacterConfig | null>(() => {
-  const leftChar = activeCharacters.value.find(c => c.position === 'left');
-  if (!leftChar) return null;
+// 统一的角色配置计算函数
+function getCharacterConfig(char: ActiveCharacter | undefined, isCurrentSpeaker: boolean): CharacterConfig | null {
+  if (!char) return null;
 
   const dialogue = currentDialogue.value;
 
   // 如果当前对话是该角色，使用对话中的配置（包括动作/表情）
-  if (dialogue?.character === leftChar.name) {
+  if (isCurrentSpeaker && dialogue?.character === char.name) {
     return {
       spriteType: currentSpriteType.value,
       imageUrl: currentImageUrl.value,
@@ -1009,11 +1021,12 @@ const leftCharacterConfig = computed<CharacterConfig | null>(() => {
     };
   }
 
-  // 否则从历史对话中查找该角色最后一次的配置，保持显示但无动作/表情
+  // 否则从历史对话中查找该角色最后一次的配置
+  // 只查找真正的角色对话单元（有 sprite 或 text，且不是 marker）
   const lastDialogue = dialogues.value
-    .slice(0, currentDialogIndex.value + 1) // 只查找到当前位置之前
+    .slice(0, currentDialogIndex.value + 1)
     .reverse()
-    .find(d => d.character === leftChar.name && d.sprite);
+    .find(d => d.character === char.name && (d.sprite || d.text) && !d.isMarker && d.type !== 'marker');
 
   if (lastDialogue?.sprite) {
     return {
@@ -1026,7 +1039,6 @@ const leftCharacterConfig = computed<CharacterConfig | null>(() => {
   }
 
   // 如果没有历史配置，说明角色还未真正出场，不显示
-  // 只有在角色有过对话记录后才会显示默认状态
   return {
     spriteType: 'none',
     imageUrl: undefined,
@@ -1034,50 +1046,16 @@ const leftCharacterConfig = computed<CharacterConfig | null>(() => {
     motion: undefined,
     expression: undefined,
   };
+}
+
+const leftCharacterConfig = computed<CharacterConfig | null>(() => {
+  const leftChar = activeCharacters.value.find(c => c.position === 'left');
+  return getCharacterConfig(leftChar, currentDialogue.value?.character === leftChar?.name);
 });
 
 const rightCharacterConfig = computed<CharacterConfig | null>(() => {
   const rightChar = activeCharacters.value.find(c => c.position === 'right');
-  if (!rightChar) return null;
-
-  const dialogue = currentDialogue.value;
-
-  // 如果当前对话是该角色，使用对话中的配置（包括动作/表情）
-  if (dialogue?.character === rightChar.name) {
-    return {
-      spriteType: currentSpriteType.value,
-      imageUrl: currentImageUrl.value,
-      live2dModelId: currentLive2dModelId.value,
-      motion: dialogue.motion,
-      expression: dialogue.expression,
-    };
-  }
-
-  // 否则从历史对话中查找该角色最后一次的配置，保持显示但无动作/表情
-  const lastDialogue = dialogues.value
-    .slice(0, currentDialogIndex.value + 1) // 只查找到当前位置之前
-    .reverse()
-    .find(d => d.character === rightChar.name && d.sprite);
-
-  if (lastDialogue?.sprite) {
-    return {
-      spriteType: lastDialogue.sprite.type,
-      imageUrl: lastDialogue.sprite.imageUrl,
-      live2dModelId: lastDialogue.sprite.live2dModelId,
-      motion: undefined, // 不播放动作
-      expression: undefined, // 不显示表情
-    };
-  }
-
-  // 如果没有历史配置，说明角色还未真正出场，不显示
-  // 只有在角色有过对话记录后才会显示默认状态
-  return {
-    spriteType: 'none',
-    imageUrl: undefined,
-    live2dModelId: undefined,
-    motion: undefined,
-    expression: undefined,
-  };
+  return getCharacterConfig(rightChar, currentDialogue.value?.character === rightChar?.name);
 });
 
 // 用户消息编辑状态（内存中）
@@ -1211,7 +1189,7 @@ async function loadDialoguesFromTavern() {
   try {
     const messages = getChatMessages('0-{{lastMessageId}}');
     const newDialogues: DialogueItem[] = [];
-    const seenCharacters = new Set<string>(); // 用于标记角色首次出现（跨整段剧情）
+    const globalSeenCharacters = new Set<string>(); // 用于标记角色首次出现（跨整段剧情）
     let lastScene: string | undefined; // 用于场景继承
     let lastSceneImageUrl: string | undefined; // 上一次解析到的背景图，用于避免重复场景闪动
     let lastSpriteState: DialogueItem['sprite'] | undefined; // 上一次角色立绘/Live2D 状态
@@ -1322,6 +1300,9 @@ async function loadDialoguesFromTavern() {
       if (blocks.length === 0) {
         continue;
       }
+
+      // 每个消息独立维护 seenCharacters，用于标记角色首次出现
+      const seenCharacters = new Set<string>();
 
       // 解析StatusBlock（用于状态栏显示，不作为对话项）
       const statusBlock = parseStatusBlock(messageText);
@@ -1500,8 +1481,12 @@ async function loadDialoguesFromTavern() {
                   : '未设置isCG，使用默认逻辑',
           });
 
+          // 标记角色首次出现（在当前消息内）
           const isEntrance = !!block.character && !seenCharacters.has(block.character);
-          if (block.character) seenCharacters.add(block.character);
+          if (block.character) {
+            seenCharacters.add(block.character);
+            globalSeenCharacters.add(block.character);
+          }
 
           const dialogue: DialogueItem = {
             unitId: `msg_${msg.message_id}_unit_${unitIndex}`,
